@@ -1,0 +1,19 @@
+/* @media (min-width: 992px) and (max-width: 1199px) {
+
+} */
+
+@media screen and (min-width: 992px) {
+    .deal-box-image {
+        height: 211px;
+      }
+      .stry-details .story-list-img {
+        height: auto;
+    }
+    .desktop-view{
+      display: block;
+    }
+    .story-list-img {
+      height: 160px;
+      margin: 0 0px 15px 0px;
+  }
+  }

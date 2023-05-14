@@ -1,0 +1,25 @@
+{
+  "short_name": "JGL",
+  "name": "JGL Customer",
+  "icons": [
+    {
+      "src": "/images/1024logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/192logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/512logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#fff",
+  "background_color": "#ed2100"
+}
