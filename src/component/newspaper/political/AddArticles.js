@@ -70,7 +70,7 @@ const AddArticles = () => {
                         <option>4</option>
                     </select>
                 </div>
-                <div className='form-group'>
+                <div className='form-group mt-3 mb-3'>
                     <ul className='acInflex'>
                         <li>
                             <input type='radio' id="local" name='place' value="local" checked={place == 'local'} onChange={handleChangePlace}  />
@@ -102,7 +102,7 @@ const AddArticles = () => {
                     <label>Description</label>
                     <textarea className='form-control' placeholder='Text Here'>  </textarea>
                 </div>
-                <div className='form-group'>
+                <div className='form-group mb-5'>
                 <label>Choose Image</label>
                     <input type='file' className='form-control'/>
                 </div>

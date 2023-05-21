@@ -2,10 +2,11 @@ import React from "react";
 import AfterLoginTopbar from "../header/AfterLoginTopbar";
 import cartIcon from "../../../image/headingicon/Bag_fill.png";
 import dealImage from "../../../image/deal-image.png";
+import BottomTabCustomer from "../header/BottomTabCustomer";
 
 const CheckOut = () => {
   return (
-    <>
+    <div className='customer-layout'>
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={cartIcon}/> Check Out</div>
@@ -52,7 +53,7 @@ const CheckOut = () => {
                         <input type="text" className="form-control" placeholder="Country" />
                       </div>
                   </div>
-                  <div className="col-lg-4 col-12">
+                  <div className="col-lg-4 col-12 mt-4">
                       <div className="form-group">
                         <h3>Credit Card Information</h3>
                       </div>
@@ -75,7 +76,7 @@ const CheckOut = () => {
                         <input type="text" className="form-control" placeholder="date" />
                       </div>
                   </div>
-                  <div className="col-lg-4 col-12">
+                  <div className="col-lg-4 col-12 mb-4">
                       <div className="form-group">
                         <label>CVV</label>
                         <input type="text" className="form-control" placeholder="CVV" />
@@ -91,7 +92,8 @@ const CheckOut = () => {
            
         </div>
       </div>
-    </>
+      <BottomTabCustomer/>
+    </div>
   )
 }
 

@@ -1,10 +1,11 @@
 import React from "react";
 import AfterLoginTopbar from "../../businessowner/header/AfterLoginTopbar";
 import dealIcon from "../../../image/headingicon/message-3-fill.svg";
+import BottomNavigation from '../header/BottomNavigation'
 
 const ContactUs = () => {
   return (
-    <>
+    <div className='ownerLayout'>
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> Contact Us</div>
@@ -13,7 +14,7 @@ const ContactUs = () => {
       <div className="container">
             <div className="contact-us">
                 <h2>Get In Touch</h2>
-                <div className="row">
+                <div className="row mb-4">
                     <div className="col-lg-4 col-12">
                         <div className="form-group">
                             <label>First Name</label>
@@ -59,7 +60,8 @@ const ContactUs = () => {
             </div>
       </div>
     </div>
-  </>
+    <BottomNavigation/>
+  </div>
   )
 }
 

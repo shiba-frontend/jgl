@@ -72,6 +72,16 @@ import UpdateProfileNews from "./component/newspaper/profile/UpdateProfile";
 import UpdateProfileBusiness from "./component/businessowner/profile/UpdateProfile";
 import DeleteAccount from "./component/customer/profile/DeleteAccount";
 import DeleteAccountBusiness from "./component/businessowner/profile/DeleteAccount";
+import AddBusiness from "./component/businessowner/businesslisting/AddBusiness";
+import DealsListing from "./component/businessowner/Deals/DealsListing";
+import BusinessListing from "./component/businessowner/businesslisting/BusinessListing";
+import DeleteListing from "./component/businessowner/businesslisting/DeleteListing";
+import ReviewList from "./component/businessowner/profile/ReviewList";
+import AddDeal from "./component/businessowner/Deals/AddDeal";
+import Analytics from "./component/businessowner/analytics/Analytics";
+import CustomerList from "./component/businessowner/dashboard/CustomerList";
+import MyOrder from "./component/businessowner/order/MyOrder";
+import NotFound from "./component/NotFound";
 
 //End Profile
 
@@ -92,7 +102,8 @@ function App() {
       
     }
       <Routes>
-            <Route path="/" element={<SignUp />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Login />} />
             <Route path="/login-customer" element={<Login />} />
             <Route path="/login-newspaper" element={<LoginNews />} />
             <Route path="/sign-up" element={<SignUp />} />
@@ -143,7 +154,17 @@ function App() {
             <Route path="/news-analytics" element={<NewsAnalyticsList />} />
             <Route path="/political-news" element={<PoliticalNewsArticle />} />
             <Route path="/add-articles" element={<AddArticles />} />
+            {/* Business Owner */}
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-business" element={<AddBusiness />} />
+            <Route path="/deal-listing" element={<DealsListing />} />
+            <Route path="/business-listing" element={<BusinessListing />} />
+            <Route path="/delete-listing" element={<DeleteListing />} />
+            <Route path="/add-deal" element={<AddDeal />} />
+            <Route path="/review-list" element={<ReviewList />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/customer-list" element={<CustomerList />} />
+            <Route path="/my-order" element={<MyOrder />} />
       </Routes>
       </BrowserRouter>
     </div>

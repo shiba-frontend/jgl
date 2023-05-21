@@ -26,14 +26,14 @@ const ResetPassword = () => {
                   placeholder="Password"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group mb-4">
                 <input
                   type="password"
                   className="form-control"
                   placeholder="Confirm Password"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group mb-4">
                 <button type="button" className="themeBtn">
                   Reset
                 </button>

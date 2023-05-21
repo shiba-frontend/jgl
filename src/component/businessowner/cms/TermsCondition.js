@@ -1,10 +1,11 @@
 import React from "react";
 import AfterLoginTopbar from "../../businessowner/header/AfterLoginTopbar";
 import dealIcon from "../../../image/headingicon/reserved-fill.svg";
+import BottomNavigation from '../header/BottomNavigation'
 
 const TermsCondition = () => {
   return (
-    <>
+    <div className='ownerLayout'>
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> Terms and Condition</div>
@@ -49,7 +50,8 @@ Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque
         </ul>
       </div>
     </div>
-  </>
+    <BottomNavigation/>
+  </div>
   )
 }
 

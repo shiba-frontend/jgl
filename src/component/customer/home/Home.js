@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import story from "../../../image/story-news.png";
 import adv from "../../../image/advertise.png";
 import cart from "../../../image/cart-icon.png";
+import BottomTabCustomer from '../header/BottomTabCustomer';
 
 const Home = () => {
   const [show, setShow] = useState(false);
@@ -59,7 +60,7 @@ const Home = () => {
 
 
   return (
-    <>
+    <div className='customer-layout'>
     <AfterLoginTopbar
       />
       <div className='header-info'>
@@ -125,6 +126,8 @@ const Home = () => {
        
 
     </div>
+    <BottomTabCustomer/>
+
     <Modal show={show} onHide={handleClose} centered animation={true} className='advertisement-slider'>
         
         <Modal.Body >
@@ -150,7 +153,7 @@ const Home = () => {
         </Modal.Body>
        
       </Modal>
-    </>
+    </div>
     
   )
 }

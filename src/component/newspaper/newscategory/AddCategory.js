@@ -40,7 +40,7 @@ const AddCategory = () => {
                         <option>4</option>
                     </select>
                 </div>
-                <div className='form-group'>
+                <div className='form-group mb-4 mt-4'>
                     <ul className='acInflex'>
                         <li>
                             <input type='radio' id="active" name='status' value="1" checked={status == '1'} onChange={handleChange}  />

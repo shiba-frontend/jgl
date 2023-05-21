@@ -1,10 +1,11 @@
 import React from "react";
 import AfterLoginTopbar from "../../customer/header/AfterLoginTopbar";
 import dealIcon from "../../../image/headingicon/message-3-fill.svg";
+import BottomTabCustomer from "../header/BottomTabCustomer";
 
 const ContactUs = () => {
   return (
-    <>
+    <div className='customer-layout'>
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> Contact Us</div>
@@ -44,7 +45,7 @@ const ContactUs = () => {
                             <input type="text" className="form-control" placeholder="Enter Here" />
                         </div>
                     </div>
-                    <div className="col-lg-4 col-12">
+                    <div className="col-lg-4 col-12 mb-4">
                         <div className="form-group">
                             <label>Message</label>
                             <textarea placeholder="Enter message here" className="form-control"></textarea>
@@ -59,7 +60,8 @@ const ContactUs = () => {
             </div>
       </div>
     </div>
-  </>
+    <BottomTabCustomer/>
+  </div>
   )
 }
 

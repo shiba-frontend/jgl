@@ -1,10 +1,11 @@
 import React from "react";
 import AfterLoginTopbar from "../../customer/header/AfterLoginTopbar";
 import dealIcon from "../../../image/headingicon/Folder_file_fill.svg";
+import BottomTabCustomer from "../header/BottomTabCustomer";
 
 const PrivacyPolicy = () => {
   return (
-    <>
+    <div className='customer-layout'>
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={dealIcon}/> Privacy Policy</div>
@@ -39,7 +40,8 @@ Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque
           </ul>
         </div>
       </div>
-    </>
+      <BottomTabCustomer/>
+    </div>
   );
 };
 

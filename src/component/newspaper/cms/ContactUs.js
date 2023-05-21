@@ -13,7 +13,7 @@ const ContactUs = () => {
       <div className="container">
             <div className="contact-us">
                 <h2>Get In Touch</h2>
-                <div className="row">
+                <div className="row mb-4">
                     <div className="col-lg-4 col-12">
                         <div className="form-group">
                             <label>First Name</label>

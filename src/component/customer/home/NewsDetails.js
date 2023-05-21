@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import PageMenu from '../header/PageMenu'
 import story from "../../../image/story-news.png";
+import BottomTabCustomer from '../header/BottomTabCustomer';
 
 const NewsDetails = () => {
     const NewsId = useSelector((state) => state.newsdetailsId);
     console.log(NewsId)
 
   return (
-    <>
+    <div className='customer-layout'>
     <AfterLoginTopbar
       />
       <div className='header-info'>
@@ -57,7 +58,8 @@ const NewsDetails = () => {
        
 
     </div>
-    </>
+    <BottomTabCustomer/>
+    </div>
   )
 }
 

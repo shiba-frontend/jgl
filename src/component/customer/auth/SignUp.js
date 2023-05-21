@@ -55,7 +55,7 @@ const SignUp = () => {
             <div className='row'>
             <div className='col-12 col-lg-12 col-md-12'>
                        
-                       <div className='form-group mt-4'>
+                       <div className='form-group mt-4 mb-4'>
                           <button className='themeBtn'>Signup</button>
                        </div> 
                            </div>

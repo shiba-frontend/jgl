@@ -95,7 +95,7 @@ const NavMenu = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/business-listing"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width
@@ -112,7 +112,7 @@ const NavMenu = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/deal-listing"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width
@@ -130,7 +130,7 @@ const NavMenu = () => {
           
           <li>
             <NavLink
-              to="/dashboard"
+              to="/review-list"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width
@@ -147,7 +147,7 @@ const NavMenu = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/customer-list"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width
@@ -164,7 +164,7 @@ const NavMenu = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/my-order"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width
@@ -181,7 +181,7 @@ const NavMenu = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/analytics"
               className={({ isActive }) => (isActive ? "active" : undefined)}
               onClick={() =>
                 width

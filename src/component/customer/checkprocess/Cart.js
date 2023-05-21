@@ -4,6 +4,7 @@ import cartIcon from "../../../image/headingicon/Bag_fill.png";
 import dealImage from "../../../image/deal-image.png";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { NavLink } from "react-router-dom";
+import BottomTabCustomer from "../header/BottomTabCustomer";
 
 const Cart = () => {
 
@@ -36,7 +37,7 @@ const cartList = [
 
 
   return (
-    <>
+    <div className='customer-layout'>
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={cartIcon}/> Cart</div>
@@ -94,7 +95,8 @@ const cartList = [
 
         </div>
       </div>
-    </>
+      <BottomTabCustomer/>
+    </div>
   )
 }
 

@@ -1,10 +1,11 @@
 import React from "react";
 import AfterLoginTopbar from "../../businessowner/header/AfterLoginTopbar";
 import dealIcon from "../../../image/headingicon/Folder_file_fill.svg";
+import BottomNavigation from '../header/BottomNavigation'
 
 const PrivacyPolicy = () => {
   return (
-    <>
+    <div className='ownerLayout'>
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={dealIcon}/> Privacy Policy</div>
@@ -39,7 +40,8 @@ Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque
           </ul>
         </div>
       </div>
-    </>
+      <BottomNavigation/>
+    </div>
   );
 };
 

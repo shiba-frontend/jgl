@@ -3,10 +3,11 @@ import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import { NavLink } from 'react-router-dom'
 import deal from "../../../image/deal-image.png";
 import dealIcon from "../../../image/headingicon/bank-card-fill 1.svg";
+import BottomTabCustomer from '../header/BottomTabCustomer';
 
 const Business = () => {
   return (
-    <>
+    <div className='customer-layout'>
     <AfterLoginTopbar/>
     <div className="header-info">
         <div className="container"><img src={dealIcon}/> Business</div>
@@ -108,7 +109,8 @@ const Business = () => {
             </div>
         </div>
     </div>
-    </>
+    <BottomTabCustomer/>
+    </div>
   )
 }
 

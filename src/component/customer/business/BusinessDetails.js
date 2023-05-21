@@ -7,6 +7,7 @@ import adv from "../../../image/slider.png";
 import { NavLink } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import BottomTabCustomer from '../header/BottomTabCustomer';
 
 const BusinessDetails = () => {
   const [key, setKey] = useState('home');
@@ -48,7 +49,7 @@ const BusinessDetails = () => {
 
 
   return (
-    <>
+    <div className='customer-layout'>
     <AfterLoginTopbar
       />
       <div className='header-info'>
@@ -158,7 +159,8 @@ const BusinessDetails = () => {
        
 
     </div>
-    </>
+    <BottomTabCustomer/>
+    </div>
   )
 }
 

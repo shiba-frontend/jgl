@@ -27,7 +27,7 @@ const VerifyOtp = () =>{
             <div className='comon-white'>
             <h3>Forget Password?</h3>
       
-            <div className='form-group'>
+            <div className='form-group mb-5'>
               <input type="email" className='form-control' placeholder='Enter your Email'/>
             </div>
             <div className='form-group'>
