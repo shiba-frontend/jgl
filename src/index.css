@@ -1498,3 +1498,44 @@ a.theme-color {
 .not-found img {
   width: 200px;
 }
+
+.loaaderIcon {
+  animation: rotation infinite .5s linear;
+}
+
+@keyframes rotation {
+  from {
+      transform: rotate(0deg);
+  }
+
+  to {
+      transform: rotate(360deg);
+  }
+}
+
+.CustomLoader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  z-index: 99999;
+}
+.CustomLoaderInner {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 11px;
+  border-radius: 2px;
+  width: 88%;
+}
+
+.CustomLoaderInner h3 {
+  font-size: 15px;
+  margin: 0;
+}

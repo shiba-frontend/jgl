@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink , useNavigate} from 'react-router-dom'
 import logo from "../../../image/logo.png";
 import loginVector from "../../../image/login-vector.png";
+import axios, * as others from 'axios';
+import {ApiConnection, CommonapiBody} from '../../../common/ApiConnection';
+import CustomLoader from '../../../common/CustomLoader';
 
 
 const Login = () => {
@@ -10,6 +13,8 @@ const [password, setpassword] = useState('')
 const [usernamechecking, setusernamechecking] = useState(false)
 
 let navigate = useNavigate();
+let obj = CommonapiBody();
+
 
 const InputHandling = (e)=>{
     var U_name = e.target.value
@@ -28,12 +33,71 @@ const InputHandling = (e)=>{
     }
 }
 
-const LoginHandler = () =>{
-    navigate("/home")
+useEffect(()=>{
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+      "key": "facb6e0a6fcbe200dca2fb60dec75be7",
+      "source": "WEB"
+    });
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    fetch("https://itiffyconsultants.com/JUST-GO-LIVE/api/faq", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+},[])
+
+
+
+const LoginHandler = async () =>{
+
+
+    var body = {
+        "key":obj.key,
+        "source":obj.source,
+        "email": username,
+        "password": password
+    }
+
+   
+
+
+
+    console.log(body)
+
+    // try{
+    //     const response = await ApiConnection.post("/signin", body)
+    //     console.log("response", response);
+    // } catch(error){
+        
+    // }
+
+
+
+
+    // navigate("/home")
+
+
+
+
+
+
+
+
 }
 
 
   return (
+    <>
+    {/* <CustomLoader/> */}
     <div className='comon-bg'>
         <div className='container'>
         <div className='comon-logo'>
@@ -82,6 +146,7 @@ const LoginHandler = () =>{
         
          </div>
     </div>
+    </>
   )
 }
 
