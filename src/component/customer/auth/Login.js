@@ -3,7 +3,7 @@ import { NavLink , useNavigate} from 'react-router-dom'
 import logo from "../../../image/logo.png";
 import loginVector from "../../../image/login-vector.png";
 import axios, * as others from 'axios';
-import {ApiConnection, CommonapiBody} from '../../../common/ApiConnection';
+
 import CustomLoader from '../../../common/CustomLoader';
 
 
@@ -13,7 +13,7 @@ const [password, setpassword] = useState('')
 const [usernamechecking, setusernamechecking] = useState(false)
 
 let navigate = useNavigate();
-let obj = CommonapiBody();
+
 
 
 const InputHandling = (e)=>{
@@ -44,7 +44,7 @@ useEffect(()=>{
     
     var requestOptions = {
       method: 'POST',
-      headers: myHeaders,
+      //headers: myHeaders,
       body: raw,
       redirect: 'follow'
     };
@@ -59,19 +59,6 @@ useEffect(()=>{
 
 const LoginHandler = async () =>{
 
-
-    var body = {
-        "key":obj.key,
-        "source":obj.source,
-        "email": username,
-        "password": password
-    }
-
-   
-
-
-
-    console.log(body)
 
     // try{
     //     const response = await ApiConnection.post("/signin", body)
