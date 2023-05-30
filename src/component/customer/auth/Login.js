@@ -34,25 +34,27 @@ const InputHandling = (e)=>{
 }
 
 useEffect(()=>{
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    
-    var raw = JSON.stringify({
-      "key": "facb6e0a6fcbe200dca2fb60dec75be7",
-      "source": "WEB"
-    });
-    
-    var requestOptions = {
-      method: 'POST',
-      //headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-    
-    fetch("https://itiffyconsultants.com/JUST-GO-LIVE/api/faq", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+
+let data = JSON.stringify({
+  "key": "facb6e0a6fcbe200dca2fb60dec75be7",
+  "source": "WEB"
+});
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: 'https://itiffyconsultants.com/JUST-GO-LIVE/api/faq',
+ 
+  data : data
+};
+
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+})
+.catch((error) => {
+  console.log(error);
+});
 },[])
 
 
