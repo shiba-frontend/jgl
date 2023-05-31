@@ -31,13 +31,22 @@ const baseURL = "https://itiffyconsultants.com/JUST-GO-LIVE/api";
 // })
 
 
-export async function postApi(url, payload, header){
-    console.log(baseURL + "/" + url);
+// export async function postApi(url, payload, header){
+//     console.log(baseURL + "/" + url);
 
-    const response = await axios.post(`${baseURL}/${url}`, payload, {});
+//     const response = await axios.post(`${baseURL}/${url}`, payload, {
+//         headers: {
 
-    return response
+//             Accept: header.Accept,
 
-}
+//             'Content-Type': header.contenttype,
+
+//             Authorization: `Bearer ${header.Authorization}`,
+//         },
+//     });
+
+//     return response
+
+// }
 
 
