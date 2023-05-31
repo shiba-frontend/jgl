@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import logo from "../../../image/logo.png";
 import { toast } from 'react-toastify';
-// import {postApi} from '../../../common/ApiConnection';
+import ApiConnection from '../../../common/ApiConnection';
 import CustomLoader from '../../../common/CustomLoader';
 import axios, * as others from 'axios';
-import { postApi } from '../../../common/ApiConnection';
+//import { postApi } from '../../../common/ApiConnection';
 
 
 
@@ -23,85 +23,80 @@ const [confirmpassword, setconfirmpassword] = useState("");
 const SubmitHandler = async ()=>{
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-   if (reg.test(email) === false) {
-    toast.error('Email should be proper!');
-    } else if (phone == ''){
-        toast.error('Phone is required');
-    } else if (password == '' ){
-        toast.error('Password is required');
-    } else if (confirmpassword == '' ){
-        toast.error('Confirm Password is required');
-    } else if (confirmpassword !== password){
-        toast.error('Confirm Password do not same as password');
-    }
+//    if (reg.test(email) === false) {
+//     toast.error('Email should be proper!');
+//     } else if (phone == ''){
+//         toast.error('Phone is required');
+//     } else if (password == '' ){
+//         toast.error('Password is required');
+//     } else if (confirmpassword == '' ){
+//         toast.error('Confirm Password is required');
+//     } else if (confirmpassword !== password){
+//         toast.error('Confirm Password do not same as password');
+//     }
 
-    else {
-        let body = {
-            "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-            "source":"WEB",
-            "role_id":"2",
-            "first_name":fname,
-            "last_name":lname,
-            "email_id":email,
-            "contact_no":phone,
-            "password":password,
-            "confirm_password":confirmpassword,
-            "address":address,
-            "city":"",
-            "state":"",
-            "country":"",
-            "zipcode":"",
-            "latitude":"",
-            "longitude":""
-        }
-        try{
-            const response = await postApi("signup", body)
-            console.log(response);
-        } catch{
+    // else {
+        // let body = {
+        //     "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        //     "source":"WEB",
+        //     "role_id":"2",
+        //     "first_name":fname,
+        //     "last_name":lname,
+        //     "email_id":email,
+        //     "contact_no":phone,
+        //     "password":password,
+        //     "confirm_password":confirmpassword,
+        //     "address":address,
+        //     "city":"",
+        //     "state":"",
+        //     "country":"",
+        //     "zipcode":"",
+        //     "latitude":"",
+        //     "longitude":""
+        // }
+        // try{
+        //     const response = await ApiConnection.post("/signup", body)
+        //     console.log(response);
+        // } catch{
 
-        }
+        // }
        
+    // }
+
+
+
+let body = {
+  "key": "facb6e0a6fcbe200dca2fb60dec75be7",
+  "source": "WEB",
+  "role_id": "2",
+  "first_name": "shibu",
+  "last_name": "Sankar",
+  "email_id": "test1@yopmail.com",
+  "contact_no": "90513718",
+  "password": "123456",
+  "confirm_password": "123456",
+  "address": "test",
+  "city": "Bowie",
+  "state": "MD",
+  "country": "US",
+  "zipcode": "20715",
+  "latitude": "38.9760088",
+  "longitude": "-76.74705809999999"
+};
+
+await axios.post("/signup", JSON.stringify(body))
+.then((response) => {
+  console.log(response.data);
+})
+.catch((error) => {
+    console.log(error.response)
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
     }
-
-
-
-// let data = JSON.stringify({
-//   "key": "facb6e0a6fcbe200dca2fb60dec75be7",
-//   "source": "WEB",
-//   "role_id": "2",
-//   "first_name": "shibu",
-//   "last_name": "Sankar",
-//   "email_id": "test1@yopmail.com",
-//   "contact_no": "90513718",
-//   "password": "123456",
-//   "confirm_password": "123456",
-//   "address": "test",
-//   "city": "Bowie",
-//   "state": "MD",
-//   "country": "US",
-//   "zipcode": "20715",
-//   "latitude": "38.9760088",
-//   "longitude": "-76.74705809999999"
-// });
-
-// let config = {
-//   method: 'post',
-//   maxBodyLength: Infinity,
-//   url: 'https://itiffyconsultants.com/JUST-GO-LIVE/api/signup',
-//   headers: { 
-//     'Content-Type': 'application/json', 
-//     'Cookie': 'ci_session=93bd7cfd5bd7dc67a9145d009a90cfeb9eaebbed'
-//   },
-//   data : data
-// };
-
-// axios.request(config)
-// .then((response) => {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch((error) => {
-//   console.log(error);
-// });
+    if(error.response.status === 401){
+        
+    } 
+});
 
    
 }
