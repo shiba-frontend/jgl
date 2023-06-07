@@ -73,9 +73,11 @@ const AddBusiness = () => {
 
   return (
     <div className='ownerLayout'>
+         <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={addBusiness} alt="owner"/> Add Your Business Listing</div>
+    </div>
     </div>
     <div className="comon-layout">
       <div className="container">
@@ -108,7 +110,7 @@ const AddBusiness = () => {
                     <div className='form-group'>
                     <label>Select Business List</label>
                         <div className='custom-drodown'>
-                            <button onClick={DropdownHandle}>Select  Category ({selectData.length}) <span><i class="fa-sharp fa-solid fa-angle-down"></i></span></button>
+                            <button onClick={DropdownHandle}>Select  Category ({selectData.length}) <span><i className="fa-sharp fa-solid fa-angle-down"></i></span></button>
                            <div className={`custom-dropdown-box ${show ? "active" : ''}`}>
                                 <ul>
                                     {dropdownData.map((item, index)=>{

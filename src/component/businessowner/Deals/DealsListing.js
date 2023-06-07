@@ -9,9 +9,11 @@ import { NavLink } from 'react-router-dom';
 const DealsListing = () => {
   return (
     <div className='ownerLayout'>
+        <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={business} alt="owner"/> My Deals (You can create multiple deals)</div>
+    </div>
     </div>
     <div className="comon-layout deal-listing">
       <div className="container">

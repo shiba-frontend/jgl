@@ -8,9 +8,11 @@ import BottomTabCustomer from '../header/BottomTabCustomer';
 const MyDeal = () => {
   return (
     <div className='customer-layout'>
+         <div className="top-f-header">
     <AfterLoginTopbar/>
     <div className="header-info">
         <div className="container"><img src={dealIcon}/> My Deals</div>
+      </div>
       </div>
     <div className='comon-layout'>
          <div className='container'>

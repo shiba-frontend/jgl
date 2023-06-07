@@ -1,15 +1,29 @@
-import React from "react";
+import React,{useState} from "react";
 import AfterLoginTopbar from "../header/AfterLoginTopbar";
 import cartIcon from "../../../image/headingicon/Bag_fill.png";
 import dealImage from "../../../image/deal-image.png";
 import BottomTabCustomer from "../header/BottomTabCustomer";
+import { NavLink } from "react-router-dom";
 
 const CheckOut = () => {
+  const [checked, setChecked] = useState(false)
+  const [checked1, setChecked1] = useState(false)
+
+  const handleChangecheckbox = () => {
+    setChecked(!checked);
+  };
+
+  const handleChangecheckbox1 = () => {
+    setChecked1(!checked1);
+  };
+
   return (
     <div className='customer-layout'>
+       <div className="top-f-header">
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={cartIcon}/> Check Out</div>
+      </div>
       </div>
       <div className="comon-layout">
         <div className="container">
@@ -82,9 +96,28 @@ const CheckOut = () => {
                         <input type="text" className="form-control" placeholder="CVV" />
                       </div>
                   </div>
+                  <div className='col-lg-4'>
+                    <div className='form-group'>
+                        <div className="voicedeal">
+                            <input type="checkbox" id="voice" checked={checked}
+                            onChange={handleChangecheckbox}   />
+                            <label htmlFor="voice">Set as default payment method</label>
+                        </div>
+                    </div>
+                </div>
+                <div className='col-lg-4'>
+                    <div className='form-group'>
+                        <div className="voicedeal">
+                            <input type="checkbox" id="voice1" checked={checked1}
+                            onChange={handleChangecheckbox1}   />
+                            <label htmlFor="voice1">By clicking this checkbox you agree to our </label>
+                        </div>
+                        <NavLink to="/terms-condition" style={{color:'red',marginLeft:'25px',marginTop:"5px"}}>Terms & Conditions</NavLink>
+                    </div>
+                </div>
                   <div className="col-lg-4 col-12">
-                      <div className="form-group">
-                      <button className='themeBtn' to="/check-out">Pay Now</button>
+                      <div className="form-group mt-3">
+                      <button className='themeBtn'>Pay Now</button>
                       </div>
                   </div>
               </div>

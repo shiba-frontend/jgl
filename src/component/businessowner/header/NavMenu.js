@@ -18,6 +18,8 @@ import password from "../../../image/icon/password.svg";
 import account from "../../../image/icon/delete-accoint.svg";
 import analytics from "../../../image/icon/Chart_fill.svg";
 import signout from "../../../image/icon/sign_out.svg";
+import logo from "../../../image/logo.png";
+import location from "../../../image/location-outline.png";
 
 const NavMenu = () => {
 
@@ -57,15 +59,12 @@ const NavMenu = () => {
 
   return (
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
+       <div className="left-panel-sidebar">
       <div className="panel-logo">
-        {/* <div className='profile-pic'>
-            <img src="../images/profile-img.png" alt="profile" id="editImg" />
-            <div className='file-upload'>
-                <input type="file" accept="image/*" onChange={HandleImage} />
-                <i class="fa-solid fa-camera"></i>
-            </div>
-          </div>
-          <h5>John Miller</h5> */}
+      <div className="sidebar-logo">
+    <img src={logo}  />
+    <span> <img src={location}/> Bowie, MD, USA</span>
+    </div>
         <button
           className="close-btn"
           onClick={() => dispatch({ type: "setbusiness", sidebarShowbusiness: !sidebarShowbusiness })}
@@ -369,6 +368,7 @@ const NavMenu = () => {
        
         </ul>
       </div>
+    </div>
     </div>
   );
 };

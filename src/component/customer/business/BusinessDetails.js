@@ -50,13 +50,14 @@ const BusinessDetails = () => {
 
   return (
     <div className='customer-layout'>
+       <div className="top-f-header">
     <AfterLoginTopbar
       />
       <div className='header-info'>
         <div className='container'>
           Business Name
         </div>
-    
+    </div>
       </div>
       <div className='comon-layout'>
       <div className='container'>
@@ -123,7 +124,7 @@ const BusinessDetails = () => {
                       </table>
                       <ul className='s-btn'>
                         <li>
-                          <button className='themeBtn'>Submit A Review</button>
+                          <button className='themeBtn'>Add A Review</button>
                         </li>
                         <li>
                             <NavLink to="/check-out" className="themeBtnOutline">Check In</NavLink>

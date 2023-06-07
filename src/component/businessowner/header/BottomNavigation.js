@@ -1,10 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import widget from '../../../image/Widget.png'
+import widget from '../../../image/Widget-1.png'
 import file from '../../../image/File_dock_light.png'
 import dash from '../../../image/dash-icon.png'
 import Star from '../../../image/Star.png'
 import money from '../../../image/Money.png'
+import analytics from "../../../image/icon/Chart_fill.svg";
 
 const BottomNavigation = () => {
   return (
@@ -23,7 +24,7 @@ const BottomNavigation = () => {
             </li>
             <li className='bottom-d'>
                 <NavLink to="/analytics">
-                    <img src={dash} alt="dash" />
+                    <img src={analytics} alt="dash" />
                 </NavLink>
             </li>
             <li>

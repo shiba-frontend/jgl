@@ -1,13 +1,17 @@
-import React, { useState, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../../image/logo.png";
-import otpVector from "../../../image/otp-vector.png";
+import React, { useState, useRef,useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../../image/logo.png";
+import otpVector from "../../image/otp-vector.png";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import CustomLoader from '../../common/CustomLoader';
 
 const Otp = () => {
   const [otp1, setotp1] = useState("");
   const [otp2, setotp2] = useState("");
   const [otp3, setotp3] = useState("");
   const [otp4, setotp4] = useState("");
+  const [loading, setloading] = useState(false)
 
   const textInput1 = useRef(null);
   const textInput2 = useRef(null);
@@ -16,12 +20,78 @@ const Otp = () => {
 
   const [counter, setCounter] = useState(59);
   let navigate = useNavigate();
+  const userId = useLocation();
+  var UserId = userId.state && userId.state.userId
 
-  const VerifyHandler = () => {
-    navigate("/reset-password", { replace: true });
-  };
+
+  const VerifyHandler = async () => {
+ 
+      if(otp1 === '' || otp2 === '' || otp3 === '' || otp4 === '' ){
+          toast.error("Field should be mandatory"); 
+      } else {
+      setloading(true)
+      let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "user_id":UserId&&UserId,
+        "inputOtp":otp1+otp2+otp3+otp4
+    }
+  
+    await axios.post("/verify-otp", JSON.stringify(body))
+    .then((response) => {
+      setloading(false)
+    if(response.data.success){
+      toast.success(response.data.message);
+      setTimeout(()=>{
+        navigate('/reset-password',{state:{userId:response.data.data.user_id}});
+      },3000)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+  });
+      }
+     
+    };
+
+    const ResendHandler = async () =>{
+
+      let body = {
+          "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+          "source":"WEB",
+          "user_id":UserId
+      }
+
+      await axios.post("/resend-otp", JSON.stringify(body))
+      .then((response) => {
+        if(response.data.success){
+          toast.success(response.data.message);
+          setCounter(59)
+        }
+      })
+      .catch((error) => {
+          if(error.response.status === 404){
+              toast.error(error.response.data.message);
+          }
+      });
+
+
+    }
+useEffect(() => {
+const timer =
+counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+return () => clearInterval(timer);
+}, [counter]);
+
+
 
   return (
+<>
+{loading && <CustomLoader/>}
+
     <div className="comon-bg">
       <div className="container">
         <div className="comon-logo">
@@ -56,9 +126,9 @@ const Otp = () => {
                         setotp1(e.target.value);
                       }}
                       onKeyUp={(e) => {
-                        if (otp1 != "") {
+                        if (otp1 !== "") {
                           textInput2.current.focus();
-                        } else if (otp1 == "") {
+                        } else if (otp1 === "") {
                           textInput1.current.focus();
                         }
                       }}
@@ -81,9 +151,9 @@ const Otp = () => {
                         setotp2(e.target.value);
                       }}
                       onKeyUp={(e) => {
-                        if (otp2 != "") {
+                        if (otp2 !== "") {
                           textInput3.current.focus();
-                        } else if (otp2 == "") {
+                        } else if (otp2 === "") {
                           textInput1.current.focus();
                         }
                       }}
@@ -106,9 +176,9 @@ const Otp = () => {
                         setotp3(e.target.value);
                       }}
                       onKeyUp={(e) => {
-                        if (otp3 != "") {
+                        if (otp3 !== "") {
                           textInput4.current.focus();
-                        } else if (otp3 == "") {
+                        } else if (otp3 === "") {
                           textInput2.current.focus();
                         }
                       }}
@@ -131,9 +201,9 @@ const Otp = () => {
                         setotp4(e.target.value);
                       }}
                       onKeyUp={(e) => {
-                        if (otp4 != "") {
+                        if (otp4 !== "") {
                           textInput4.current.focus();
-                        } else if (otp4 == "") {
+                        } else if (otp4 === "") {
                           textInput3.current.focus();
                         }
                       }}
@@ -152,8 +222,14 @@ const Otp = () => {
               </div>
 
               <div className="form-group">
+              <h6 className="counter-txt">00:{counter}</h6>
                 <h5>
-                  Did not receive the code? <button>Resend OTP.</button>
+                  Did not receive the code? 
+                  {counter === 0 ? (
+                  <button onClick={ResendHandler}>Resend OTP.</button>
+                ) : null}
+                  
+                  
                 </h5>
               </div>
             </div>
@@ -161,6 +237,7 @@ const Otp = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

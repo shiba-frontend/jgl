@@ -5,9 +5,12 @@ import dealIcon from "../../../image/headingicon/Folder_file_fill.svg";
 const About = () => {
   return (
     <>
+    <div className='newspaper-layout'>
+       <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> About Us</div>
+    </div>
     </div>
     <div className="comon-layout cms-page">
       <div className="container">
@@ -27,7 +30,7 @@ const About = () => {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lorem dui. 
 Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque vehicula. 
         </p>
-        
+        </div>
       </div>
     </div>
   </>

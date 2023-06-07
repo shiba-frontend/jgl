@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import story from "../../../image/story-news.png";
+import story from "../../../image/maxresdefault.jpg";
 import adv from "../../../image/advertise.png";
 import cart from "../../../image/cart-icon.png";
 import BottomTabCustomer from '../header/BottomTabCustomer';
@@ -35,7 +35,7 @@ const Home = () => {
       if(indexed == total_length){
         setTimeout(()=>{
           dispatch({ type: "setid", newsdetailsId: "3" })
-          navigate("/news-details", { replace: true });
+          navigate("/news-details/2", { replace: true });
         },1000)
       }
   
@@ -58,9 +58,31 @@ const Home = () => {
     },
   ]
 
+  const categoryL = [
+    {
+      id:1,
+      image:story,
+      title:"  The standard Lorem Ipsum passage, used since the 1500s",
+      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+    },
+    {
+      id:2,
+      image:story,
+      title:"  The standard Lorem Ipsum passage, used since the 1500s",
+      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+    },
+    {
+      id:3,
+      image:story,
+      title:"  The standard Lorem Ipsum passage, used since the 1500s",
+      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+    }
+  ]
+
 
   return (
     <div className='customer-layout'>
+       <div className="top-f-header">
     <AfterLoginTopbar
       />
       <div className='header-info'>
@@ -69,6 +91,7 @@ const Home = () => {
         </div>
     
       </div>
+      </div>
       <div className='comon-layout'>
       <div className='container'>
       <PageMenu/>
@@ -76,47 +99,25 @@ const Home = () => {
         <div className='top-stories'>
             <h1>Top Stories For The Day:</h1>
             <div className='row'>
-              <div className='col-lg-4 col-12'>
-                <div className='story-list'>
-                  <div className='story-list-img'>
-                      <img src={story}/>
+              {categoryL.map((item,index)=>{
+                return (
+                  <div className='col-lg-4 col-12'>
+                      <div className='story-list'>
+                        <div className='story-list-img'>
+                            <img src={item.image}/>
+                          </div>
+                          <div className='story-list-info'>
+                            <Button  onClick={handleShow}>
+                              {item.title}
+                            </Button>
+                            <p>{item.description}</p>
+                          </div>
+                      </div>
                     </div>
-                    <div className='story-list-info'>
-                      <Button  onClick={handleShow}>
-                        The standard Lorem Ipsum passage, used since the 1500s
-                      </Button>
-                      <p>Contrary to popular belief, Lorem Ipsum is not simply random text. 
-                        It has roots in a piece of classical Latin literature from 45 BC, 
-                        making it over 2000 years old.</p>
-                    </div>
-                </div>
-              </div>
-              <div className='col-lg-4 col-12'>
-                <div className='story-list'>
-                  
-                    <div className='story-list-info'>
-                      <Button  onClick={handleShow}>
-                        The standard Lorem Ipsum passage, used since the 1500s
-                      </Button>
-                      <p>Contrary to popular belief, Lorem Ipsum is not simply random text. 
-                        It has roots in a piece of classical Latin literature from 45 BC, 
-                        making it over 2000 years old.</p>
-                    </div>
-                </div>
-              </div>
-              <div className='col-lg-4 col-12'>
-                <div className='story-list'>
-                  
-                    <div className='story-list-info'>
-                      <Button  onClick={handleShow}>
-                        The standard Lorem Ipsum passage, used since the 1500s
-                      </Button>
-                      <p>Contrary to popular belief, Lorem Ipsum is not simply random text. 
-                        It has roots in a piece of classical Latin literature from 45 BC, 
-                        making it over 2000 years old.</p>
-                    </div>
-                </div>
-              </div>
+                )
+              })}
+              
+            
             </div>
          
         </div>

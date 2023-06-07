@@ -12,9 +12,11 @@ import { NavLink } from 'react-router-dom';
 const Analytics = () => {
   return (
     <div className='ownerLayout'>
+        <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={analytics} alt="owner"/> Analytics</div>
+    </div>
     </div>
     <div className="comon-layout">
       <div className="container">
@@ -37,20 +39,21 @@ const Analytics = () => {
                 </div>
                 <div className='col-6'>
                     <div className='analytics-card'>
-                        <img src={leads_icon} alt="search" />
-                        <h3>LEADS</h3>
-                        <b>600</b>
-                        <p>People Who Have Visited Your Business Places.</p>
-                    </div>
-                </div>
-                <div className='col-6'>
-                    <div className='analytics-card'>
                         <img src={adv_icon} alt="search" />
                         <h3>Advertisement</h3>
                         <b>60</b>
                         <p>Business and Your Business Appeared as a Recommended Business.</p>
                     </div>
                 </div>
+                <div className='col-6'>
+                    <div className='analytics-card'>
+                        <img src={leads_icon} alt="search" />
+                        <h3>LEADS</h3>
+                        <b>600</b>
+                        <p>People Who Have Visited Your Business Places.</p>
+                    </div>
+                </div>
+              
                 <div className='col-6'>
                     <div className='analytics-card'>
                         <img src={expenses_icon} alt="search" />

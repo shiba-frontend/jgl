@@ -5,9 +5,12 @@ import dealIcon from "../../../image/headingicon/message-3-fill.svg";
 const ContactUs = () => {
   return (
     <>
+     <div className='newspaper-layout'>
+       <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> Contact Us</div>
+    </div>
     </div>
     <div className="comon-layout">
       <div className="container">
@@ -58,6 +61,7 @@ const ContactUs = () => {
                 </div>
             </div>
       </div>
+    </div>
     </div>
   </>
   )

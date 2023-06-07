@@ -2,38 +2,72 @@ import React, { useState } from 'react'
 import { NavLink , useNavigate} from 'react-router-dom'
 import logo from "../../../image/logo.png";
 import loginVector from "../../../image/login-vector.png";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from "react-redux";
+import CustomLoader from '../../../common/CustomLoader';
 
 
 const Login = () => {
-const [username, setusername] = useState('')
-const [password, setpassword] = useState('')
-const [usernamechecking, setusernamechecking] = useState(false)
-
-let navigate = useNavigate();
-
-const InputHandling = (e)=>{
-    var U_name = e.target.value
-    setusername(U_name)
-    if(U_name !== ''){
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(U_name) === false) {
-        setusernamechecking(false)
-      return false;
-    } 
-    else{
-        setusernamechecking(true)
+    const [email, setemail] = useState('')
+    const [password, setpassword] = useState('')
+    const [loading, setloading] = useState(false)
+    let navigate = useNavigate();
+    const dispatch = useDispatch();
+    
+    
+    const LoginHandler = async () =>{
+    
+        navigate("/news-category", { replace: true });
+    //     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    
+    //    if (reg.test(email) === false) {
+    //     toast.error('Email should be proper!');
+    //     } else if(password === ''){
+    //         toast.error('Password is required');
+    //     } else {
+    //         setloading(true)
+    //         let body = {
+    //             "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+    //             "source":"WEB",
+    //             "email":email,
+    //             "password":password,
+    //             "device_type":"",
+    //             "device_token":"",
+    //             "role_id":"3"
+    //         }
+    
+    //         await axios.post("/signin", JSON.stringify(body))
+    //         .then((response) => {
+    //             setloading(false)
+    //           if(response.data.success){
+    //             toast.success(response.data.message);
+    //             var Token = response.data.data.app_access_token
+    //             var RoleId = response.data.data.user_role
+    //             dispatch({ type: "setToken", accessToken: Token })
+    //             localStorage.setItem("accessToken", Token);
+    //             localStorage.setItem("role_id", RoleId);
+    //             setTimeout(()=>{
+    //               navigate("/news-category", { replace: true });
+    //             },2000)
+    //           }
+    //         })
+    //         .catch((error) => {
+    //             setloading(false)
+    //             if(error.response.status === 404){
+    //                 toast.error(error.response.data.message);
+    //             }
+    //         });
+    //     }
+    
+    
     }
-    }else {
-        setusernamechecking(false)
-    }
-}
-
-const LoginHandler = () =>{
-    navigate("/news-category")
-}
 
 
   return (
+    <>
+     {loading && <CustomLoader/>}
+
     <div className='comon-bg'>
         <div className='container'>
         <div className='comon-logo'>
@@ -51,8 +85,8 @@ const LoginHandler = () =>{
             <div className='form-group'>
                 <input type="text" className='form-control' 
                 placeholder='Enter Your Email'
-                value={username}
-                onChange={(e)=>InputHandling(e)}
+                value={email}
+                onChange={(e)=>setemail(e.target.value)}
                 />
                
             </div>
@@ -66,11 +100,9 @@ const LoginHandler = () =>{
                 
             </div>
             <div className='form-group text-right'>
-                <NavLink to="/newspaper-forgot-password" className="theme-color">Forgot Password?</NavLink>
+                <NavLink to="/forgot-password" className="theme-color">Forgot Password?</NavLink>
             </div>
-            <div className='form-group mb-4 mt-3 '>
-               <h5>New User ? <NavLink to="/sign-up">Signup here. <i className="fa-solid fa-arrow-right"></i></NavLink></h5>
-            </div>
+           
             <div className='form-group'>
                 <button type='button' className='themeBtn' onClick={LoginHandler}>LOGIN</button>
             </div>
@@ -82,6 +114,7 @@ const LoginHandler = () =>{
         
          </div>
     </div>
+    </>
   )
 }
 

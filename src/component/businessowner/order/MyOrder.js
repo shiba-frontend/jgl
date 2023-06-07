@@ -7,9 +7,11 @@ import { NavLink } from 'react-router-dom';
 const MyOrder = () => {
   return (
     <div className='ownerLayout'>
+        <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={Checkin} alt="owner"/> My Order History</div>
+    </div>
     </div>
     <div className="comon-layout">
       <div className="container">

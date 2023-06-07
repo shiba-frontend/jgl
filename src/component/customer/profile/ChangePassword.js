@@ -13,7 +13,7 @@ const ChangePassword = () => {
      
       <div className="row">
         <div className="col-lg-5">
-          <div className="vector-img desktop-view">
+          <div className="vector-img">
               <img src={otpVector}  alt="forgot" />
           </div>
         </div>

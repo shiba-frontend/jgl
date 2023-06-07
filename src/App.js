@@ -2,17 +2,16 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FlashScreen from "./component/flashscreen/FlashScreen";
+import { useSelector, useDispatch } from "react-redux";
 
 //Auth
-import SignUp from "./component/customer/auth/SignUp";
+import SignUp from "./component/auth/SignUp";
 import Login from "./component/customer/auth/Login";
 import LoginNews from "./component/newspaper/auth/Login";
-import Otp from "./component/customer/auth/Otp";
-import OtpNews from "./component/newspaper/auth/Otp";
-import ForgotPassword from "./component/customer/auth/ForgotPassword";
-import ForgotPasswordNews from "./component/newspaper/auth/ForgotPassword";
-import ResetPassword from "./component/customer/auth/ResetPassword";
-import ResetPasswordNews from "./component/newspaper/auth/ResetPassword";
+import Otp from "./component/auth/Otp";
+import ForgotPassword from "./component/auth/ForgotPassword";
+import ResetPassword from "./component/auth/ResetPassword";
+
 
 //End Auth
 
@@ -77,11 +76,17 @@ import DealsListing from "./component/businessowner/Deals/DealsListing";
 import BusinessListing from "./component/businessowner/businesslisting/BusinessListing";
 import DeleteListing from "./component/businessowner/businesslisting/DeleteListing";
 import ReviewList from "./component/businessowner/profile/ReviewList";
+import ReviewListcustomer from "./component/customer/profile/ReviewList";
 import AddDeal from "./component/businessowner/Deals/AddDeal";
 import Analytics from "./component/businessowner/analytics/Analytics";
 import CustomerList from "./component/businessowner/dashboard/CustomerList";
 import MyOrder from "./component/businessowner/order/MyOrder";
 import NotFound from "./component/NotFound";
+import SignUpOtp from "./component/auth/SignUpOtp";
+import PublicRoute from "./common/PublicRoute";
+import PrivateRoute from "./common/PrivateRoute";
+import EditCategory from "./component/newspaper/newscategory/EditCategory";
+import PaymentCard from "./component/businessowner/Deals/PaymentCard";
 
 //End Profile
 
@@ -89,7 +94,10 @@ import NotFound from "./component/NotFound";
 
 function App() {
 
-  var token = "sdd"
+  //var token = useSelector((state) => state.accessToken);
+  //var token = localStorage.getItem('accessToken');
+
+  var token = "hh"
 
   return (
     <div className="App">
@@ -102,18 +110,19 @@ function App() {
       
     }
       <Routes>
-            <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
+      {/* <Route element={<PublicRoute />}> */}
+          
             <Route path="/" element={<Login />} />
             <Route path="/login-customer" element={<Login />} />
             <Route path="/login-newspaper" element={<LoginNews />} />
             <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/newspaper-forgot-password" element={<ForgotPasswordNews />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />     
             <Route path="/otp" element={<Otp />} />
-            <Route path="/newspaper-otp" element={<OtpNews />} />
+            <Route path="/signup-otp" element={<SignUpOtp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/newspaper-reset-password" element={<ResetPasswordNews />} />
-
+        {/* </Route> */}
+            {/* <Route element={<PrivateRoute />}> */}
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/newspaper-privacy-policy" element={<PrivacyPolicyNews />} />
             <Route path="/business-privacy-policy" element={<PrivacyPolicyBusiness />} />
@@ -143,9 +152,10 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/news-category" element={<NewsCategoryList />} />
             <Route path="/add-category" element={<AddCategory />} />
+            <Route path="/edit-category/:id" element={<EditCategory />} />
             <Route path="/deal" element={<Deals />} />
             <Route path="/my-deal" element={<MyDeal />} />
-            <Route path="/news-details" element={<NewsDetails />} />
+            <Route path="/news-details/:id" element={<NewsDetails />} />
             <Route path="/business" element={<Business />} />
             <Route path="/business-details/:id" element={<BusinessDetails />} />
             <Route path="/my-checked-in" element={<MyCheckedIn />} />
@@ -162,9 +172,12 @@ function App() {
             <Route path="/delete-listing" element={<DeleteListing />} />
             <Route path="/add-deal" element={<AddDeal />} />
             <Route path="/review-list" element={<ReviewList />} />
+            <Route path="/customer-review-list" element={<ReviewListcustomer />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/customer-list" element={<CustomerList />} />
             <Route path="/my-order" element={<MyOrder />} />
+            <Route path="/payment" element={<PaymentCard />} />
+            {/* </Route> */}
       </Routes>
       </BrowserRouter>
     </div>

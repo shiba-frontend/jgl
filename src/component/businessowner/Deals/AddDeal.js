@@ -3,14 +3,15 @@ import AfterLoginTopbar from '../../businessowner/header/AfterLoginTopbar'
 import BottomNavigation from '../header/BottomNavigation'
 import business from "../../../image/headingicon/bank-card-fill 1.png";
 import Dropdown from 'react-bootstrap/Dropdown';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AddDeal = () => {
     const [status, setstatus] = useState("text");
     const [startDate, setStartDate] = useState(new Date());
-
+    const [checked, setChecked] = useState(false)
+    let navigate = useNavigate();
 
     const handleChange = e => {
         const target = e.target;
@@ -19,12 +20,22 @@ const AddDeal = () => {
         }
       };
 
+      const handleChangecheckbox = () => {
+        setChecked(!checked);
+      };
+
+      const BuyNowHandle = ()=>{
+        navigate("/payment", { replace: true });
+      }
+
 
   return (
     <div className='ownerLayout'>
+        <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={business} alt="owner"/> Add new {status} Deal</div>
+    </div>
     </div>
     <div className="comon-layout add-deal-listing">
       <div className="container">
@@ -34,11 +45,11 @@ const AddDeal = () => {
                         <ul className='acInflex'>
                             <li>
                                 <input type='radio' id="active" name='status' value="text" checked={status == 'text'} onChange={handleChange}  />
-                                <label for="active">Text</label>
+                                <label htmlFor="active">Text</label>
                             </li>
                             <li>
                                 <input type='radio' id="inactive" name='status' value="image" checked={status == 'image'} onChange={handleChange} />
-                                <label for="inactive">Image</label>
+                                <label htmlFor="inactive">Image</label>
                             </li>
                         </ul>
                     </div>
@@ -115,9 +126,30 @@ const AddDeal = () => {
                         <span className='form-icon'><i class="fa-solid fa-calendar"></i></span>
                     </div>  
                 </div>
+                <div className='col-lg-4'>
+                    <div className='form-group'>
+                        <div className="voicedeal">
+                            <input type="checkbox" id="voice" checked={checked}
+                            onChange={handleChangecheckbox}   />
+                            <label htmlFor="voice">Voice my deals</label>
+                        </div>
+                    </div>
+                </div>
+                {checked && 
+                <div className='col-lg-4'>
+                    <div className='form-group'>
+                        <label>Buy Voice Option</label>
+                        <select className='form-control'>
+                            <option>$10 - 100 Ads</option>
+                            <option>$100 - 1000 Ads</option>
+                            <option>$1000 - 1000 Ads</option>
+                        </select>
+                    </div>
+                </div>
+}
                 <div className='col-lg-4 mt-4'>
                 <div className='form-group'>
-                    <button className='themeBtn'>Submit</button>
+                    <button className='themeBtn' onClick={BuyNowHandle}>Buy Now</button>
                 </div>
             </div>
             </div>

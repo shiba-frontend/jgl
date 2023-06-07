@@ -5,9 +5,12 @@ import dealIcon from "../../../image/headingicon/Folder_file_fill.svg";
 const PrivacyPolicy = () => {
   return (
     <>
+    <div className='newspaper-layout'>
+       <div className="top-f-header">
       <AfterLoginTopbar />
       <div className="header-info">
         <div className="container"><img src={dealIcon}/> Privacy Policy</div>
+      </div>
       </div>
       <div className="comon-layout cms-page">
         <div className="container">
@@ -38,6 +41,7 @@ Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque
             </li>
           </ul>
         </div>
+      </div>
       </div>
     </>
   );

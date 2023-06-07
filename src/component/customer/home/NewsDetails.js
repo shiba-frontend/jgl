@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import PageMenu from '../header/PageMenu'
-import story from "../../../image/story-news.png";
+import story from "../../../image/maxresdefault.jpg";
 import BottomTabCustomer from '../header/BottomTabCustomer';
 
 const NewsDetails = () => {
@@ -11,13 +11,14 @@ const NewsDetails = () => {
 
   return (
     <div className='customer-layout'>
+       <div className="top-f-header">
     <AfterLoginTopbar
       />
       <div className='header-info'>
         <div className='container'>
           Top Stories
         </div>
-    
+        </div>
       </div>
       <div className='comon-layout'>
       <div className='container'>

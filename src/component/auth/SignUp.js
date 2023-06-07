@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import logo from "../../../image/logo.png";
+import { NavLink,useNavigate } from 'react-router-dom'
+import logo from "../../image/logo.png";
 import { toast } from 'react-toastify';
-import ApiConnection from '../../../common/ApiConnection';
-import CustomLoader from '../../../common/CustomLoader';
+import CustomLoader from '../../common/CustomLoader';
 import axios, * as others from 'axios';
-//import { postApi } from '../../../common/ApiConnection';
+
 
 
 
@@ -19,90 +18,76 @@ const [phone, setphone] = useState("");
 const [address, setaddress] = useState("");
 const [password, setpassword] = useState("");
 const [confirmpassword, setconfirmpassword] = useState("");
+const [loading, setloading] = useState(false)
+let navigate = useNavigate();
+
 
 const SubmitHandler = async ()=>{
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-//    if (reg.test(email) === false) {
-//     toast.error('Email should be proper!');
-//     } else if (phone == ''){
-//         toast.error('Phone is required');
-//     } else if (password == '' ){
-//         toast.error('Password is required');
-//     } else if (confirmpassword == '' ){
-//         toast.error('Confirm Password is required');
-//     } else if (confirmpassword !== password){
-//         toast.error('Confirm Password do not same as password');
-//     }
+   if (reg.test(email) === false) {
+    toast.error('Email should be proper!');
+    } else if (phone == ''){
+        toast.error('Phone is required');
+    } else if (password == '' ){
+        toast.error('Password is required');
+    } else if (confirmpassword == '' ){
+        toast.error('Confirm Password is required');
+    } else if (confirmpassword !== password){
+        toast.error('Confirm Password do not same as password');
+    }
 
-    // else {
-        // let body = {
-        //     "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-        //     "source":"WEB",
-        //     "role_id":"2",
-        //     "first_name":fname,
-        //     "last_name":lname,
-        //     "email_id":email,
-        //     "contact_no":phone,
-        //     "password":password,
-        //     "confirm_password":confirmpassword,
-        //     "address":address,
-        //     "city":"",
-        //     "state":"",
-        //     "country":"",
-        //     "zipcode":"",
-        //     "latitude":"",
-        //     "longitude":""
-        // }
-        // try{
-        //     const response = await ApiConnection.post("/signup", body)
-        //     console.log(response);
-        // } catch{
+    else {
 
-        // }
-       
-    // }
+        setloading(true)
 
-
-
-let body = {
-  "key": "facb6e0a6fcbe200dca2fb60dec75be7",
-  "source": "WEB",
-  "role_id": "2",
-  "first_name": "shibu",
-  "last_name": "Sankar",
-  "email_id": "test1@yopmail.com",
-  "contact_no": "90513718",
-  "password": "123456",
-  "confirm_password": "123456",
-  "address": "test",
-  "city": "Bowie",
-  "state": "MD",
-  "country": "US",
-  "zipcode": "20715",
-  "latitude": "38.9760088",
-  "longitude": "-76.74705809999999"
-};
+        let body = {
+            "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+            "source":"WEB",
+            "role_id":"5",
+            "first_name":fname,
+            "last_name":lname,
+            "email_id":email,
+            "contact_no":phone,
+            "password":password,
+            "confirm_password":confirmpassword,
+            "address":address,
+            "city":"",
+            "state":"",
+            "country":"",
+            "zipcode":"",
+            "latitude":"",
+            "longitude":""
+        }
+    
 
 await axios.post("/signup", JSON.stringify(body))
 .then((response) => {
-  console.log(response.data);
+    setloading(false)
+  if(response.data.success){
+    toast.success(response.data.message);
+    setTimeout(()=>{
+        navigate('/signup-otp',{state:{userId:response.data.data.user_id}});
+    },3000)
+  }
 })
 .catch((error) => {
-    console.log(error.response)
+    setloading(false)
+   
     if(error.response.status === 404){
         toast.error(error.response.data.message);
     }
-    if(error.response.status === 401){
-        
-    } 
 });
 
-   
+}
+ 
 }
 
 
   return (
+    <>
+    {loading && <CustomLoader/>}
+    
     <div className='comon-bg'>
         <div className='container'>
         <div className='comon-logo'>
@@ -208,6 +193,7 @@ await axios.post("/signup", JSON.stringify(body))
     </div>
   
     </div>
+    </>
   )
 }
 

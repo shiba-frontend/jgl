@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import AfterLoginTopbar from '../../newspaper/header/AfterLoginTopbar'
 import Dropdown from 'react-bootstrap/Dropdown';
 import addicon from '../../../image/Add_round_fill.png'
 import { NavLink } from 'react-router-dom';
-
+import CustomLoader from '../../../common/CustomLoader';
+import axios, * as others from 'axios';
+import { toast } from 'react-toastify';
 
 const Home = () => {
 
@@ -30,7 +32,38 @@ const Home = () => {
         title:"Politics"
       },
     ]
+    const token = localStorage.getItem('accessToken');
 
+    const GetData = async ()=>{
+
+      let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "app_access_token":token
+    }
+
+    await axios.post("/newspaper/category-list", JSON.stringify(body))
+    .then((response) => {
+      console.log(response.data)
+        //setloading(false)
+      if(response.data.success){
+      
+      }
+    })
+    .catch((error) => {
+        //setloading(false)
+      
+        if(error.response.status === 404){
+            toast.error(error.response.data.message);
+        }
+    });
+
+    }
+
+
+    useEffect(()=>{
+      GetData()
+    },[])
 
 
 

@@ -5,7 +5,11 @@ import { NavLink } from 'react-router-dom';
 const DeleteListing = () => {
   return (
     <>
+    
+    <div className="top-f-header">
     <AfterLoginTopbar/>
+    </div>
+   
     <div className="comon-bg">
     <div className="container">
     <div className="comon-white delete-account">

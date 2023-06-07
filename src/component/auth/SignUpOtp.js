@@ -1,27 +1,95 @@
-import React, { useState, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../../image/logo.png";
-import otpVector from "../../../image/otp-vector.png";
+import React, { useState, useRef,useEffect } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import logo from "../../image/logo.png";
+import otpVector from "../../image/otp-vector.png";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import CustomLoader from '../../common/CustomLoader';
 
-const Otp = () => {
-  const [otp1, setotp1] = useState("");
-  const [otp2, setotp2] = useState("");
-  const [otp3, setotp3] = useState("");
-  const [otp4, setotp4] = useState("");
+const SignUpOtp = () => {
 
-  const textInput1 = useRef(null);
-  const textInput2 = useRef(null);
-  const textInput3 = useRef(null);
-  const textInput4 = useRef(null);
+    const [otp1, setotp1] = useState("");
+    const [otp2, setotp2] = useState("");
+    const [otp3, setotp3] = useState("");
+    const [otp4, setotp4] = useState("");
+    const [loading, setloading] = useState(false)
+  
+    const textInput1 = useRef(null);
+    const textInput2 = useRef(null);
+    const textInput3 = useRef(null);
+    const textInput4 = useRef(null);
+  
+    const [counter, setCounter] = useState(59);
+    let navigate = useNavigate();
+    const userId = useLocation();
+    var UserId = userId.state && userId.state.userId
 
-  const [counter, setCounter] = useState(59);
-  let navigate = useNavigate();
 
-  const VerifyHandler = () => {
-    navigate("/newspaper-reset-password", { replace: true });
-  };
+    const VerifyHandler = async () => {
+
+        if(otp1 == '' || otp2 == '' || otp3 == '' || otp4 == '' ){
+            toast.error("Field should be mandatory"); 
+        } else {
+        setloading(true)
+        let body = {
+          "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+          "source":"WEB",
+          "user_id":UserId&&UserId,
+          "inputOtp":otp1+otp2+otp3+otp4
+      }
+    
+      await axios.post("/signup-otp-verify", JSON.stringify(body))
+      .then((response) => {
+        setloading(false)
+      if(response.data.success){
+        toast.success(response.data.message);
+        setTimeout(()=>{
+          navigate("/", { replace: true });
+        },3000)
+      }
+    })
+    .catch((error) => {
+        setloading(false)
+        if(error.response.status === 404){
+            toast.error(error.response.data.message);
+        }
+    });
+        }
+       
+      };
+
+      const ResendHandler = async () =>{
+
+        let body = {
+            "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+            "source":"WEB",
+            "user_id":UserId
+        }
+
+        await axios.post("/resend-otp", JSON.stringify(body))
+        .then((response) => {
+          if(response.data.success){
+            toast.success(response.data.message);
+            setCounter(59)
+          }
+        })
+        .catch((error) => {
+            if(error.response.status === 404){
+                toast.error(error.response.data.message);
+            }
+        });
+
+
+      }
+useEffect(() => {
+  const timer =
+  counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+  return () => clearInterval(timer);
+}, [counter]);
 
   return (
+    <>
+    {loading && <CustomLoader/>}
     <div className="comon-bg">
       <div className="container">
         <div className="comon-logo">
@@ -152,8 +220,14 @@ const Otp = () => {
               </div>
 
               <div className="form-group">
+              <h6 className="counter-txt">00:{counter}</h6>
                 <h5>
-                  Did not receive the code? <button>Resend OTP.</button>
+                  Did not receive the code? 
+                  {counter === 0 ? (
+                  <button onClick={ResendHandler}>Resend OTP.</button>
+                ) : null}
+                  
+                  
                 </h5>
               </div>
             </div>
@@ -161,7 +235,8 @@ const Otp = () => {
         </div>
       </div>
     </div>
-  );
-};
+    </>
+  )
+}
 
-export default Otp;
+export default SignUpOtp

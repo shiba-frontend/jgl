@@ -12,6 +12,8 @@ import password from "../../../image/icon/password.svg";
 import account from "../../../image/icon/delete-accoint.svg";
 import signout from "../../../image/icon/sign_out.svg";
 import home from "../../../image/headingicon/Paper_fill.svg";
+import logo from "../../../image/logo.png";
+import location from "../../../image/location-outline.png";
 
 const NavMenu = () => {
 
@@ -36,8 +38,12 @@ const NavMenu = () => {
 
   return (
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
+       <div className="left-panel-sidebar">
       <div className="panel-logo">
-       
+      <div className="sidebar-logo">
+    <img src={logo}  />
+    <span> <img src={location}/> Bowie, MD, USA</span>
+    </div>
         <button
           className="close-btn"
           onClick={() => dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })}
@@ -93,7 +99,7 @@ const NavMenu = () => {
               }
             >
               <img src={home} alt="deal" />
-            Politycal news articles
+            Political news articles
               <span>
                 <i class="fa-solid fa-angle-right"></i>
               </span>
@@ -240,6 +246,7 @@ const NavMenu = () => {
        
         </ul>
       </div>
+    </div>
     </div>
   );
 };

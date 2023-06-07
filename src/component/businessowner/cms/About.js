@@ -6,9 +6,11 @@ import BottomNavigation from '../header/BottomNavigation'
 const About = () => {
   return (
     <div className='ownerLayout'>
+       <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={dealIcon}/> About Us</div>
+    </div>
     </div>
     <div className="comon-layout cms-page">
       <div className="container">

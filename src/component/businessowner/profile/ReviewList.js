@@ -8,9 +8,11 @@ import { NavLink } from 'react-router-dom';
 const ReviewList = () => {
   return (
     <div className='ownerLayout'>
+         <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
       <div className="container"><img src={deal} alt="review" /> My Reviews</div>
+    </div>
     </div>
     <div className="comon-layout review-listing">
       <div className="container">

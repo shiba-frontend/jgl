@@ -4,6 +4,7 @@ const initialState = {
   sidebarShownews: true,
   sidebarShowbusiness: true,
   newsdetailsId:null,
+  accessToken:null,
 }
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
@@ -14,6 +15,8 @@ const changeState = (state = initialState, { type, ...rest }) => {
       case 'setbusiness':
       return { ...state, ...rest }
       case 'setid':
+        return { ...state, ...rest }
+        case 'setToken':
         return { ...state, ...rest }
     default:
       return state
