@@ -76,6 +76,18 @@ const Home = () => {
       image:story,
       title:"  The standard Lorem Ipsum passage, used since the 1500s",
       description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+    },
+    {
+      id:4,
+      image:story,
+      title:"  The standard Lorem Ipsum passage, used since the 1500s",
+      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+    },
+    {
+      id:5,
+      image:story,
+      title:"  The standard Lorem Ipsum passage, used since the 1500s",
+      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
     }
   ]
 

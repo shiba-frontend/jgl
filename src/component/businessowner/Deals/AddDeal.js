@@ -56,6 +56,28 @@ const AddDeal = () => {
                 </div>
                 <div className='col-lg-4'>
                     <div className='form-group'>
+                        <label>Select Newspaper Category</label>
+                        <select className='form-control'>
+                            <option>Category 1</option>
+                            <option>Category 2</option>
+                            <option>Category 3</option>
+                            <option>Category 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div className='col-lg-4'>
+                    <div className='form-group'>
+                        <label>Select Sub Newspaper Category</label>
+                        <select className='form-control'>
+                            <option>Sub Category 1</option>
+                            <option>Sub Category 2</option>
+                            <option>Sub Category 3</option>
+                            <option>Sub Category 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div className='col-lg-4'>
+                    <div className='form-group'>
                         <label>Deal Title</label>
                         <input type='text' className='form-control' placeholder='Add Deal Title' />
                     </div>
