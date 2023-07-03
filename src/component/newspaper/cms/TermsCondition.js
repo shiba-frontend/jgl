@@ -1,59 +1,67 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import AfterLoginTopbar from "../../newspaper/header/AfterLoginTopbar";
-import dealIcon from "../../../image/headingicon/reserved-fill.svg";
+import CustomLoader from '../../../common/CustomLoader';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { IMAGE } from "../../../common/Theme";
 
 const TermsCondition = () => {
+  const [cmsData, setcmsData] = useState({});
+  const [loading, setloading] = useState(false)
+ 
+ 
+  const GetData = async ()=>{
+    setloading(true)
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "page_slug":"terms-and-condition"
+  }
+
+  await axios.post("/page", JSON.stringify(body))
+  .then((response) => {
+   
+      setloading(false)
+    if(response.data.success){
+      setcmsData(response.data.data)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+    
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+  
+  });
+
+  }
+
+
+  useEffect(()=>{
+    GetData()
+  },[])
+  
   return (
     <>
-     <div className='newspaper-layout'>
+    {loading && <CustomLoader/>}
+    <div className='newspaper-layout'>
        <div className="top-f-header">
-    <AfterLoginTopbar />
-    <div className="header-info">
-      <div className="container"><img src={dealIcon}/> Terms and Condition</div>
-    </div>
-    </div>
-    <div className="comon-layout cms-page">
-      <div className="container">
-        <h2>Terms & Condition</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-          ornare lorem dui. Praesent porta enim sed vehicula iaculis. Proin
-          accumsan nisi a eros scelerisque vehicula. Pellentesque non aliquam
-          purus. Curabitur ornare et risus id ullamcorper. Fusce nunc ante,
-          facilisis at eros nec, fringilla vehicula nisl. Duis vitae feugiat
-          nulla. Cras dictum risus vitae lacus interdum varius. Vestibulum
-          felis dolor, efficitur id justo eu, dictum aliquet sapien. Curabitur
-          elit ex, commodo in iaculis a, posuere vel mi. Vivamus euismod vel
-          odio nec pulvinar. Mauris ut mauris ante.
-        </p>
-        <h2>Cookies</h2>
-        <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lorem dui. 
-Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque vehicula. 
-        </p>
-        <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lorem dui. 
-Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque vehicula. 
-        </p>
-        <h2>License</h2>
-        <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ornare lorem dui. 
-Praesent porta enim sed vehicula iaculis. Proin accumsan nisi a eros scelerisque vehicula. 
-        </p>
-        <ul>
-          <li>
-          Aliquam sit amet nulla et libero iaculis convallis in eu quam. Vestibulum 
-
-          </li>
-          <li>
-          Aliquam sit amet nulla et libero iaculis convallis in eu quam. Vestibulum 
-
-          </li>
-        </ul>
+      <AfterLoginTopbar />
+      <div className="header-info">
+        <div className="container"><img src={IMAGE.terms_icon}/> {cmsData && cmsData.title}</div>
       </div>
-    </div>
-    </div>
-  </>
+      </div>
+      <div className="comon-layout cms-page">
+        <div className="container">
+          <h2>{cmsData && cmsData.title}</h2>
+          <div
+      dangerouslySetInnerHTML={{__html: cmsData && cmsData.content}}
+    />
+        </div>
+      </div>
+      </div>
+    </>
   )
 }
 

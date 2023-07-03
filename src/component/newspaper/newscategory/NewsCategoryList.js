@@ -1,28 +1,28 @@
 import React,{useEffect, useState} from 'react'
 import AfterLoginTopbar from '../../newspaper/header/AfterLoginTopbar'
 import Dropdown from 'react-bootstrap/Dropdown';
-import addicon from '../../../image/Add_round_fill.png'
-import dealIcon from "../../../image/headingicon/Paper_fill.svg";
 import { NavLink, useNavigate } from 'react-router-dom';
 import CustomLoader from '../../../common/CustomLoader';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import ConfirmationAlert from '../../../common/ConfirmationAlert';
+import { IMAGE } from '../../../common/Theme';
+
+
 
 const NewsCategoryList = () => {
   const [ListData, setListData] = useState([]);
   const [loading, setloading] = useState(false)
-
   const token = localStorage.getItem('accessToken');
   let navigate = useNavigate();
 
   const GetData = async ()=>{
     setloading(true)
+    
     let body = {
       "key":"facb6e0a6fcbe200dca2fb60dec75be7",
       "source":"WEB",
-      "app_access_token":token&&token
-  }
+      "app_access_token":token&&token,
+    }
 
   await axios.post("/newspaper/category-list", JSON.stringify(body))
   .then((response) => {
@@ -38,11 +38,7 @@ const NewsCategoryList = () => {
       if(error.response.status === 404){
           toast.error(error.response.data.message);
       }
-      if(error.response.status === 403){
-        toast.error(error.response.data.message);
-        localStorage.clear();
-        navigate("/login-newspaper", { replace: true });
-    }
+      
   });
 
   }
@@ -51,6 +47,10 @@ const NewsCategoryList = () => {
   useEffect(()=>{
     GetData()
   },[])
+
+  function DetailsPage(id,name){
+    navigate('/article-details',{state:{cate_id:id,catename:name}});
+}
 
   const StatusHandler = async (id)=>{
     setloading(true)
@@ -75,6 +75,7 @@ const NewsCategoryList = () => {
       if(error.response.status === 404){
           toast.error(error.response.data.message);
       }
+      
      
   });
 
@@ -120,7 +121,7 @@ const NewsCategoryList = () => {
     <AfterLoginTopbar/>
     <div className='header-info'>
         <div className='container'>
-        <img src={dealIcon} alt="deal" /> News Category
+        <img src={IMAGE.dealIcon} alt="deal" /> News Category
         </div>
         </div>
       </div>
@@ -130,7 +131,10 @@ const NewsCategoryList = () => {
             {ListData && ListData.map((item,index)=>{
               return (
                 <li key={index}>
+                  <button onClick={()=>DetailsPage(item.category_id,item.category_name)} className='btnlink'>
                 <label style={{color:item.category_status === "0" ? "#666":"#222"}}>{item && item.category_name} <i className="fa-solid fa-arrow-right-long"></i></label>
+                </button>
+                
                 <Dropdown>
                             <Dropdown.Toggle id="dropdown-basic">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -155,7 +159,7 @@ const NewsCategoryList = () => {
         </div> 
         <div className='addIcon'>
               <NavLink to="/add-category">
-                <img src ={addicon}   alt="addicon" />
+                <img src ={IMAGE.addicon}   alt="addicon" />
               </NavLink>
             </div>
     </div>

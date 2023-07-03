@@ -6,11 +6,7 @@ import CustomLoader from '../../common/CustomLoader';
 import axios, * as others from 'axios';
 
 
-
-
-
 const SignUp = () => {
-
 const [fname, setfname] = useState("");
 const [lname, setlname] = useState("");
 const [email, setemail] = useState("");

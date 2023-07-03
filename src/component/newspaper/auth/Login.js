@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { NavLink , useNavigate} from 'react-router-dom'
-import logo from "../../../image/logo.png";
-import loginVector from "../../../image/login-vector.png";
+
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from "react-redux";
 import CustomLoader from '../../../common/CustomLoader';
+import { IMAGE } from '../../../common/Theme';
+
 
 
 const Login = () => {
@@ -14,51 +15,50 @@ const Login = () => {
     const [loading, setloading] = useState(false)
     let navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     
     const LoginHandler = async () =>{
     
-        navigate("/news-category", { replace: true });
-    //     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     
-    //    if (reg.test(email) === false) {
-    //     toast.error('Email should be proper!');
-    //     } else if(password === ''){
-    //         toast.error('Password is required');
-    //     } else {
-    //         setloading(true)
-    //         let body = {
-    //             "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-    //             "source":"WEB",
-    //             "email":email,
-    //             "password":password,
-    //             "device_type":"",
-    //             "device_token":"",
-    //             "role_id":"3"
-    //         }
+       if (reg.test(email) === false) {
+        toast.error('Email should be proper!');
+        } else if(password === ''){
+            toast.error('Password is required');
+        } else {
+            setloading(true)
+            let body = {
+                "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+                "source":"WEB",
+                "email":email,
+                "password":password,
+                "device_type":"",
+                "device_token":"",
+                "role_id":"3"
+            }
     
-    //         await axios.post("/signin", JSON.stringify(body))
-    //         .then((response) => {
-    //             setloading(false)
-    //           if(response.data.success){
-    //             toast.success(response.data.message);
-    //             var Token = response.data.data.app_access_token
-    //             var RoleId = response.data.data.user_role
-    //             dispatch({ type: "setToken", accessToken: Token })
-    //             localStorage.setItem("accessToken", Token);
-    //             localStorage.setItem("role_id", RoleId);
-    //             setTimeout(()=>{
-    //               navigate("/news-category", { replace: true });
-    //             },2000)
-    //           }
-    //         })
-    //         .catch((error) => {
-    //             setloading(false)
-    //             if(error.response.status === 404){
-    //                 toast.error(error.response.data.message);
-    //             }
-    //         });
-    //     }
+            await axios.post("/signin", JSON.stringify(body))
+            .then((response) => {
+                setloading(false)
+              if(response.data.success){
+                toast.success(response.data.message);
+                var Token = response.data.data.app_access_token
+                var RoleId = response.data.data.user_role
+                dispatch({ type: "setToken", accessToken: Token })
+                localStorage.setItem("accessToken", Token);
+                localStorage.setItem("role_id", RoleId);
+                setTimeout(()=>{
+                  navigate("/news-category", { replace: true });
+                },2000)
+              }
+            })
+            .catch((error) => {
+                setloading(false)
+                if(error.response.status === 404){
+                    toast.error(error.response.data.message);
+                }
+            });
+        }
     
     
     }
@@ -71,12 +71,12 @@ const Login = () => {
     <div className='comon-bg'>
         <div className='container'>
         <div className='comon-logo'>
-        <img src={logo} alt="logo" />
+        <img src={IMAGE.logo} alt="logo" />
         </div>
         <div className='row'>
             <div className='col-lg-5'>
             <div className='vector-img'>
-         <img src={loginVector} alt='vector'/>
+         <img src={IMAGE.loginimg} alt='vector'/>
         </div>
             </div>
             <div className='col-lg-7'>

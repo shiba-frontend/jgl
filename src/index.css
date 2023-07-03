@@ -213,12 +213,12 @@ ul.otp-l li .input-style {
 }
 .panel-logo {
   position: relative;
-  padding: 15px;
+  padding: 22px 15px 15px 15px;
 }
 button.close-btn {
   position: absolute;
-  top: 9px;
-  right: 27px;
+  top: 0;
+  right: 15px;
   background: transparent;
   border: none;
   color: #fff;
@@ -273,6 +273,20 @@ button.close-btn {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+.logoutBtnn {
+  font-size: 13px;
+  color: #FBFBFB;
+  padding: 9px 13px 9px 9px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: transparent;
+  border: none;
+  width: 100%;
+}
+.sidebar li .logoutBtnn span {
+  margin-left: auto;
 }
 .sidebar li a.active {
   background: #d30000;
@@ -997,7 +1011,7 @@ ul.total-l {
   border: none;
   background: transparent;
   color: #222222;
-  font-size: 11px;
+  font-size: 14px;
   text-align: center;
   width: 100%;
   padding: 6px 4px;
@@ -1534,7 +1548,7 @@ a.theme-color {
   padding-top: 149px;
 }
 .newspaper-layout {
-  padding: 149px 0 20px 0;
+  padding: 149px 0 60px 0;
 }
 .newspaper-layout .addIcon {
   position: fixed;
@@ -1620,10 +1634,12 @@ h6.counter-txt {
 
 button.logoutBtn {
   position: absolute;
-  right: 15px;
+  left: 15px;
   top: 6px;
   color: #fff;
   font-size: 14px;
+  background: transparent;
+  border: none;
 }
 .AlertMsg  .modal-header {
   padding: 6px 15px;
@@ -1699,4 +1715,128 @@ button.logoutBtn {
 .voicedeal input[type=checkbox]:checked + label::after {
   opacity: 1;
   transform: scale(1);
+}
+.detailsBtn {
+  font-size: 12px;
+  border: 1px solid red;
+  color: red;
+  display: block;
+  padding: 2px 9px;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.btnlink {
+  display: block;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.analytics-details ul {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+.analytics-details ul label {
+  color: #000;
+  font-size: 16px;
+  margin: 0 0 0 0;
+  display: block;
+}
+.analytics-details ul span {
+  font-size: 14px;
+  color: #666;
+}
+.analytics-details ul li {
+  margin-bottom: 15px;
+  width: 50%;
+}
+img.dealImage {
+  width: 100%;
+}
+.analytics-details ul li:last-child {
+  width: 100%;
+}
+.custom-dropdown-box 
+ ul {
+    height: 200px;
+    overflow-y: scroll;
+}
+ul.preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+ul.preview-list img.preview {
+  width: 100px;
+}
+.addressField {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+input.form-control.color-div {
+  height: 50px;
+}
+
+.chip {
+  background: #ff0000;
+}
+.highlightOption {
+  background: #ff0000;
+}
+.searchWrapper {
+  border-radius: 15px;
+}
+.multiSelectContainer li:hover {
+  background: #ff0000;
+}
+.order-tab ul li button {
+  display: block;
+  width: 100%;
+  border: none;
+  background: #ccc;
+  padding: 10px 10px;
+}
+.order-tab ul li {
+  flex: 1;
+}
+.order-tab ul {
+  display: flex;
+  margin-bottom: 18px;
+}
+.analytics-details ul.deal-edit-del {
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 15px;
+}
+.analytics-details ul.deal-edit-del li {
+  flex: 1;
+  width: 100%;
+}
+.analytics-details ul.deal-edit-del li .outlinebtn {
+  background: transparent;
+  display: block;
+}
+button.AddBtn {
+  background: #124a12;
+  color: #fff;
+  border: none;
+  display: inline-block;
+  padding: 5px 23px;
+  border-radius: 3px;
+}
+button.RemoveBtn{
+  background: red;
+  color: #fff;
+  border: none;
+  display: inline-block;
+  padding: 5px 23px;
+  border-radius: 3px;
 }

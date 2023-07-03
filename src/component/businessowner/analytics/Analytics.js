@@ -1,21 +1,64 @@
 import React, { useEffect, useState } from 'react'
 import AfterLoginTopbar from '../../businessowner/header/AfterLoginTopbar'
 import BottomNavigation from '../header/BottomNavigation'
-import analytics from "../../../image/icon/Chart_fill.svg";
-import search_icon from "../../../image/Search_alt_fill.svg";
-import customer_icon from "../../../image/User_fill.svg";
-import leads_icon from "../../../image/Pipe_fill.svg";
-import adv_icon from "../../../image/Form_fill.svg";
-import expenses_icon from "../../../image/Money_fill.svg";
+
 import { NavLink } from 'react-router-dom';
+import { IMAGE } from '../../../common/Theme';
+import CustomLoader from '../../../common/CustomLoader';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Analytics = () => {
+    const [loading, setloading] = useState(false)
+    const [countdata, setcountdata] = useState({})
+    const token = localStorage.getItem('accessToken');
+
+    const GetData = async ()=>{
+        setloading(true)
+        
+        let body = {
+          "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+          "source":"WEB",
+          "app_access_token":token&&token,
+        }
+    
+      await axios.post("/business-owner/analytics", JSON.stringify(body))
+      .then((response) => {
+       
+          setloading(false)
+        if(response.data.success){
+            setcountdata(response.data.data)
+        }
+      })
+      .catch((error) => {
+          setloading(false)
+        
+          if(error.response.status === 404){
+              toast.error(error.response.data.message);
+          }
+          
+      });
+    
+      }
+    
+    
+      useEffect(()=>{
+        GetData()
+      
+      },[])
+
+
+
   return (
+
+    <>
+         {loading && <CustomLoader/>}
+  
     <div className='ownerLayout'>
         <div className="top-f-header">
     <AfterLoginTopbar />
     <div className="header-info">
-      <div className="container"><img src={analytics} alt="owner"/> Analytics</div>
+      <div className="container"><img src={IMAGE.analytics_icon} alt="owner"/> Analytics</div>
     </div>
     </div>
     <div className="comon-layout">
@@ -23,42 +66,44 @@ const Analytics = () => {
             <div className='row'>
                 <div className='col-12'>
                     <div className='analytics-card' style={{minHeight:"auto"}}>
-                        <img src={search_icon} alt="search" />
+                        <img src={IMAGE.search_icon} alt="search" />
                         <h3>Searches</h3>
-                        <b>136</b>
+                        <b>{countdata?.search_count}</b>
                         <p>People Who Have Searched Your Type of Business and Your Business Appeared as a Recommended Business.</p>
                     </div>
                 </div>
                 <div className='col-6'>
                     <div className='analytics-card'>
-                        <img src={customer_icon} alt="search" />
+                        <img src={IMAGE.userfill_icon} alt="search" />
                         <h3>CUSTOMERS</h3>
-                        <b>1</b>
+                        <b>{countdata?.customer_count}</b>
                         <p>People Who Have Searched Your Type of Business and Your Business Appeared as a Recommended Business.</p>
                     </div>
                 </div>
                 <div className='col-6'>
                     <div className='analytics-card'>
-                        <img src={adv_icon} alt="search" />
-                        <h3>Advertisement</h3>
-                        <b>60</b>
-                        <p>Business and Your Business Appeared as a Recommended Business.</p>
-                    </div>
-                </div>
-                <div className='col-6'>
-                    <div className='analytics-card'>
-                        <img src={leads_icon} alt="search" />
+                        <img src={IMAGE.leads_icon} alt="search" />
                         <h3>LEADS</h3>
-                        <b>600</b>
+                        <b>{countdata?.lead_count}</b>
                         <p>People Who Have Visited Your Business Places.</p>
                     </div>
                 </div>
+                <div className='col-6'>
+                    <div className='analytics-card'>
+                        <img src={IMAGE.adv_icon} alt="search" />
+                        <h3>DEALS ADDED</h3>
+                        <b>{countdata?.deals_added_count}</b>
+                        <p>Business and Your Business Appeared as a Recommended Business.</p>
+                    </div>
+                </div>
+                
               
                 <div className='col-6'>
                     <div className='analytics-card'>
-                        <img src={expenses_icon} alt="search" />
-                        <h3>Expenses</h3>
-                        <b>$674k</b>
+                        <img src={IMAGE.expenses_icon} alt="search" />
+                        <h3>DEALS PURCHASED</h3>
+                        <b>{countdata?.deals_purchased_count
+}</b>
                         <p>People Who Have Visited Your Business Places.</p>
                     </div>
                 </div>
@@ -69,6 +114,7 @@ const Analytics = () => {
     </div>
     <BottomNavigation/>
   </div>
+  </>
   )
 }
 

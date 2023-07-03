@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import AfterLoginTopbar from '../../newspaper/header/AfterLoginTopbar'
-import Dropdown from 'react-bootstrap/Dropdown';
-import dealIcon from "../../../image/headingicon/File_dock_add_fill.svg";
 import {useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
+import { IMAGE } from '../../../common/Theme';
+
 
 const EditCategory = () => {
     const [status, setstatus] = useState("1");
@@ -48,11 +48,7 @@ const EditCategory = () => {
           if(error.response.status === 404){
               toast.error(error.response.data.message);
           }
-          if(error.response.status === 403){
-            toast.error(error.response.data.message);
-            localStorage.clear();
-            navigate("/login-newspaper", { replace: true });
-        }
+         
       });
     
       }
@@ -64,9 +60,9 @@ const EditCategory = () => {
 
       const SubmitHandler = async ()=>{
         if(catename === ''){
-            toast.error('Category name should be proper!');
+            toast.error('Category is required!');
         } else if(position === ''){
-            toast.error('Position should be proper!');
+            toast.error('Position is required!');
         } else {
             setloading(true)
             let body = {
@@ -114,7 +110,7 @@ const EditCategory = () => {
     <AfterLoginTopbar/>
     <div className='header-info'>
         <div className='container'>
-        <img src={dealIcon}/>  Edit News Categories
+        <img src={IMAGE.add_cate}/>  Edit News Categories
         </div>
         </div>
       </div>

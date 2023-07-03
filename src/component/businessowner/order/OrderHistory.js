@@ -1,29 +1,23 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-const OrderHistory = () => {
+const OrderHistory = ({data}) => {
 
-
+console.log(data)
 
   return (
     <div className='order-history'>
-        <ul>
-            <li>
-                <h5>Order from John Smith for ABC Deal X <span>1</span> Qty</h5>
-                <NavLink className="procedBtn">Processed</NavLink>
-            </li>
-            <li>
-                <h5>Order from John Smith for ABC Deal X <span>1</span> Qty</h5>
-                <NavLink className="procedBtn">Processed</NavLink>
-            </li>
-            <li>
-                <h5>Order from John Smith for ABC Deal X <span>1</span> Qty</h5>
-                <NavLink className="procedBtn">Processed</NavLink>
-            </li>
-            <li>
-                <h5>Order from John Smith for ABC Deal X <span>1</span> Qty</h5>
-                <NavLink className="procedBtn">Processed</NavLink>
-            </li>
+  <ul>
+        {data && data.map((value,index)=>{
+            return (
+                <li key={index}>
+                    <h5>Order from <b>{value?.customer}</b> for <b>{value?.product}</b> <span>{value?.qty}</span> Qty</h5>
+                
+                </li>
+            )
+        })}
+      
+          
         </ul>
     </div>
   )

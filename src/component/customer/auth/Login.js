@@ -17,48 +17,49 @@ const dispatch = useDispatch();
 
 
 const LoginHandler = async () =>{
-    navigate("/home", { replace: true });
+  
 
-//     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-//    if (reg.test(email) === false) {
-//     toast.error('Email should be proper!');
-//     } else if(password === ''){
-//         toast.error('Password is required');
-//     } else {
-//         setloading(true)
-//         let body = {
-//             "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-//             "source":"WEB",
-//             "email":email,
-//             "password":password,
-//             "device_type":"",
-//             "device_token":"",
-//             "role_id":"5"
-//         }
+   if (reg.test(email) === false) {
+    toast.error('Email should be proper!');
+    } else if(password === ''){
+        toast.error('Password is required');
+    } else {
+        setloading(true)
+        let body = {
+            "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+            "source":"WEB",
+            "email":email,
+            "password":password,
+            "device_type":"",
+            "device_token":"",
+        }
 
-//         await axios.post("/signin", JSON.stringify(body))
-//         .then((response) => {
-//             setloading(false)
-//           if(response.data.success){
-//             toast.success(response.data.message);
-//             var Token = response.data.data.app_access_token
-//             var RoleId = response.data.data.user_role
-//             dispatch({ type: "setToken", accessToken: Token })
-//             localStorage.setItem("accessToken", Token);
-//             localStorage.setItem("role_id", RoleId);
-//             setTimeout(()=>{
-//               navigate("/home", { replace: true });
-//             },2000)
-//           }
-//         })
-//         .catch((error) => {
-//             setloading(false)
-//             if(error.response.status === 404){
-//                 toast.error(error.response.data.message);
-//             }
-//         });
-//     }
+        await axios.post("/signinweb", JSON.stringify(body))
+        .then((response) => {
+            setloading(false)
+          if(response.data.success){
+            toast.success(response.data.message);
+            var Token = response.data.data.app_access_token
+            var RoleId = response.data.data.user_role
+            dispatch({ type: "setToken", accessToken: Token })
+            localStorage.setItem("accessToken", Token);
+            localStorage.setItem("role_id", RoleId);
+            if(RoleId == "5"){
+                navigate("/home", { replace: true });
+            } else {
+                navigate("/dashboard", { replace: true });
+            }
+          }
+        })
+        .catch((error) => {
+            setloading(false)
+            if(error.response.status === 404){
+                toast.error(error.response.data.message);
+            }
+        });
+    }
 
 
 }

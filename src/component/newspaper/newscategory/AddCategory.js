@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 import AfterLoginTopbar from '../../newspaper/header/AfterLoginTopbar'
-import Dropdown from 'react-bootstrap/Dropdown';
-import dealIcon from "../../../image/headingicon/File_dock_add_fill.svg";
 import {useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
+import { IMAGE } from '../../../common/Theme';
+
 
 const AddCategory = () => {
     const [status, setstatus] = useState("1");
     const [catename, setcatename] = useState("");
     const [position, setposition] = useState("");
     const [loading, setloading] = useState(false)
-    const token = localStorage.getItem('accessToken');
     let navigate = useNavigate();
-
+    const token = localStorage.getItem('accessToken');
     const handleChange = e => {
         const target = e.target;
         if (target.checked) {
@@ -25,15 +24,15 @@ const AddCategory = () => {
 
       const SubmitHandler = async ()=>{
         if(catename === ''){
-            toast.error('Category name should be proper!');
+            toast.error('Category is mandatory!');
         } else if(position === ''){
-            toast.error('Position should be proper!');
+            toast.error('Position is mandatory!');
         } else {
             setloading(true)
             let body = {
-              "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-              "source":"WEB",
-              "app_access_token":token&&token,
+                "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+                "source":"WEB",
+                "app_access_token":token&&token,
               "category_name":catename,
               "rank":position,
               "category_status":status
@@ -55,11 +54,7 @@ const AddCategory = () => {
               if(error.response.status === 404){
                   toast.error(error.response.data.message);
               }
-              if(error.response.status === 403){
-                toast.error(error.response.data.message);
-                localStorage.clear();
-                navigate("/login-newspaper", { replace: true });
-            }
+            
           });
         }
       }
@@ -73,7 +68,7 @@ const AddCategory = () => {
     <AfterLoginTopbar/>
     <div className='header-info'>
         <div className='container'>
-        <img src={dealIcon}/>  Add News Categories
+        <img src={IMAGE.add_cate}/>  Add News Categories
         </div>
         </div>
       </div>
@@ -100,7 +95,15 @@ const AddCategory = () => {
                         <option value="7">7</option>
                         <option value="8">8</option>
                         <option value="9">9</option>
-                        <option value="10">4</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
                     </select>
                 </div>
                 <div className='form-group mb-4 mt-4'>

@@ -1,27 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import deal from "../../../image/icon/deal.svg";
-import about from "../../../image/icon/about.svg";
-import terms from "../../../image/icon/terms.svg";
-import Agreement from "../../../image/icon/agreement.svg";
-import privacy from "../../../image/icon/privacy.svg";
-import contact from "../../../image/icon/contact.svg";
-import profile from "../../../image/icon/profile.svg";
-import password from "../../../image/icon/password.svg";
-import account from "../../../image/icon/delete-accoint.svg";
-import signout from "../../../image/icon/sign_out.svg";
-import home from "../../../image/headingicon/Paper_fill.svg";
-import logo from "../../../image/logo.png";
-import location from "../../../image/location-outline.png";
-
+import Modal from 'react-bootstrap/Modal';
+import { toast } from 'react-toastify';
+import CustomLoader from '../../../common/CustomLoader';
+import axios from 'axios';
+import { IMAGE } from "../../../common/Theme";
 const NavMenu = () => {
-
+  const [show, setShow] = useState(false);
+  const [loading, setloading] = useState(false)
+  let navigate = useNavigate();
+  const handleClose = () => setShow(false);
+  const token = localStorage.getItem('accessToken');
 
   const dispatch = useDispatch();
   const sidebarShownews = useSelector((state) => state.sidebarShownews);
 
-  console.log("scd", sidebarShownews)
 
   var DynmicClass = "";
 
@@ -34,15 +28,46 @@ const NavMenu = () => {
 
   var width = window.innerWidth < 1920;
 
- 
+  const LogoutHandling = async ()=>{
+    setloading(true)
+
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token
+  }
+  await axios.post("/sign-out", JSON.stringify(body))
+  .then((response) => {
+    setloading(false)
+  if(response.data.success){
+    setShow(false)
+    dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })
+    toast.success(response.data.message);
+    dispatch({ type: "setToken", accessToken: null })
+    localStorage.clear();
+    setTimeout(()=>{
+      navigate("/login-newspaper", { replace: true });
+    },2000)
+  }
+})
+.catch((error) => {
+  setloading(false)
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
+    }
+});
+  }
 
   return (
+    <>
+     {loading && <CustomLoader/>}
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
        <div className="left-panel-sidebar">
       <div className="panel-logo">
+   
       <div className="sidebar-logo">
-    <img src={logo}  />
-    <span> <img src={location}/> Bowie, MD, USA</span>
+    <img src={IMAGE.logo}  />
+  
     </div>
         <button
           className="close-btn"
@@ -64,8 +89,46 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={home} alt="home" />
+              <img src={IMAGE.dealIcon} alt="home" />
               News Category
+              <span>
+                <i class="fa-solid fa-angle-right"></i>
+              </span>
+            </NavLink>
+      
+          </li>
+          <li>
+            <NavLink
+              to="/news-sub-category"
+              className={({ isActive }) => (isActive ? "active" : undefined)}
+              onClick={() =>
+                width
+                  ? dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })
+                  : null
+              }
+            >
+              <img src={IMAGE.dealIcon} alt="home" />
+              News Sub Category
+              <span>
+                <i class="fa-solid fa-angle-right"></i>
+              </span>
+            </NavLink>
+            
+          
+          </li>
+          
+          <li>
+            <NavLink
+              to="/news-articles"
+              className={({ isActive }) => (isActive ? "active" : undefined)}
+              onClick={() =>
+                width
+                  ? dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })
+                  : null
+              }
+            >
+              <img src={IMAGE.dealIcon} alt="deal" />
+            News articles
               <span>
                 <i class="fa-solid fa-angle-right"></i>
               </span>
@@ -81,25 +144,8 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={home} alt="deal" />
+              <img src={IMAGE.dealIcon} alt="deal" />
             News analytics
-              <span>
-                <i class="fa-solid fa-angle-right"></i>
-              </span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/political-news"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              onClick={() =>
-                width
-                  ? dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })
-                  : null
-              }
-            >
-              <img src={home} alt="deal" />
-            Political news articles
               <span>
                 <i class="fa-solid fa-angle-right"></i>
               </span>
@@ -115,7 +161,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={about} alt="about" />
+              <img src={IMAGE.about_icon} alt="about" />
               About Us
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -132,7 +178,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={terms} alt="terms" />
+              <img src={IMAGE.terms_icon} alt="terms" />
               Terms of Use
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -149,7 +195,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={Agreement} alt="agreement" />
+              <img src={IMAGE.agreement_icon} alt="agreement" />
               User Agreement
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -166,7 +212,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={privacy}  alt="privacy"/>
+              <img src={IMAGE.privacy_icon}  alt="privacy"/>
               Privacy Policy
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -183,7 +229,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={contact} alt="contact" />
+              <img src={IMAGE.contact_icon} alt="contact" />
               Contact Us
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -201,7 +247,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={profile} alt="profile" />
+              <img src={IMAGE.profile_icon} alt="profile" />
               Update Profile
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -218,7 +264,7 @@ const NavMenu = () => {
                   : null
               }
             >
-              <img src={password} alt="lock" />
+              <img src={IMAGE.password_icon} alt="lock" />
               Change Password
               <span>
                 <i class="fa-solid fa-angle-right"></i>
@@ -227,27 +273,46 @@ const NavMenu = () => {
           </li>
          
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-              onClick={() =>
-                width
-                  ? dispatch({ type: "setnews", sidebarShownews: !sidebarShownews })
-                  : null
-              }
-            >
-              <img src={signout} alt="signout" />
-              Logout
-              <span>
-                <i class="fa-solid fa-angle-right"></i>
-              </span>
-            </NavLink>
+             <button className="logoutBtnn" onClick={()=>setShow(true)}>
+                <img src={IMAGE.signout_icon} alt="signout" />
+                  Logout
+                  <span>
+                    <i class="fa-solid fa-angle-right"></i>
+                  </span>
+             </button>
+           
           </li>
        
         </ul>
       </div>
     </div>
+    <Modal show={show} onHide={handleClose} centered size="sm" className='AlertMsg'>
+    <Modal.Header>
+      <Modal.Title><i class="fa-solid fa-triangle-exclamation"></i> Alert !</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <h4>Are You sure log out ?</h4>
+      <ul>
+      <li>
+        <button onClick={handleClose} className='btn btn-md btn-danger'>
+            No
+        </button>
+     
+      </li>
+      <li>
+      <button onClick={LogoutHandling} className='btn btn-md btn-success'>
+            Yes
+        </button>
+    
+      </li>
+    </ul>
+
+    </Modal.Body>
+  
+   
+  </Modal>
     </div>
+    </>
   );
 };
 

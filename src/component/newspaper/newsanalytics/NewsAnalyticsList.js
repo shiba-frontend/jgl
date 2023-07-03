@@ -1,83 +1,82 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import AfterLoginTopbar from '../../newspaper/header/AfterLoginTopbar'
 import Dropdown from 'react-bootstrap/Dropdown';
-import addicon from '../../../image/Add_round_fill.png'
-import dealIcon from "../../../image/headingicon/Paper_fill.svg";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import CustomLoader from '../../../common/CustomLoader';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { IMAGE } from '../../../common/Theme';
 
 const NewsAnalyticsList = () => {
+  const [ListData, setListData] = useState([]);
+  const [loading, setloading] = useState(false)
+  const token = localStorage.getItem('accessToken');
+  let navigate = useNavigate();
+
+  const GetData = async ()=>{
 
 
-  const categoryList = [
-    {
-      id:1,
-      title:"Top Stories",
-      business:"5",
-      times:"1"
-    },
-    {
-      id:2,
-      title:"US",
-      business:"2",
-      times:"0"
-    },
-    {
-      id:3,
-      title:"World",
-      business:"3",
-      times:"1"
-    },
-    {
-      id:4,
-      title:"Business",
-      business:"1",
-      times:"1"
-    },
-    {
-      id:5,
-      title:"Politics",
-      business:"5",
-      times:"1"
-    },
-  ]
 
+    setloading(true)
+    
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token&&token,
+    }
+
+  await axios.post("/newspaper/analytics", JSON.stringify(body))
+  .then((response) => {
+   
+      setloading(false)
+    if(response.data.success){
+      setListData(response.data.data)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+    
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+      
+  });
+
+  }
+
+
+  useEffect(()=>{
+    GetData()
+  },[])
 
 
 
   return (
     <>
+    {loading && <CustomLoader/>}
      <div className='newspaper-layout'>
        <div className="top-f-header">
     <AfterLoginTopbar/>
     <div className='header-info'>
         <div className='container'>
-        <img src={dealIcon}/> News Analytics
+        <img src={IMAGE.dealIcon}/> News Analytics
         </div>
         </div>
       </div>
       <div className='comon-layout category-list'>
       <div className='container'>
            <ul>
-            {categoryList.map((item,index)=>{
+            {ListData && ListData.map((item,index)=>{
               return (
                 <li key={index}>
                   <div className='cl-left'>
-                    <label>{item.title} <i className="fa-solid fa-arrow-right-long"></i></label>
-                    <span>({item.business}) Business Advertised</span>
-                    <span>({item.times}) Times Advertised</span>
-                </div>
-                <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </Dropdown.Toggle>
-
-                              <Dropdown.Menu>
-                                  <button>Edit</button>
-                                  <button>Delete</button>
-                                  <button>Mark as Active</button>
-                              </Dropdown.Menu>
-                        </Dropdown>
+                  <NavLink to={`/analyticle-details/${item.category_id}`} className="btnlink">
+                    <label>{item.category_name} <i className="fa-solid fa-arrow-right-long"></i></label>
+                    <span>({item.business_advertised}) Business Advertised</span>
+                    <span>({item.deals_advertised}) Deals Advertised</span>
+                 </NavLink>
+              </div>
             </li>
               )
             })}
@@ -92,7 +91,7 @@ const NewsAnalyticsList = () => {
         </div>
         <div className='addIcon'>
               <NavLink to="/add-category">
-                <img src ={addicon}   alt="addicon" />
+                <img src ={IMAGE.addicon}   alt="addicon" />
               </NavLink>
             </div>
     </div>

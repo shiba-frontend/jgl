@@ -14,9 +14,6 @@ import ResetPassword from "./component/auth/ResetPassword";
 
 
 //End Auth
-
-
-import Home from "./component/customer/home/Home";
 import MyDeal from "./component/customer/deal/MyDeal";
 import NewsDetails from "./component/customer/home/NewsDetails";
 import Business from "./component/customer/business/Business";
@@ -87,6 +84,14 @@ import PublicRoute from "./common/PublicRoute";
 import PrivateRoute from "./common/PrivateRoute";
 import EditCategory from "./component/newspaper/newscategory/EditCategory";
 import PaymentCard from "./component/businessowner/Deals/PaymentCard";
+import SubCategoryList from "./component/newspaper/newscategory/SubCategoryList";
+import AddSubCategory from "./component/newspaper/newscategory/AddSubCategory";
+import EditSubCategory from "./component/newspaper/newscategory/EditSubCategory";
+import ArticlesList from "./component/newspaper/political/ArticlesList";
+import EditArticle from "./component/newspaper/political/EditArticle";
+import AnalyticleDetails from "./component/newspaper/newsanalytics/AnalyticleDetails";
+import Home from "./component/customer/home/Home";
+import EditDeal from "./component/businessowner/Deals/EditDeal";
 
 //End Profile
 
@@ -94,10 +99,9 @@ import PaymentCard from "./component/businessowner/Deals/PaymentCard";
 
 function App() {
 
-  //var token = useSelector((state) => state.accessToken);
-  //var token = localStorage.getItem('accessToken');
+  var token = useSelector((state) => state.accessToken);
+  var token = localStorage.getItem('accessToken');
 
-  var token = "hh"
 
   return (
     <div className="App">
@@ -111,7 +115,7 @@ function App() {
     }
       <Routes>
       <Route path="*" element={<NotFound />} />
-      {/* <Route element={<PublicRoute />}> */}
+   <Route element={<PublicRoute />}> 
           
             <Route path="/" element={<Login />} />
             <Route path="/login-customer" element={<Login />} />
@@ -121,8 +125,9 @@ function App() {
             <Route path="/otp" element={<Otp />} />
             <Route path="/signup-otp" element={<SignUpOtp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-        {/* </Route> */}
-            {/* <Route element={<PrivateRoute />}> */}
+     </Route> 
+           <Route element={<PrivateRoute />}> 
+           <Route path="/home" element={<Home />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/newspaper-privacy-policy" element={<PrivacyPolicyNews />} />
             <Route path="/business-privacy-policy" element={<PrivacyPolicyBusiness />} />
@@ -149,10 +154,13 @@ function App() {
             <Route path="/business-delete-account" element={<DeleteAccountBusiness />} />
 
 
-            <Route path="/home" element={<Home />} />
+        
             <Route path="/news-category" element={<NewsCategoryList />} />
+            <Route path="/news-sub-category" element={<SubCategoryList />} />
             <Route path="/add-category" element={<AddCategory />} />
+            <Route path="/add-sub-category" element={<AddSubCategory />} />
             <Route path="/edit-category/:id" element={<EditCategory />} />
+            <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
             <Route path="/deal" element={<Deals />} />
             <Route path="/my-deal" element={<MyDeal />} />
             <Route path="/news-details/:id" element={<NewsDetails />} />
@@ -162,8 +170,11 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/check-out" element={<CheckOut />} />
             <Route path="/news-analytics" element={<NewsAnalyticsList />} />
-            <Route path="/political-news" element={<PoliticalNewsArticle />} />
+            <Route path="/news-articles" element={<ArticlesList />} />
+            <Route path="/article-details" element={<PoliticalNewsArticle />} />
             <Route path="/add-articles" element={<AddArticles />} />
+            <Route path="/article-details/:id" element={<EditArticle />} />
+            <Route path="/analyticle-details/:id" element={<AnalyticleDetails />} />
             {/* Business Owner */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-business" element={<AddBusiness />} />
@@ -171,13 +182,14 @@ function App() {
             <Route path="/business-listing" element={<BusinessListing />} />
             <Route path="/delete-listing" element={<DeleteListing />} />
             <Route path="/add-deal" element={<AddDeal />} />
+            <Route path="/edit-deal/:id" element={<EditDeal />} />
             <Route path="/review-list" element={<ReviewList />} />
             <Route path="/customer-review-list" element={<ReviewListcustomer />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/customer-list" element={<CustomerList />} />
             <Route path="/my-order" element={<MyOrder />} />
             <Route path="/payment" element={<PaymentCard />} />
-            {/* </Route> */}
+          </Route> 
       </Routes>
       </BrowserRouter>
     </div>

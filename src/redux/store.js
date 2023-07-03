@@ -5,6 +5,8 @@ const initialState = {
   sidebarShowbusiness: true,
   newsdetailsId:null,
   accessToken:null,
+  profiledata:{},
+  isbusinessdata:null
 }
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
@@ -17,6 +19,10 @@ const changeState = (state = initialState, { type, ...rest }) => {
       case 'setid':
         return { ...state, ...rest }
         case 'setToken':
+        return { ...state, ...rest }
+        case 'setprofile':
+        return { ...state, ...rest }
+        case 'setbusinessId':
         return { ...state, ...rest }
     default:
       return state

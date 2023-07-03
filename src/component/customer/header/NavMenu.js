@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import home from "../../../image/icon/home.svg";
@@ -19,13 +19,48 @@ import account from "../../../image/icon/delete-accoint.svg";
 import signout from "../../../image/icon/sign_out.svg";
 import logo from "../../../image/logo.png";
 import location from "../../../image/location-outline.png";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const NavMenu = () => {
-  const [profileimage, setprofileimage] = useState("");
-  const [PreviewImage, setPreviewImage] = useState("");
+const [isBusiness, setisBusiness] = useState(false)
 
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
+
+  const token = localStorage.getItem('accessToken');
+
+    const Getbusiness = async ()=>{
+        let body = {
+          "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+          "source":"WEB",
+          "app_access_token":token&&token,
+        }
+    
+      await axios.post("/check-business-added", JSON.stringify(body))
+      .then((response) => {
+        if(response.data.success){
+          setisBusiness(true)
+        } else {
+          localStorage.setItem("business_id", response.data.data.business_id)
+        }
+     
+      })
+      .catch((error) => {
+     
+          if(error.response.status === 404){
+              toast.error(error.response.data.message);
+          }
+          
+      });
+    
+      }
+
+      useEffect(()=>{
+        Getbusiness()
+      },[])
+
+
 
   var DynmicClass = "";
 
@@ -38,24 +73,6 @@ const NavMenu = () => {
 
   var width = window.innerWidth < 1920;
 
-  // const HandleImage = (e) => {
-  //   var file = e.target.files[0];
-  //   setprofileimage(file);
-  //   var reader = new FileReader();
-  //   //var url = reader.readAsDataURL(file);
-  //   reader.onloadend = function (e) {
-  //     const fsize = file.size;
-  //     const fileSize = Math.round(fsize / 1024);
-  //     if (fileSize >= 800) {
-  //       //notify();
-  //     } else {
-  //       var editImg = document.getElementById("editImg");
-  //       editImg.src = reader.result;
-  //     }
-
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
 
   return (
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
@@ -265,7 +282,27 @@ const NavMenu = () => {
           </span>
         </NavLink>
       </li>
-      <li>
+      {isBusiness ===  true ? 
+
+<li>
+<NavLink
+  to="/add-business"
+  className={({ isActive }) => (isActive ? "active" : undefined)}
+  onClick={() =>
+    width
+      ? dispatch({ type: "set", sidebarShow: !sidebarShow })
+      : null
+  }
+>
+  <img src={owner} alt="owner" />
+  Business Owner Dashboard
+  <span>
+    <i class="fa-solid fa-angle-right"></i>
+  </span>
+</NavLink>
+</li>
+         : 
+<li>
         <NavLink
           to="/dashboard"
           className={({ isActive }) => (isActive ? "active" : undefined)}
@@ -282,6 +319,10 @@ const NavMenu = () => {
           </span>
         </NavLink>
       </li>
+
+
+    }
+      
       <li>
         <NavLink
           to="/update-profile"

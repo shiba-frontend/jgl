@@ -1,12 +1,13 @@
 import React from 'react'
-import notfound from '../image/404.jpg'
 import { NavLink } from 'react-router-dom'
+import { IMAGE } from '../common/Theme'
 
 const NotFound = () => {
+
   return (
     <div className='not-found'>
-        <img src={notfound} />
-        <NavLink to="/home" className="themeBtn">Back to home</NavLink>
+        <img src={IMAGE.notfound} />
+        <NavLink to="/" className="themeBtn">Back to home</NavLink>
     </div>
   )
 }
