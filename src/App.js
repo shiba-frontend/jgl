@@ -92,6 +92,7 @@ import EditArticle from "./component/newspaper/political/EditArticle";
 import AnalyticleDetails from "./component/newspaper/newsanalytics/AnalyticleDetails";
 import Home from "./component/customer/home/Home";
 import EditDeal from "./component/businessowner/Deals/EditDeal";
+import Payment from "./component/customer/checkprocess/Payment";
 
 //End Profile
 
@@ -169,6 +170,7 @@ function App() {
             <Route path="/my-checked-in" element={<MyCheckedIn />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/check-out" element={<CheckOut />} />
+            <Route path="/payment-deal" element={<Payment />} />
             <Route path="/news-analytics" element={<NewsAnalyticsList />} />
             <Route path="/news-articles" element={<ArticlesList />} />
             <Route path="/article-details" element={<PoliticalNewsArticle />} />

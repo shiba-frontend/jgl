@@ -292,10 +292,10 @@ button.close-btn {
   background: #d30000;
 }
 .sidebar {
-  height: 100vh;
+  background: #df0000;
+  height: calc(100vh - 100px);
   overflow-x: scroll;
   padding-bottom: 50px;
-  background: #df0000;
 }
 .sidebar li a img {
   width: 21px;
@@ -676,7 +676,7 @@ button.accept-btn {
   width: 100%;
   height: 100%;
 }
-.story-list-info button {
+.story-list-info h2 {
   background: transparent;
   padding: 0;
   border: none;
@@ -693,6 +693,11 @@ button.accept-btn {
   box-shadow:none;
 }
 .story-list-info p {
+  font-size: 14px;
+  line-height: 24px;
+  color: #242424;
+}
+.story-list-info div {
   font-size: 14px;
   line-height: 24px;
   color: #242424;
@@ -879,7 +884,7 @@ color: #808080;
   border-radius: 12px 0 0 12px;
 }
 .cart-info {
-  width: 52%;
+  width: 50%;
   padding: 10px 0;
 }
 .quantity-box ul {
@@ -888,7 +893,7 @@ color: #808080;
   gap: 10px;
 }
 .cart-price {
-  width: 18%;
+  width: 20%;
   text-align: right;
   padding: 10px;
 }
@@ -1521,7 +1526,6 @@ a.theme-color {
   color: #222;
 }
 .order-history-card h5 {
-  margin: 0;
   color: #9B9B9B;
   font-size: 14px;
   font-weight: 400;
@@ -1667,6 +1671,13 @@ button.logoutBtn {
   border-radius: 50%;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.bottom-bar li a span {
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: -19px;
 }
 .bottom-bar li a.active {
   background: #f16e77;
@@ -1839,4 +1850,108 @@ button.RemoveBtn{
   display: inline-block;
   padding: 5px 23px;
   border-radius: 3px;
+}
+.ReviewModal  .modal-title.h4 {
+  font-size: 17px;
+}
+.ReviewModal .modal-body h4 {
+  font-size: 18px;
+  margin: 0 0 14px 0;
+}
+.cart-text {
+  padding: 10px;
+  width: 30%;
+  border-radius: 12px 0 0 12px;
+}
+.cart-text h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+}
+.rating-container {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
+}
+.rating-container h3 {
+  font-size: 15px;
+  margin: 2px 0 4px 0;
+  color: #000;
+}
+.rating-container p {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 3px 0;
+}
+.rating-container span {
+  color: #000;
+  font-size: 14px;
+}
+.deal-card {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+.dealcard-text {
+  min-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+.dealcard-img {
+  border-radius: 5px;
+  height: 150px;
+  margin-bottom: 15px;
+}
+.dealcard-img img {
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+ul.order-details {
+  display: flex;
+  justify-content: space-between;
+}
+ul.order-details li {
+  border: 1px solid #ccc;
+  flex: 1;
+  padding: 5px;
+}
+ul.order-details li:last-child{
+  text-align: right;
+}
+.apply-coupon {
+  position: relative;
+}
+.apply-coupon button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: none;
+  background: linear-gradient(80.19deg, #d50000 -2.32%, #ff581d 232.37%);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 37px;
+  display: block;
+  text-align: center;
+}
+.apply-coupon input.form-control {
+  text-transform: uppercase;
+}
+.customer-info {
+  margin-bottom: 20px;
+}
+.progress-bar-container {
+  height: 8px;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: green;
+  transition: width 0.5s ease-out;
 }

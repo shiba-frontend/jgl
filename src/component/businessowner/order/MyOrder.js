@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 const MyOrder = () => {
     const [loading, setloading] = useState(false)
     const [tabs, settabs] = useState(1)
+    const [newOrder, setneworder] = useState([])
+    const [processOrder, setprocessorder] = useState([])
 
     const token = localStorage.getItem('accessToken');
 
@@ -27,6 +29,8 @@ const MyOrder = () => {
        
           setloading(false)
         if(response.data.success){
+            setneworder(response.data.data.new_orders)
+            setprocessorder(response.data.data.processed_orders)
             console.log(response.data.data)
         }
       })
@@ -74,88 +78,75 @@ const MyOrder = () => {
 
         {tabs === 1 && 
             <>
-
-            <div className='order-history-card'>
-                <div className='order-history-card-fl'>
-                    <h3>Order No: 1947034</h3>
-                    <h5>05-12-2019</h5>
+        {newOrder&&newOrder.map((item,index)=>{
+            return (
+                <div className='order-history-card' key={index}>
+                     <div className='customer-info'>
+                        <h5 >Order No: <label>{item?.order_no}</label></h5>
+                        <h5 >Order Date: <label>{item?.payment_date}</label></h5>
+                        {item?.transaction_id &&
+                        <h5 >Tracking number: <label>{item?.transaction_id}</label></h5>
+}
+                    </div>
+             
+              
+                <div className='customer-info'>
+                    <h5><label>Product Info:</label></h5>
+                    <h5 >Item: <label>{item?.item_name}</label></h5>
+                    <h5 >Price: <label>${item?.price} X {item?.qty}</label></h5>
+                    <h5 >Total Amount: <label>${item?.subtotal}</label></h5>
                 </div>
-                <h5>Tracking number: <label>IW3475453455</label></h5>
-                <div className='order-history-card-fl'>
-                <h5>Quantity: <label>3</label></h5>
-                <h5>Total Amount: <label>$100</label></h5>
+                <div className='customer-info'>
+                    <h5 ><label>Customer Info:</label></h5>
+                    <h5 >Name: <label>{item?.billing_fname} {item?.billing_lname}</label></h5>
+                    <h5 >Email: <label>{item?.billing_email}</label></h5>
+                    <h5>Phone: <label>{item?.billing_phone}</label></h5>
                 </div>
                 <div className='order-history-card-fl mt-4'>
-                    <NavLink>Details</NavLink>
-                    <span className='text-success'>Delivered</span>
+                   
+                    <span className={item?.transaction_id == "" ? "text-danger" : 'text-success'}>{item?.payment_status}</span>
                 </div>
             </div>
+            )
+        })}
+            
            
             </>
             }
              {tabs === 2 && 
             <>
 
-            <div className='order-history-card'>
-                <div className='order-history-card-fl'>
-                    <h3>Order No: 1947034</h3>
-                    <h5>05-12-2019</h5>
+{processOrder&&processOrder.map((item,index)=>{
+            return (
+                <div className='order-history-card' key={index}>
+                     <div className='customer-info'>
+                        <h5 >Order No: <label>{item?.order_no}</label></h5>
+                        <h5 >Order Date: <label>{item?.payment_date}</label></h5>
+                        {item?.transaction_id &&
+                        <h5 >Tracking number: <label>{item?.transaction_id}</label></h5>
+}
+                    </div>
+             
+              
+                <div className='customer-info'>
+                    <h5><label>Product Info:</label></h5>
+                    <h5 >Item: <label>{item?.item_name}</label></h5>
+                    <h5 >Price: <label>${item?.price} X {item?.qty}</label></h5>
+                    <h5 >Total Amount: <label>${item?.subtotal}</label></h5>
                 </div>
-                <h5>Tracking number: <label>IW3475453455</label></h5>
-                <div className='order-history-card-fl'>
-                <h5>Quantity: <label>3</label></h5>
-                <h5>Total Amount: <label>$100</label></h5>
-                </div>
-                <div className='order-history-card-fl mt-4'>
-                    <NavLink>Details</NavLink>
-                    <span className='text-success'>Delivered</span>
-                </div>
-            </div>
-            <div className='order-history-card'>
-                <div className='order-history-card-fl'>
-                    <h3>Order No: 1947034</h3>
-                    <h5>05-12-2019</h5>
-                </div>
-                <h5>Tracking number: <label>IW3475453455</label></h5>
-                <div className='order-history-card-fl'>
-                <h5>Quantity: <label>3</label></h5>
-                <h5>Total Amount: <label>$100</label></h5>
-                </div>
-                <div className='order-history-card-fl mt-4'>
-                    <NavLink>Details</NavLink>
-                    <span className='text-success'>Delivered</span>
-                </div>
-            </div>
-            <div className='order-history-card'>
-                <div className='order-history-card-fl'>
-                    <h3>Order No: 1947034</h3>
-                    <h5>05-12-2019</h5>
-                </div>
-                <h5>Tracking number: <label>IW3475453455</label></h5>
-                <div className='order-history-card-fl'>
-                <h5>Quantity: <label>3</label></h5>
-                <h5>Total Amount: <label>$100</label></h5>
+                <div className='customer-info'>
+                    <h5 ><label>Customer Info:</label></h5>
+                    <h5 >Name: <label>{item?.billing_fname} {item?.billing_lname}</label></h5>
+                    <h5 >Email: <label>{item?.billing_email}</label></h5>
+                    <h5>Phone: <label>{item?.billing_phone}</label></h5>
                 </div>
                 <div className='order-history-card-fl mt-4'>
-                    <NavLink>Details</NavLink>
-                    <span className='text-success'>Delivered</span>
+                   
+                    <span className={item?.transaction_id == "" ? "text-danger" : 'text-success'}>{item?.payment_status}</span>
                 </div>
             </div>
-            <div className='order-history-card'>
-                <div className='order-history-card-fl'>
-                    <h3>Order No: 1947034</h3>
-                    <h5>05-12-2019</h5>
-                </div>
-                <h5>Tracking number: <label>IW3475453455</label></h5>
-                <div className='order-history-card-fl'>
-                <h5>Quantity: <label>3</label></h5>
-                <h5>Total Amount: <label>$100</label></h5>
-                </div>
-                <div className='order-history-card-fl mt-4'>
-                    <NavLink>Details</NavLink>
-                    <span className='text-success'>Delivered</span>
-                </div>
-            </div>
+            )
+        })}
             </>
             }
       </div>

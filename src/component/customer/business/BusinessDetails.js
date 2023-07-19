@@ -1,35 +1,248 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import adv from "../../../image/slider.png";
 import { NavLink } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import BottomTabCustomer from '../header/BottomTabCustomer';
+import { IMAGE } from '../../../common/Theme';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import CustomLoader from '../../../common/CustomLoader';
+import Modal from 'react-bootstrap/Modal';
+import Webcam from 'react-webcam';
+import { useSelector, useDispatch } from "react-redux";
+
+//import './Video'
 
 const BusinessDetails = () => {
+  const [loading, setloading] = useState(false)
   const [key, setKey] = useState('home');
+  const [show, setShow] = useState(false);
+  const [type, settype] = useState("text");
+  const [reviewcategory, setreviewcategory] = useState([])
+  const [reviewsubcategory, setreviewsubcategory] = useState([])
+  const [categoryvalue, setcategoryvalue] = useState("")
+  const [stream, setStream] = useState(true)
+  const [videoBlob, setVideoUrlBlob] = useState(null)
+  const [videourl, setvideourl] = useState("")
+  const [isrecording, setIsRecording] = useState(false)
+  const [bdata, setbdata] = useState({})
 
-    const slider = [
-        {
-          id:1,
-          image:adv
-        },
-        {
-          id:2,
-          image:adv
-        },
-        {
-          id:3,
-          image:adv
-        },
-        {
-            id:4,
-            image:adv
-          },
-      ]
+
+  const dispatch = useDispatch();
+
+    const webcamRef = useRef(null);
+    const videoConstraints = {
+      width: 300,
+      height: 300,
+      facingMode: 'user',
+    };
+  
+   
+  
+    const startRecording = () => {
+      const videoElement = webcamRef.current.video;
+      const mediaRecorder = new MediaRecorder(videoElement.captureStream());
+      const chunks = [];
+  
+   
+  
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+  
+      setIsRecording(true)
+  
+      mediaRecorder.onstop = () => {
+        const recordedBlob = new Blob(chunks, { type: 'video/webm' });
+        setVideoUrlBlob(recordedBlob)
+        const url = URL.createObjectURL(recordedBlob)
+        setvideourl(url)
+        setStream(false)
+        //setIsRecording(false)
+        // Do something with the recorded video blob, e.g., upload to a server
+      };
+  
+   
+  
+      mediaRecorder.start();
+      setTimeout(() => {
+        mediaRecorder.stop();
+      }, 5000); // Stop recording after 5 seconds, adjust the duration as needed
+    };
+
+
+
+
+
+
+  const handleClose = () => setShow(false);
+  const token = localStorage.getItem('accessToken');
+  const businessId = localStorage.getItem('business_id'); 
+
+
+
+ 
+  
+
+
+  const handleChange = e => {
+    const target = e.target;
+    if (target.checked) {
+      settype(target.value);
+    }
+  };
+
+  const getCheckedInRequest = async () => {
+    setloading(true)
+
+    let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "app_access_token":token&&token,
+        "businessId":businessId
+      }
+
+  await axios.post("/get-single-check-in", JSON.stringify(body))
+  .then((response) => {
+   
+      setloading(false)
+    if(response.data.success){
+        console.log(response.data.data)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+    
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+    
+  });
+  }
+
+
+  const reviewMainCategory = async () => {
+    setloading(true)
+
+    let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+      }
+
+  await axios.post("/user/get-review-main-category", JSON.stringify(body))
+  .then((response) => {
+      setloading(false)
+    if(response.data.success){
+      setreviewcategory(response.data.data)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+  });
+
+
+
+  }
+
+  const getBusinessData = async () => {
+    setloading(true)
+
+    let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "app_access_token":token&&token,
+        "business_id":"135"
+      }
+
+  await axios.post("/business-details", JSON.stringify(body))
+  .then((response) => {
+   
+      setloading(false)
+    if(response.data.success){
+      setbdata(response.data.data)
+        console.log(response.data.data)
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+    
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+    
+  });
+  }
+
+  useEffect(() => {
+      getCheckedInRequest()
+      reviewMainCategory()
+      getBusinessData()
+    }, [])
+
+    
+  const GetcartData = async ()=>{
+    setloading(true)
+    
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token&&token,
+    }
+
+  await axios.post("/user/cart", JSON.stringify(body))
+  .then((response) => {
+   
+      setloading(false)
+    if(response.data.success){
+      dispatch({ type: "cartpage", cartstore: response.data.data?.cartData })
+    }
+  })
+  .catch((error) => {
+      setloading(false)
+    
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+      
+  });
+
+  }
+
+    const CategoryReviewHandle = async (e) =>{
+
+      setcategoryvalue(e.target.value)
+
+
+      let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "category_id":e.target.value
+      }
+
+      await axios.post("/user/get-review-sub-category", JSON.stringify(body))
+      .then((response) => {
+          setloading(false)
+        if(response.data.success){
+          setreviewsubcategory(response.data.data)
+        }
+      })
+      .catch((error) => {
+          setloading(false)
+          if(error.response.status === 404){
+              toast.error(error.response.data.message);
+          }
+      });
+
+    }
 
 
       var settings = {
@@ -46,16 +259,45 @@ const BusinessDetails = () => {
       };
 
 
+      const CartHandle = async (cart_id) => {
+        setloading(true)
+        let body = {
+          "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+          "source":"WEB",
+          "app_access_token":token&&token,
+          "deal_id":cart_id
+        }
+  
+    await axios.post("user/add-to-cart", JSON.stringify(body))
+    .then((response) => {
+     
+        setloading(false)
+      if(response.data.success){
+        toast.success(response.data.message);
+        getBusinessData()
+        GetcartData()
+      }
+    })
+    .catch((error) => {
+        setloading(false)
+      
+        if(error.response.status === 404){
+            toast.error(error.response.data.message);
+        }
+      
+    });
+      }
 
 
   return (
     <div className='customer-layout'>
+       {loading && <CustomLoader />}
        <div className="top-f-header">
     <AfterLoginTopbar
       />
       <div className='header-info'>
         <div className='container'>
-          Business Name
+          {bdata?.business_name}
         </div>
     </div>
       </div>
@@ -65,10 +307,10 @@ const BusinessDetails = () => {
             <div className='col-lg-5 col-12'>
             <div className='details-slider'>
                 <Slider {...settings}>
-                {slider.map((item, index)=>{
+                {bdata?.business_images&&bdata?.business_images.map((item, index)=>{
                     return (
                     <div className='slider-image' key={index}>
-                        <img src={item.image}/>
+                        <img src={item}/>
                     
                     </div>
                     )
@@ -86,23 +328,28 @@ const BusinessDetails = () => {
                              <label>Company</label>
                           </td>
                           <td>
-                              <span>Taco Bell</span>
+                              <span>{bdata?.business_name}</span>
                           </td>
                         </tr>
-                        <tr>
-                          <td>
-                             <label><i className="fa-solid fa-location-dot"></i> Address 1:</label>
-                          </td>
-                          <td>
-                              <h5>13360, LAUREL BOWIE  ROAD, LAUREL, MD, USA</h5>
-                          </td>
-                        </tr>
+                        {bdata?.business_address&&bdata?.business_address.map((add, index)=>{
+                          return (
+                            <tr key={index}>
+                              <td>
+                                <label><i className="fa-solid fa-location-dot"></i> Address {index + 1}:</label>
+                              </td>
+                              <td>
+                                  <h5>{add?.address}</h5>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                        
                         <tr>
                           <td>
                              <label><i className="fa-solid fa-phone"></i> Phone:</label>
                           </td>
                           <td>
-                              <a href='tel:(410) 792-9225'>(410) 792-9225</a>
+                              <a href={`tel:${bdata?.contact_no}`}>{bdata?.contact_no}</a>
                           </td>
                         </tr>
                         <tr>
@@ -124,7 +371,7 @@ const BusinessDetails = () => {
                       </table>
                       <ul className='s-btn'>
                         <li>
-                          <button className='themeBtn'>Add A Review</button>
+                          <button className='themeBtn' onClick={()=>setShow(true)}>Add A Review</button>
                         </li>
                         <li>
                             <NavLink to="/check-out" className="themeBtnOutline">Check In</NavLink>
@@ -141,14 +388,85 @@ const BusinessDetails = () => {
       onSelect={(k) => setKey(k)}
       className="mb-3"
     >
-      <Tab eventKey="home" title="More Deals">
-      dnij
+      <Tab eventKey="home" title={`Deals (${bdata?.business_deals&&bdata?.business_deals.length})`}>
+          {bdata?.business_deals&&bdata?.business_deals.map((item, index) =>{
+            return (
+              <div className='deal-card' key={index}>
+                {item?.deal_image &&
+                  <div className='dealcard-img'>
+                      <img src={item?.deal_image} className='w-100'/>
+                  </div>
+                 }
+                 {item?.deal_text &&
+                  <div className='dealcard-text' style={{background:item?.primary_bgcolor,padding:'5px'}}>
+                      <h5 style={{color:item?.primary_fontcolor,fontStyle:item?.primary_font_style,fontFamily:item?.primary_font_family,fontSize:'17px'}}>{item?.deal_text}</h5>
+                  </div>
+                 }
+
+{item?.is_cart === 0 ? <button className='themeBtn' onClick={()=>CartHandle(item.deal_id)}>
+                  Add to cart
+                </button>
+                :
+                <NavLink to="/cart" className='themeBtn'>
+                  Go to cart
+                </NavLink>
+                 
+              }
+
+
+              </div>
+            )
+          })}
       </Tab>
-      <Tab eventKey="profile" title="Video Reviews (0)">
-   dds
+      <Tab eventKey="profile" title={`Video Reviews (${bdata?.video_reviews&&bdata?.video_reviews.length})`}>
+      <div className='text-review'>
+                        {bdata?.video_reviews&&bdata?.video_reviews.map((review,index)=>{
+                            var rating = parseInt(review.rating)
+                            var StarData = [];
+                                for(var i = 0; i <5; i++){
+                                    if(i < rating){
+                                        StarData.push(<i className="fa-solid fa-star"></i>)
+                                    }
+                                    else {
+                                        StarData.push(<i className="fa-regular fa-star"></i>)
+                                    }
+                                }
+                          return (
+                              <div className='rating-container' key={index}>
+                                  {StarData}
+                                  <h3>{review?.category}</h3>
+                                  <iframe src={review?.video_filename} width="100%" height="200">
+
+                                  </iframe>
+                                  <span>--{review?.review_by}</span>
+                              </div>
+                          )
+                        })}
+          </div>
       </Tab>
-      <Tab eventKey="contact" title="Reviews (1)">
-    SD
+      <Tab eventKey="contact" title={`Reviews (${bdata?.text_reviews&&bdata?.text_reviews.length})`}>
+          <div className='text-review'>
+                        {bdata?.text_reviews&&bdata?.text_reviews.map((review,index)=>{
+                            var rating = parseInt(review.rating)
+                            var StarData = [];
+                                for(var i = 0; i <5; i++){
+                                    if(i < rating){
+                                        StarData.push(<i className="fa-solid fa-star"></i>)
+                                    }
+                                    else {
+                                        StarData.push(<i className="fa-regular fa-star"></i>)
+                                    }
+                                }
+                          return (
+                              <div className='rating-container' key={index}>
+                                  {StarData}
+                                  <h3>{review?.category}</h3>
+                                  <p>{review?.content}</p>
+                                  <span>--{review?.review_by}</span>
+                              </div>
+                          )
+                        })}
+          </div>
       </Tab>
     </Tabs>
           </div> 
@@ -161,6 +479,101 @@ const BusinessDetails = () => {
 
     </div>
     <BottomTabCustomer/>
+
+
+    <Modal show={show} onHide={handleClose} centered size="lg" className='ReviewModal'>
+    <Modal.Header>
+      <Modal.Title>Business Review Of Sanjay Medicure Hall</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <h4>Write a Review</h4>
+      
+      <div className='form-group'>
+          <ul className='acInflex'>
+              <li>
+                  <input type='radio' id="active" name='status' value="video" checked={type == 'video'} onChange={handleChange}  />
+                  <label htmlFor="active">Review in Video</label>
+              </li>
+              <li>
+                  <input type='radio' id="inactive" name='status' value="text" checked={type == 'text'} onChange={handleChange} />
+                  <label htmlFor="inactive">Review in Text</label>
+              </li>
+          </ul>
+      </div>
+      
+      
+      <div className='form-group'>
+        <label>Review Category</label>
+        <select className='form-control' onChange={(e)=>CategoryReviewHandle(e)}>
+        <option value="">Select Review Category</option>
+        {reviewcategory&&reviewcategory.map((item, index)=>{
+          return (
+            <option value={item?.review_category_id} key={index}>{item?.category_name}</option>
+          )
+        })}
+        
+        </select>
+      </div>
+      {categoryvalue == "19" ? null : 
+      <div className='form-group'>
+        <label>Review Sub Category</label>
+        <select className='form-control'>
+        <option value="">Select review sub category</option>
+            {reviewsubcategory&&reviewsubcategory.map((item, index)=>{
+              return (
+                <option value={item?.review_category_id} >{item?.category_name}</option>
+              )
+            })}
+           
+          
+        </select>
+      </div>
+      }
+      {categoryvalue == "19" && 
+      <div className='form-group'>
+        <textarea className='form-control' placeholder='Review Content'>
+                
+        </textarea>
+      </div>
+}
+
+
+{type == "video" && (
+  <>
+      <div className='form-group'>
+        {isrecording ? <h5>Recording...(Only 1 Mints)</h5>
+        :
+        
+        <button  id="startrecord" onClick={startRecording} className='btn btn-sm btn-primary mr-2'>Start Recording</button>
+      }
+     
+     
+      </div>
+      <div className='form-group'>
+      {stream ?  <Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints} />
+      :
+      <video src={videourl} controls muted></video>
+      
+    }
+    </div>
+    </>
+)
+}
+      <ul>
+      
+      <li>
+      <button className='btn btn-md btn-success'>
+         Submit Review
+        </button>
+    
+      </li>
+    </ul>
+
+    </Modal.Body>
+  
+   
+  </Modal>
+
     </div>
   )
 }

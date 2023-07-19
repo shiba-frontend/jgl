@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { IMAGE } from '../../../common/Theme';
@@ -12,14 +12,27 @@ const AfterLoginTopbar = (props) => {
 
 
 
-    // useEffect(()=>{
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.watchPosition(function(position) {
-  //       console.log("Latitude is :", position.coords.latitude);
-  //       console.log("Longitude is :", position.coords.longitude);
-  //     });
-  //   }
-  // },[])
+    useEffect(()=>{
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(function(position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude
+        // const google = window.google
+        // var google_map_pos = new google.maps.LatLng( lat, lng );
+
+        // console.log(google_map_pos)
+
+      });
+
+    //   navigator.geolocation.getCurrentPosition(
+    //     function( position ){ // success cb
+    //         console.log( position );
+    //     },
+    //     function(){ // fail cb
+    //     }
+    // );
+    }
+  },[])
 
   
   return (

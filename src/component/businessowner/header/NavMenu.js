@@ -9,6 +9,7 @@ import { IMAGE } from "../../../common/Theme";
 
 const NavMenu = () => {
   const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
   const [loading, setloading] = useState(false)
   const [isBusiness, setisBusiness] = useState(false)
   let navigate = useNavigate();
@@ -73,7 +74,7 @@ const NavMenu = () => {
     setloading(false)
   if(response.data.success){
     setShow(false)
-    dispatch({ type: "setnews", sidebarShowbusiness: !sidebarShowbusiness })
+    dispatch({ type: "setbusiness", sidebarShowbusiness: !sidebarShowbusiness })
     toast.success(response.data.message);
     dispatch({ type: "setToken", accessToken: null })
     localStorage.clear();
@@ -90,18 +91,24 @@ const NavMenu = () => {
 });
   }
 
+
+  const NavigateControl = ()=>{
+    setShow1(false)
+    dispatch({ type: "setbusiness", sidebarShowbusiness: !sidebarShowbusiness })
+    localStorage.setItem("role_id", "5")
+    navigate("/home", { replace: true});
+  }
+
   return (
     <>
      {loading && <CustomLoader/>}
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
        <div className="left-panel-sidebar">
       <div className="panel-logo">
-      <button className='logoutBtn' onClick={()=>setShow(true)}>
-                <i className="fa-solid fa-arrow-right-from-bracket"></i> Logout
-      </button>
+    
       <div className="sidebar-logo">
     <img src={IMAGE.logo}  />
-    <span> <img src={IMAGE.location_icon}/> Bowie, MD, USA</span>
+   
     </div>
         <button
           className="close-btn"
@@ -354,7 +361,7 @@ const NavMenu = () => {
           </li>
 }
 
-          <li>
+          {/* <li>
             <NavLink
               to="/home"
               className={({ isActive }) => (isActive ? "active" : undefined)}
@@ -370,7 +377,19 @@ const NavMenu = () => {
                 <i class="fa-solid fa-angle-right"></i>
               </span>
             </NavLink>
-          </li>
+          </li> */}
+
+<li>
+<button className="logoutBtnn" onClick={()=>setShow1(true)}>
+<img src={IMAGE.home_icon} alt="contact" />
+Customer Home
+      <span>
+        <i class="fa-solid fa-angle-right"></i>
+      </span>
+  </button>
+</li>
+
+         
           {!isBusiness &&
     
           <li>
@@ -411,7 +430,17 @@ const NavMenu = () => {
             </NavLink>
           </li>
 }
-{!isBusiness &&
+<li>
+  <button className="logoutBtnn" onClick={()=>setShow(true)}>
+    <img src={IMAGE.signout_icon} alt="signout" />
+      Logout
+      <span>
+        <i class="fa-solid fa-angle-right"></i>
+      </span>
+  </button>
+
+</li>
+{/* {!isBusiness &&
     
           <li>
             <NavLink
@@ -430,7 +459,7 @@ const NavMenu = () => {
               </span>
             </NavLink>
           </li>
-}
+} */}
        
         </ul>
       </div>
@@ -460,6 +489,34 @@ const NavMenu = () => {
   
    
   </Modal>
+
+  <Modal show={show1} onHide={handleClose} centered size="sm" className='AlertMsg'>
+    <Modal.Header>
+      <Modal.Title><i class="fa-solid fa-triangle-exclamation"></i> Alert !</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <h4>Are You sure switch to customer panel ?</h4>
+      <ul>
+      <li>
+        <button onClick={()=>setShow1(false)} className='btn btn-md btn-danger'>
+            No
+        </button>
+     
+      </li>
+      <li>
+      <button onClick={NavigateControl} className='btn btn-md btn-success'>
+            Yes
+        </button>
+    
+      </li>
+    </ul>
+
+    </Modal.Body>
+  
+   
+  </Modal>
+
+
     </div>
     </>
   );

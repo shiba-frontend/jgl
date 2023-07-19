@@ -253,39 +253,39 @@ function onLoad(autocomplete) {
       data.append("business_video", video);
 
       for(let i = 0; i < selectData.length; i++){
-        data.append(`business_category[${i}]`, selectData[i]);
+        data.append('business_category[]', selectData[i]);
       }
       
       for(let i = 0; i < businessImage.length; i++){
-        data.append(`business_image[${i}]`, businessImage[i]);
+        data.append('business_image[]', businessImage[i]);
       }
 
       for(let i = 0; i < AddArr.length; i++){
-        data.append(`address[${i}]`, AddArr[i]);
+        data.append('address[]', AddArr[i]);
       }
 
       for(let i = 0; i < countryArr.length; i++){
-        data.append(`country[${i}]`, countryArr[i]);
+        data.append('country[]', countryArr[i]);
       }
 
       for(let i = 0; i < stateArr.length; i++){
-        data.append(`state[${i}]`, stateArr[i]);
+        data.append('state[]', stateArr[i]);
       }
 
       for(let i = 0; i < cityArr.length; i++){
-        data.append(`city[${i}]`, cityArr[i]);
+        data.append('city[]', cityArr[i]);
       }
 
       for(let i = 0; i < zipcodeArr.length; i++){
-        data.append(`pincode[${i}]`, zipcodeArr[i]);
+        data.append('pincode[]', zipcodeArr[i]);
       }
 
       for(let i = 0; i < latArr.length; i++){
-        data.append(`lat[${i}]`, latArr[i]);
+        data.append('lat[]', latArr[i]);
       }
      
       for(let i = 0; i < lngArr.length; i++){
-        data.append(`lng[${i}]`, lngArr[i]);
+        data.append('lng[]', lngArr[i]);
       }
  
 

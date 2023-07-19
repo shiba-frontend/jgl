@@ -6,7 +6,8 @@ const initialState = {
   newsdetailsId:null,
   accessToken:null,
   profiledata:{},
-  isbusinessdata:null
+  isbusinessdata:null,
+  cartstore:[]
 }
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
@@ -24,6 +25,8 @@ const changeState = (state = initialState, { type, ...rest }) => {
         return { ...state, ...rest }
         case 'setbusinessId':
         return { ...state, ...rest }
+        case 'cartpage':
+          return { ...state, ...rest }
     default:
       return state
   }

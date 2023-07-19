@@ -1,30 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import home from "../../../image/icon/home.svg";
-import deal from "../../../image/icon/deal.svg";
-import business from "../../../image/icon/business.svg";
-import mydeal from "../../../image/icon/my-deal.svg";
-import reviews from "../../../image/icon/review.svg";
-import Checkin from "../../../image/icon/checkin.svg";
-import about from "../../../image/icon/about.svg";
-import terms from "../../../image/icon/terms.svg";
-import Agreement from "../../../image/icon/agreement.svg";
-import privacy from "../../../image/icon/privacy.svg";
-import contact from "../../../image/icon/contact.svg";
-import owner from "../../../image/icon/owner.svg";
-import profile from "../../../image/icon/profile.svg";
-import password from "../../../image/icon/password.svg";
-import account from "../../../image/icon/delete-accoint.svg";
-import signout from "../../../image/icon/sign_out.svg";
-import logo from "../../../image/logo.png";
-import location from "../../../image/location-outline.png";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { IMAGE } from "../../../common/Theme";
+import Modal from 'react-bootstrap/Modal';
 
 const NavMenu = () => {
 const [isBusiness, setisBusiness] = useState(false)
+const [show, setShow] = useState(false);
+const [show1, setShow1] = useState(false);
+const [loading, setloading] = useState(false)
 
+let navigate = useNavigate();
+const handleClose = () => setShow(false);
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
 
@@ -73,6 +62,43 @@ const [isBusiness, setisBusiness] = useState(false)
 
   var width = window.innerWidth < 1920;
 
+  const LogoutHandling = async ()=>{
+    setloading(true)
+
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token
+  }
+  await axios.post("/sign-out", JSON.stringify(body))
+  .then((response) => {
+    setloading(false)
+  if(response.data.success){
+    setShow(false)
+    toast.success(response.data.message);
+    dispatch({ type: "setToken", accessToken: null })
+    dispatch({ type: "set", sidebarShow: !sidebarShow })
+    localStorage.clear();
+    setTimeout(()=>{
+      navigate("/", { replace: true });
+    },2000)
+  }
+})
+.catch((error) => {
+  setloading(false)
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
+    }
+});
+  }
+
+
+  const NavigateControl = ()=>{
+    setShow1(false)
+    dispatch({ type: "set", sidebarShow: !sidebarShow })
+    localStorage.setItem("role_id", "2")
+    navigate("/dashboard", { replace: true});
+  }
 
   return (
     <div className={`left-panel sidebar-fixed ${DynmicClass}`}>
@@ -82,8 +108,8 @@ const [isBusiness, setisBusiness] = useState(false)
 
   <div className="panel-logo">
     <div className="sidebar-logo">
-    <img src={logo}  />
-    <span> <img src={location}/> Bowie, MD, USA</span>
+    <img src={IMAGE.logo} alt="logo" />
+    <span> <img src={IMAGE.location_icon}/> Bowie, MD, USA</span>
     </div>
     <button
       className="close-btn"
@@ -105,7 +131,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={home} alt="home" />
+          <img src={IMAGE.home_icon} alt="home" />
           Home
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -122,7 +148,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={deal} alt="deal" />
+          <img src={IMAGE.deal_icon} alt="deal" />
           Deals
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -139,7 +165,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={business} alt="business" />
+          <img src={IMAGE.business_icon_one} alt="business" />
           Business
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -156,7 +182,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={mydeal} alt="deal" />
+          <img src={IMAGE.customer_icon} alt="deal" />
           My Deals
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -173,7 +199,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={reviews} alt="review" />
+          <img src={IMAGE.review_icon} alt="review" />
           My Reviews
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -190,7 +216,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={Checkin} alt="checkin" />
+          <img src={IMAGE.checkin_icon} alt="checkin" />
           My Check-Ins
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -207,7 +233,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={about} alt="about" />
+          <img src={IMAGE.about_icon} alt="about" />
           About Us
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -224,7 +250,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={terms} alt="terms" />
+          <img src={IMAGE.terms_icon} alt="terms" />
           Terms of Use
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -241,7 +267,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={Agreement} alt="agreement" />
+          <img src={IMAGE.agreement_icon} alt="agreement" />
           User Agreement
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -258,7 +284,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={privacy}  alt="privacy"/>
+          <img src={IMAGE.privacy_icon}  alt="privacy"/>
           Privacy Policy
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -275,53 +301,22 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={contact} alt="contact" />
+          <img src={IMAGE.contact_icon} alt="contact" />
           Contact Us
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
         </NavLink>
       </li>
-      {isBusiness ===  true ? 
-
-<li>
-<NavLink
-  to="/add-business"
-  className={({ isActive }) => (isActive ? "active" : undefined)}
-  onClick={() =>
-    width
-      ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-      : null
-  }
->
-  <img src={owner} alt="owner" />
-  Business Owner Dashboard
-  <span>
-    <i class="fa-solid fa-angle-right"></i>
-  </span>
-</NavLink>
+      <li>
+<button className="logoutBtnn" onClick={()=>setShow1(true)}>
+<img src={IMAGE.home_icon} alt="contact" />
+Business Panel
+      <span>
+        <i class="fa-solid fa-angle-right"></i>
+      </span>
+  </button>
 </li>
-         : 
-<li>
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) => (isActive ? "active" : undefined)}
-          onClick={() =>
-            width
-              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-              : null
-          }
-        >
-          <img src={owner} alt="owner" />
-          Business Owner Dashboard
-          <span>
-            <i class="fa-solid fa-angle-right"></i>
-          </span>
-        </NavLink>
-      </li>
-
-
-    }
       
       <li>
         <NavLink
@@ -333,7 +328,7 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={profile} alt="profile" />
+          <img src={IMAGE.profile_icon} alt="profile" />
           Update Profile
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -350,51 +345,99 @@ const [isBusiness, setisBusiness] = useState(false)
               : null
           }
         >
-          <img src={password} alt="lock" />
+          <img src={IMAGE.password_icon} alt="lock" />
           Change Password
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
         </NavLink>
       </li>
+     
       <li>
-        <NavLink
-          to="/delete-account"
-          className={({ isActive }) => (isActive ? "active" : undefined)}
-          onClick={() =>
-            width
-              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-              : null
-          }
-        >
-          <img src={account} alt="account" />
-          Delete Account
-          <span>
-            <i class="fa-solid fa-angle-right"></i>
-          </span>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) => (isActive ? "active" : undefined)}
-          onClick={() =>
-            width
-              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-              : null
-          }
-        >
-          <img src={signout} alt="signout" />
-          Logout
-          <span>
-            <i class="fa-solid fa-angle-right"></i>
-          </span>
-        </NavLink>
-      </li>
+  <button className="logoutBtnn" onClick={()=>setShow(true)}>
+    <img src={IMAGE.signout_icon} alt="signout" />
+      Logout
+      <span>
+        <i class="fa-solid fa-angle-right"></i>
+      </span>
+  </button>
+
+</li>
    
     </ul>
   </div>
 </div>
+<Modal show={show} onHide={handleClose} centered size="sm" className='AlertMsg'>
+    <Modal.Header>
+      <Modal.Title><i class="fa-solid fa-triangle-exclamation"></i> Alert !</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <h4>Are You sure log out ?</h4>
+      <ul>
+      <li>
+        <button onClick={handleClose} className='btn btn-md btn-danger'>
+            No
+        </button>
+     
+      </li>
+      <li>
+      <button onClick={LogoutHandling} className='btn btn-md btn-success'>
+            Yes
+        </button>
+    
+      </li>
+    </ul>
+
+    </Modal.Body>
+  
+   
+  </Modal>
+
+  <Modal show={show1} onHide={handleClose} centered size="sm" className='AlertMsg'>
+    <Modal.Header>
+      <Modal.Title><i class="fa-solid fa-triangle-exclamation"></i> Alert !</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      {isBusiness ===  true ? 
+      <h4>You have no business! Please add your business first</h4>
+      :
+      <h4>Are You sure switch to business panel ?</h4>
+}
+      <ul>
+      <li>
+        <button onClick={()=>setShow1(false)} className='btn btn-md btn-danger'>
+            No
+        </button>
+     
+      </li>
+      <li>
+      {isBusiness ===  true ? 
+      <NavLink
+  to="/add-business"
+  className='btn btn-md btn-success'
+  onClick={() =>
+    {
+      setShow1(false)
+   dispatch({ type: "set", sidebarShow: !sidebarShow })
+
+    }
+  }
+>
+ Add Business
+</NavLink>
+:
+
+        <button onClick={NavigateControl} className='btn btn-md btn-success'>
+            Yes
+        </button>
+}
+      </li>
+    </ul>
+
+    </Modal.Body>
+  
+   
+  </Modal>
 </div>
   );
 };

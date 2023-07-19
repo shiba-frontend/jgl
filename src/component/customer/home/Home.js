@@ -1,99 +1,97 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import PageMenu from '../header/PageMenu'
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import story from "../../../image/maxresdefault.jpg";
-import adv from "../../../image/advertise.png";
-import cart from "../../../image/cart-icon.png";
 import BottomTabCustomer from '../header/BottomTabCustomer';
+import { IMAGE } from '../../../common/Theme';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import CustomLoader from '../../../common/CustomLoader';
 
 const Home = () => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  var total_length = "3";
+  const [loading, setloading] = useState(false)
+  const [getdata, setgetdata] = useState([])
 
-
-  var settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows:false,
-    afterChange: function(index) {
-      var indexed = index + 1
-      if(indexed == total_length){
-        setTimeout(()=>{
-          dispatch({ type: "setid", newsdetailsId: "3" })
-          navigate("/news-details/2", { replace: true });
-        },1000)
-      }
   
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('accessToken');
+
+const getCheckedInRequest = async () => {
+  setloading(true)
+
+  let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token&&token,
     }
-  };
 
-
-  const slider = [
-    {
-      id:1,
-      image:adv
-    },
-    {
-      id:2,
-      image:adv
-    },
-    {
-      id:3,
-      image:adv
-    },
-  ]
-
-  const categoryL = [
-    {
-      id:1,
-      image:story,
-      title:"  The standard Lorem Ipsum passage, used since the 1500s",
-      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
-    },
-    {
-      id:2,
-      image:story,
-      title:"  The standard Lorem Ipsum passage, used since the 1500s",
-      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
-    },
-    {
-      id:3,
-      image:story,
-      title:"  The standard Lorem Ipsum passage, used since the 1500s",
-      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
-    },
-    {
-      id:4,
-      image:story,
-      title:"  The standard Lorem Ipsum passage, used since the 1500s",
-      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
-    },
-    {
-      id:5,
-      image:story,
-      title:"  The standard Lorem Ipsum passage, used since the 1500s",
-      description:"Contrary to popular belief, Lorem Ipsum is not simply random text.It has roots in a piece of classical Latin literature from 45 BC,  making it over 2000 years old."
+await axios.post("/newspaper-home", JSON.stringify(body))
+.then((response) => {
+ 
+    setloading(false)
+  if(response.data.success){
+     setgetdata(response.data.data)
+      console.log(response.data.data)
+  }
+})
+.catch((error) => {
+    setloading(false)
+  
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
     }
-  ]
+  
+});
+}
+
+const GetcartData = async ()=>{
+  setloading(true)
+  
+  let body = {
+    "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+    "source":"WEB",
+    "app_access_token":token&&token,
+  }
+
+await axios.post("/user/cart", JSON.stringify(body))
+.then((response) => {
+ 
+    setloading(false)
+  if(response.data.success){
+    dispatch({ type: "cartpage", cartstore: response.data.data?.cartData })
+  }
+})
+.catch((error) => {
+    setloading(false)
+  
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
+    }
+    
+});
+
+}
+
+useEffect(() => {
+    getCheckedInRequest();
+    GetcartData();
+  }, [])
+
+
+
+
+
+
+
+
 
 
   return (
     <div className='customer-layout'>
+       {loading && <CustomLoader />}
        <div className="top-f-header">
     <AfterLoginTopbar
       />
@@ -111,20 +109,22 @@ const Home = () => {
         <div className='top-stories'>
             <h1>Top Stories For The Day:</h1>
             <div className='row'>
-              {categoryL.map((item,index)=>{
+            {getdata&&getdata.map((item,index)=>{
                 return (
-                  <div className='col-lg-4 col-12'>
-                      <div className='story-list'>
+                  <div className='col-lg-4 col-12' key={index}>
+                    <NavLink to={`/news-details/${item.id}`}>
+                    <div className='story-list'>
                         <div className='story-list-img'>
-                            <img src={item.image}/>
+                            <img src={item?.article_image}/>
                           </div>
                           <div className='story-list-info'>
-                            <Button  onClick={handleShow}>
-                              {item.title}
-                            </Button>
-                            <p>{item.description}</p>
+                            <h2> {item?.title}</h2>
+                            <div dangerouslySetInnerHTML={{ __html: item?.short_description }} />
+                         
                           </div>
                       </div>
+                    </NavLink>
+                     
                     </div>
                 )
               })}
@@ -141,31 +141,7 @@ const Home = () => {
     </div>
     <BottomTabCustomer/>
 
-    <Modal show={show} onHide={handleClose} centered animation={true} className='advertisement-slider'>
-        
-        <Modal.Body >
-      
-            <Slider {...settings}>
-              {slider.map((item, index)=>{
-                var Total = slider.length
-                return (
-                  <div className='adimage' key={index}>
-                    <img src={item.image}/>
-                    <h5>Advertisement {index + 1} of {Total}</h5>
-                    <NavLink to="/cart" className="advCart">
-                        <img src={cart}/>
-                    </NavLink>
-                </div>
-                )
-              })}
-              
-             
-            </Slider>
-
-
-        </Modal.Body>
-       
-      </Modal>
+  
     </div>
     
   )

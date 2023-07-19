@@ -28,7 +28,7 @@ const AfterLoginTopbar = (props) => {
               </div>
               <div className='col-8 col-lg-8'>
               <div className='login-after-top-right'>
-          <span>  <img src={IMAGE.location_icon}/> Bowie, MD, USA</span>
+        
         <button
         onClick={() =>
           dispatch({ type: "setbusiness", sidebarShowbusiness: !sidebarShowbusiness })
