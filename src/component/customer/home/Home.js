@@ -1,7 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import PageMenu from '../header/PageMenu'
-
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import BottomTabCustomer from '../header/BottomTabCustomer';
@@ -11,12 +10,17 @@ import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
 
 const Home = () => {
-
+  
   const [loading, setloading] = useState(false)
   const [getdata, setgetdata] = useState([])
 
-  
+  const newsData = useSelector((state) => state.voicesearch);
+  const newsResultList = useSelector((state) => state.newsresult);
   const dispatch = useDispatch();
+
+
+  console.log("from home", newsResultList)
+
   const token = localStorage.getItem('accessToken');
 
 const getCheckedInRequest = async () => {
@@ -33,8 +37,8 @@ await axios.post("/newspaper-home", JSON.stringify(body))
  
     setloading(false)
   if(response.data.success){
-     setgetdata(response.data.data)
-      console.log(response.data.data)
+    dispatch({ type: "news", newsresult: response.data.data })
+    // setgetdata(response.data.data)
   }
 })
 .catch((error) => {
@@ -75,10 +79,47 @@ await axios.post("/user/cart", JSON.stringify(body))
 
 }
 
+const ApiCall = async ()=>{
+  setloading(true);
+  let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token&&token,
+      "search_phrase":newsData
+    }
+
+    await axios.post("/voice-search-newspaper", JSON.stringify(body))
+.then((response) => {
+  setloading(false);
+  if(response.data.success){
+    dispatch({ type: "news", newsresult: response.data.data })
+   // setgetdata(response.data.data)
+  }
+})
+.catch((error) => {
+  setloading(false);
+    if(error.response.status === 404){
+        toast.error(error.response.data.message);
+    }
+    
+});
+}
+
+function ResetNews(){
+  getCheckedInRequest();
+}
+
+
 useEffect(() => {
+  if(newsData == ''){
     getCheckedInRequest();
     GetcartData();
-  }, [])
+  } else {
+    ApiCall()
+  }
+   
+ 
+  }, [newsData])
 
 
 
@@ -104,12 +145,13 @@ useEffect(() => {
       </div>
       <div className='comon-layout'>
       <div className='container'>
-      <PageMenu/>
 
+      <PageMenu/>
+      {newsResultList&&newsResultList.length > 0 ?
         <div className='top-stories'>
             <h1>Top Stories For The Day:</h1>
             <div className='row'>
-            {getdata&&getdata.map((item,index)=>{
+            {newsResultList&&newsResultList.map((item,index)=>{
                 return (
                   <div className='col-lg-4 col-12' key={index}>
                     <NavLink to={`/news-details/${item.id}`}>
@@ -133,7 +175,12 @@ useEffect(() => {
             </div>
          
         </div>
-
+:
+<div className='notFound'>
+<h4>No data found</h4>
+<button className='themeBtn' onClick={ResetNews}>Get All News</button>
+</div>
+            }
 
         </div>
        

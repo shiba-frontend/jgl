@@ -67,7 +67,7 @@ const MyCheckedIn = () => {
                         <div className='col-6 col-lg-3 col-md-4' key={index}>
                         <div className='deal-box'>
                             <div className='deal-box-image'>
-                                <NavLink to={`/business-details/${item.encoded_business_id}`}>
+                                <NavLink to={`/business-details/${item.business_id}`}>
                                     <img src={item?.business_image} alt="checkedImg" />
                                     <div className='overlay-info'>
                                     <h5>{item?.business_name}</h5>

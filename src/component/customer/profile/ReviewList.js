@@ -86,7 +86,7 @@ const ReviewList = () => {
                         {StarData}
                         </div>
                         
-                        <Dropdown className='dropDownBtn'>
+                        {/* <Dropdown className='dropDownBtn'>
                             <Dropdown.Toggle id="dropdown-basic">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                             </Dropdown.Toggle>
@@ -95,7 +95,7 @@ const ReviewList = () => {
                                   <button>Approve</button>
                                   <button>Reject</button>
                               </Dropdown.Menu>
-                        </Dropdown>
+                        </Dropdown> */}
                     </div>
                     
                         <p> {item?.review_main_category} {item?.review_sub_category}</p>

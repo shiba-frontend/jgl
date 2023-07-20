@@ -138,7 +138,7 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
-      <li>
+      {/* <li>
         <NavLink
           to="/deal"
           className={({ isActive }) => (isActive ? "active" : undefined)}
@@ -167,6 +167,23 @@ const handleClose = () => setShow(false);
         >
           <img src={IMAGE.business_icon_one} alt="business" />
           Business
+          <span>
+            <i class="fa-solid fa-angle-right"></i>
+          </span>
+        </NavLink>
+      </li> */}
+         <li>
+        <NavLink
+          to="/my-checked-in"
+          className={({ isActive }) => (isActive ? "active" : undefined)}
+          onClick={() =>
+            width
+              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
+              : null
+          }
+        >
+          <img src={IMAGE.checkin_icon} alt="checkin" />
+          My Check-Ins
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
@@ -206,23 +223,7 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
-      <li>
-        <NavLink
-          to="/my-checked-in"
-          className={({ isActive }) => (isActive ? "active" : undefined)}
-          onClick={() =>
-            width
-              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-              : null
-          }
-        >
-          <img src={IMAGE.checkin_icon} alt="checkin" />
-          My Check-Ins
-          <span>
-            <i class="fa-solid fa-angle-right"></i>
-          </span>
-        </NavLink>
-      </li>
+   
       <li>
         <NavLink
           to="/about-us"

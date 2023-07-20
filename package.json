@@ -17,6 +17,7 @@
     "react-datepicker": "^4.11.0",
     "react-dom": "^18.2.0",
     "react-google-places-autocomplete": "^4.0.1",
+    "react-maskinput": "^3.2.0",
     "react-places-autocomplete": "^7.3.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.0",
@@ -28,6 +29,7 @@
     "react-webcam": "^7.1.1",
     "redux": "^4.2.0",
     "redux-saga": "^1.2.3",
+    "remove": "^0.1.5",
     "slick-carousel": "^1.8.1",
     "web-vitals": "^2.1.4"
   },

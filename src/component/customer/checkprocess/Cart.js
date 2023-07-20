@@ -184,7 +184,7 @@ const Cart = () => {
       </div>
       <div className="comon-layout">
         <div className="container">
-        {cart.length > 0 ?
+        {cart&&cart.length > 0 ?
           <>
            { cart&&cart.map((item, index)=>{
                 return (

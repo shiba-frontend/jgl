@@ -3,17 +3,18 @@ import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import { NavLink } from 'react-router-dom';
+import { NavLink,useParams } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import BottomTabCustomer from '../header/BottomTabCustomer';
-import { IMAGE } from '../../../common/Theme';
+import { IMAGE, baseUrl } from '../../../common/Theme';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
 import Modal from 'react-bootstrap/Modal';
 import Webcam from 'react-webcam';
 import { useSelector, useDispatch } from "react-redux";
+
 
 //import './Video'
 
@@ -25,14 +26,20 @@ const BusinessDetails = () => {
   const [reviewcategory, setreviewcategory] = useState([])
   const [reviewsubcategory, setreviewsubcategory] = useState([])
   const [categoryvalue, setcategoryvalue] = useState("")
+  const [subcategoryvalue, setsubcategoryvalue] = useState("")
+  const [reviewcontent, setreviewcontent] = useState("")
+  const [isgolive, setisgolive] = useState(false)
   const [stream, setStream] = useState(true)
   const [videoBlob, setVideoUrlBlob] = useState(null)
+  const [uploadvideofile, setuploadvideofile] = useState(null)
   const [videourl, setvideourl] = useState("")
   const [isrecording, setIsRecording] = useState(false)
   const [bdata, setbdata] = useState({})
 
 
   const dispatch = useDispatch();
+  const {id} = useParams();
+  const url = baseUrl();
 
     const webcamRef = useRef(null);
     const videoConstraints = {
@@ -160,7 +167,7 @@ const BusinessDetails = () => {
         "key":"facb6e0a6fcbe200dca2fb60dec75be7",
         "source":"WEB",
         "app_access_token":token&&token,
-        "business_id":"135"
+        "business_id":'135'
       }
 
   await axios.post("/business-details", JSON.stringify(body))
@@ -287,6 +294,62 @@ const BusinessDetails = () => {
       
     });
       }
+
+      const uploadVideoHandler = (event) => {
+        const file = event.target.files[0];
+        setVideoUrlBlob(file)
+      }
+
+const SubmitReview = async () => {
+
+  if(categoryvalue == ''){
+    toast.error("Please select a category")
+  } else if(subcategoryvalue == ''){
+    toast.error("Please select a sub category")
+  } else {
+
+    setloading(true)
+    const FormData = require("form-data");
+      let data = new FormData();
+      data.append("key", "facb6e0a6fcbe200dca2fb60dec75be7");
+      data.append("source", "WEB");
+      data.append("app_access_token", token && token);
+      data.append("business_id", '135');
+      data.append("custom_checkbox", type);
+      data.append("review_category", categoryvalue);
+      data.append("review_sub_category", subcategoryvalue);
+      data.append("review_content", reviewcontent);
+      data.append("video_filename", videoBlob);
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${url}/user/submit-review`,
+        data: data,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          setloading(false);
+          if (response.data.success) {
+            toast.success(response.data.message);
+           
+          }
+        })
+        .catch((error) => {
+          setloading(false);
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message);
+          }
+        });
+
+
+  }
+
+
+}
+  
 
 
   return (
@@ -517,7 +580,7 @@ const BusinessDetails = () => {
       {categoryvalue == "19" ? null : 
       <div className='form-group'>
         <label>Review Sub Category</label>
-        <select className='form-control'>
+        <select className='form-control' value={subcategoryvalue} onChange={(e)=>setsubcategoryvalue(e.target.value)}>
         <option value="">Select review sub category</option>
             {reviewsubcategory&&reviewsubcategory.map((item, index)=>{
               return (
@@ -531,7 +594,7 @@ const BusinessDetails = () => {
       }
       {categoryvalue == "19" && 
       <div className='form-group'>
-        <textarea className='form-control' placeholder='Review Content'>
+        <textarea className='form-control' placeholder='Review Content' value={reviewcontent} onChange={(e)=>setreviewcontent(e.target.value)}>
                 
         </textarea>
       </div>
@@ -540,6 +603,25 @@ const BusinessDetails = () => {
 
 {type == "video" && (
   <>
+  {!isgolive ?
+    <div className='video-type text-center'>
+        <div className='form-group'>
+          <label style={{display:'block',color:'red'}}>Need to upload video within 2MB size.</label>
+            <button className='golivebtn' onClick={()=>setisgolive(true)}>
+                Go Live
+            </button>
+        </div>
+        <h5>OR</h5>
+        <div className='form-group'>
+          <div className='custom-v-file'>
+          <label>Upload your videos</label>
+          <input type='file' onChange={uploadVideoHandler} accept='video/*'  />
+          </div>
+         
+        </div>
+    </div>
+:
+<>
       <div className='form-group'>
         {isrecording ? <h5>Recording...(Only 1 Mints)</h5>
         :
@@ -547,6 +629,7 @@ const BusinessDetails = () => {
         <button  id="startrecord" onClick={startRecording} className='btn btn-sm btn-primary mr-2'>Start Recording</button>
       }
      
+     <button className='btn btn-sm btn-warning' onClick={()=>setisgolive(false)}>No interest</button>
      
       </div>
       <div className='form-group'>
@@ -557,12 +640,14 @@ const BusinessDetails = () => {
     }
     </div>
     </>
+}
+    </>
 )
 }
       <ul>
       
       <li>
-      <button className='btn btn-md btn-success'>
+      <button className='btn btn-md btn-success' onClick={SubmitReview}>
          Submit Review
         </button>
     

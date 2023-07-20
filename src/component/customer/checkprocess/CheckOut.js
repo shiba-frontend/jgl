@@ -124,12 +124,16 @@ else {
 }
 
 
-await axios.post("/user/checkout", JSON.stringify(body))
+await axios.post("/user/order-place", JSON.stringify(body))
 .then((response) => {
 setloading(false)
 if(response.data.success){
 toast.success(response.data.message);
-navigate("/payment-deal")
+navigate("/payment-deal",{
+  state:{
+    orderid:response.data.data?.order_id
+  }
+})
 }
 })
 .catch((error) => {

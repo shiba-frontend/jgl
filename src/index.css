@@ -742,6 +742,8 @@ a.advCart {
 .slider-image img {
   width: 100%;
   opacity: 0.5;
+  height: 215px;
+  object-fit: cover;
 }
 .details-slider .slick-active.slick-center.slick-current img {
   opacity: 1;
@@ -1673,6 +1675,19 @@ button.logoutBtn {
   align-items: center;
   position: relative;
 }
+.bottom-bar li button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  background: transparent;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+}
 .bottom-bar li a span {
   color: #fff;
   position: absolute;
@@ -1954,4 +1969,38 @@ ul.order-details li:last-child{
   height: 100%;
   background: green;
   transition: width 0.5s ease-out;
+}
+button.golivebtn {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+}
+.custom-v-file {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.custom-v-file label{
+  color: #fff;
+  margin: 0;
+}
+.custom-v-file input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  opacity: 0;
 }
