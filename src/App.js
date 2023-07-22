@@ -94,6 +94,7 @@ import Home from "./component/customer/home/Home";
 import EditDeal from "./component/businessowner/Deals/EditDeal";
 import Payment from "./component/customer/checkprocess/Payment";
 import OrderDetails from "./component/customer/deal/OrderDetails";
+import CategoryArticle from "./component/customer/home/CategoryArticle";
 
 //End Profile
 
@@ -163,12 +164,13 @@ function App() {
             <Route path="/add-sub-category" element={<AddSubCategory />} />
             <Route path="/edit-category/:id" element={<EditCategory />} />
             <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
-            <Route path="/deal" element={<Deals />} />
+            <Route path="/deal" element={<  Deals />} />
             <Route path="/my-deal" element={<MyDeal />} />
             <Route path="/order-details/:id" element={<OrderDetails />} />
             <Route path="/news-details/:id" element={<NewsDetails />} />
             <Route path="/business" element={<Business />} />
             <Route path="/business-details/:id" element={<BusinessDetails />} />
+            <Route path="/home-article" element={<CategoryArticle />} />
             <Route path="/my-checked-in" element={<MyCheckedIn />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/check-out" element={<CheckOut />} />

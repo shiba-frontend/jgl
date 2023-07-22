@@ -335,8 +335,17 @@ button.close-btn {
 }
 .login-after-top-right {
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 .login-after-top-right span {
+  font-weight: 500;
+  font-size: 13px;
+  color: #F9F9F9;
+  margin-right: 14px;
+}
+.login-after-top-right button {
   font-weight: 500;
   font-size: 13px;
   color: #F9F9F9;
@@ -602,6 +611,11 @@ button.accept-btn {
   left: 0;
   right: 0;
 }
+.deal-box-info h4 {
+  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+}
 .deal-box-info label {
   background: #EA0615;
   color: #fff;
@@ -632,15 +646,27 @@ button.accept-btn {
   padding: 13px 0px;
   font-size: 13px;
 }
-.pageMenu > ul > li > a {
+.pageMenu > ul > li > button {
   color: #484848;
   font-size: 12px;
   font-weight: 500;
   padding: 0px 14px 0 0;
   border-right: 1px solid #484848;
   margin: 0 14px 0 0;
+  background: transparent;
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
 }
-.pageMenu > ul > li button {
+.pageMenu > ul > li .dropdown button {
+  background: transparent;
+  color: #484848;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  padding: 0 10px;
+}
+.pageMenu > ul > li .dropdown li button {
   background: transparent;
   color: #484848;
   font-size: 12px;
@@ -1906,6 +1932,7 @@ button.RemoveBtn{
   margin-bottom: 30px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 30px;
+  width: 100%;
 }
 .dealcard-text {
   min-height: 150px;
@@ -1926,7 +1953,9 @@ button.RemoveBtn{
   border-radius: 5px;
   object-fit: cover;
 }
-
+.deal-card h4 {
+  font-size: 16px;
+}
 ul.order-details {
   display: flex;
   justify-content: space-between;
@@ -2003,4 +2032,96 @@ button.golivebtn {
   bottom: 0;
   height: 100%;
   opacity: 0;
+}
+.customerOrder-details h3 {
+  font-size: 15px;
+}
+.order-bg {
+  background: #f2f2f2;
+  padding: 15px;
+  border-radius: 5px;
+}
+.order-bg h4 {
+  font-size: 18px;
+  color: #000;
+  margin: 11px 0 7px 0;
+}
+.order-bg p {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+.order-bg p b {
+  color: #000;
+  margin-right: 3px;
+  font-size: 13px;
+}
+.billing-add {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+.billing-add  h4 {
+  font-size: 18px;
+  color: #000;
+  margin: 0px 0 7px 0;
+}
+.billing-add p {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+.billing-item h4 {
+  font-size: 18px;
+  color: #000;
+  margin: 0px 0 15px 0;
+}
+.itemList b {
+  font-size: 14px;
+}
+.itemList b p{
+  font-size: 14px;
+  color: #666;
+}
+.billing-item_list {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+.t-info li {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0;
+  font-size: 14px;
+}
+.float-btn {
+  position: fixed;
+  bottom: 63px;
+  right: 19px;
+}
+.float-btn button {
+  border: none;
+  font-size: 15px;
+  text-transform: capitalize;
+  background: #f30000;
+  color: #fff;
+  display: block;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+.pac-container {
+  z-index: 99999;
+}
+
+.article-d {
+  min-height: 68vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ul.bredcrams {
+  display: flex;
+  font-size: 14px;
+  gap: 6px;
+  margin: 0 0 15px 0;
 }

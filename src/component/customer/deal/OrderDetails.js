@@ -44,12 +44,15 @@ const OrderDetails = () => {
     
       }
     
-    
+   
+
+
       useEffect(()=>{
         GetData()
-      
+     
       },[])
 
+    
 
 
   return (
@@ -64,6 +67,9 @@ const OrderDetails = () => {
     <div className='comon-layout'>
          <div className='container'>
               <div className='customerOrder-details'>
+                  <h1></h1>
+
+
                   <h3>Order# JGL/2023/00013</h3>
                   <div className='order-bg'>
                     <h4>Order Information</h4>
@@ -76,7 +82,7 @@ const OrderDetails = () => {
                     <p><b>Phone:</b>{getdata?.billing_phone}</p>
                   </div>
                   <div className='billing-add'>
-                    <h4>Order Information</h4>
+                    <h4>Billing Information</h4>
                     <p>{getdata?.billing_address}</p>
                     <p>{getdata?.billing_country}</p>
                     <p>{getdata?.billing_state}</p>
@@ -115,6 +121,24 @@ const OrderDetails = () => {
                     })}
                     
                   </div>
+
+                    <div className='t-info'>
+                      <ul>
+                        <li>
+                          <b>Sub Total</b>
+                          <span>{getdata?.subtotal_amount}</span>
+                        </li>
+                        <li>
+                          <b>Discount</b>
+                          <span>{getdata?.discount_amount}</span>
+                        </li>
+                        <li>
+                          <b>Total</b>
+                          <span>{getdata?.total_amount}</span>
+                        </li>
+                      </ul>
+                    </div>
+
               </div>
         </div>
     </div>

@@ -1,16 +1,30 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Dropdown from 'react-bootstrap/Dropdown';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const PageMenu = () => {
+
+const PageMenu = ({response}) => {
+   
+    console.log(response)
+
   return (
     <div className='pageMenu'>
         <ul>
+            
             <li>
-                <NavLink to="/">International</NavLink>
+                <NavLink to={`/home-article/${response&&response[0]?.category_id
+}`}>{response&&response[0].category_name}</NavLink>
             </li>
             <li>
-                <NavLink to="/">National</NavLink>
+                <NavLink to="/">{response&&response[1]?.category_name}</NavLink>
+            </li>
+            <li>
+                <NavLink to="/">{response&&response[2]?.category_name}</NavLink>
+            </li>
+            <li>
+                <NavLink to="/">{response&&response[3]?.category_name}</NavLink>
             </li>
             <li>
             <Dropdown>
@@ -20,15 +34,16 @@ const PageMenu = () => {
 
                 <Dropdown.Menu>
                    <ul>
-                    <li>
-                        <NavLink to="">More 1</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="">More 2</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="">More 3</NavLink>
-                    </li>
+                    {response&&response.slice(4).map((cat,i)=>{
+                        return (
+                            <li key={i}>
+                            <NavLink to="">{cat?.category_name}</NavLink>
+                        </li>
+                        )
+                       
+                    })}
+                    
+                   
                    </ul>
                 </Dropdown.Menu>
                 </Dropdown>

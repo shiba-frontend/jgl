@@ -1,23 +1,23 @@
 import React,{useState} from 'react'
-import { NavLink } from 'react-router-dom'
 import search from '../../../image/bottom-search.png'
 import voice from '../../../image/voice-assistant.png'
 import cart from '../../../image/shopping-cart.png'
 import { useSelector, useDispatch } from "react-redux";
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { NavLink, useNavigate } from "react-router-dom";
+import { IMAGE } from '../../../common/Theme';
 
 const BottomTabCustomer = () => {
-    const [text, settext] = useState();
-    const [iscondition, setiscondition] = useState(false);
+ 
 
-    console.log(text)
+    let navigate = useNavigate();
    
     const token = localStorage.getItem('accessToken');
     const cartData = useSelector((state) => state.cartstore);
     const dispatch = useDispatch();
-   
+  
 
     function cartqty (){
         var total = 0;
@@ -29,33 +29,6 @@ const BottomTabCustomer = () => {
 
     
 
-    const {
-        transcript,
-        listening,
-        resetTranscript,
-        browserSupportsSpeechRecognition
-      } = useSpeechRecognition();
-    
-      if (!browserSupportsSpeechRecognition) {
-        return null
-      }
-
-      const StartListening = ()=>{
-        resetTranscript()
-        setiscondition(true)
-        SpeechRecognition.startListening({continuous: true});
-    }
-
-    const StopListening = async ()=>{
-        SpeechRecognition.stopListening();
-        settext(transcript)
-        
-        setiscondition(false)
-       setTimeout(()=>{
-        dispatch({ type: "voice", voicesearch: transcript })
-       },1000)
-
-    }
 
 
   
@@ -69,25 +42,21 @@ const BottomTabCustomer = () => {
         <ul>
 
         <li>
-                <NavLink>
-                    <img src={search} alt="widget" />
+                <NavLink to="/home">
+                    <img src={IMAGE.home_icon} alt="widget" />
                 </NavLink>
             </li>
-            {!iscondition ? 
             <li>
-                <button onClick={StartListening}>
-                <i class="fa-solid fa-microphone-lines"></i>
-                </button>
-              
+                <NavLink to="/deal">
+                    <img src={IMAGE.checkin_icon} alt="widget" />
+                </NavLink>
             </li>
-            :
             <li>
-                <button onClick={StopListening}>
-                <i class="fa-solid fa-microphone-lines-slash"></i>
-                </button>
-              
+                <NavLink to="/business">
+                    <img src={IMAGE.business_icon_one} alt="widget" />
+                </NavLink>
             </li>
-}
+        
             <li>
                 <NavLink to="/cart">
                     <img src={cart} alt="dash" />

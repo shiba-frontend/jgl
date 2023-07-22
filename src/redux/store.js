@@ -9,7 +9,10 @@ const initialState = {
   isbusinessdata:null,
   cartstore:[],
   voicesearch:"",
-  newsresult:[]
+  newsresult:[],
+  dealsLocationList:[],
+  businessLocationList:[],
+  isstatus:false,
 }
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
@@ -33,6 +36,14 @@ const changeState = (state = initialState, { type, ...rest }) => {
           return { ...state, ...rest }
           case 'news':
           return { ...state, ...rest }
+       
+            case 'dealslocation':
+              return { ...state, ...rest }
+              case 'businesslocation':
+                return { ...state, ...rest }
+            
+                  case 'status':
+                    return { ...state, ...rest }
     default:
       return state
   }

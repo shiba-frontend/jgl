@@ -16,8 +16,10 @@ let navigate = useNavigate();
 const handleClose = () => setShow(false);
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
-
+  const getlocation = useSelector((state) => state.locationData);
+  const getcurrentadd = useSelector((state) => state.previewLocation);
   const token = localStorage.getItem('accessToken');
+  const LocationName = localStorage.getItem("location_name");
 
     const Getbusiness = async ()=>{
         let body = {
@@ -109,7 +111,7 @@ const handleClose = () => setShow(false);
   <div className="panel-logo">
     <div className="sidebar-logo">
     <img src={IMAGE.logo} alt="logo" />
-    <span> <img src={IMAGE.location_icon}/> Bowie, MD, USA</span>
+    <span> <img src={IMAGE.location_icon}/> {LocationName && LocationName}</span>
     </div>
     <button
       className="close-btn"
@@ -138,23 +140,6 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
-      {/* <li>
-        <NavLink
-          to="/deal"
-          className={({ isActive }) => (isActive ? "active" : undefined)}
-          onClick={() =>
-            width
-              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
-              : null
-          }
-        >
-          <img src={IMAGE.deal_icon} alt="deal" />
-          Deals
-          <span>
-            <i class="fa-solid fa-angle-right"></i>
-          </span>
-        </NavLink>
-      </li>
       <li>
         <NavLink
           to="/business"
@@ -165,13 +150,30 @@ const handleClose = () => setShow(false);
               : null
           }
         >
-          <img src={IMAGE.business_icon_one} alt="business" />
+          <img src={IMAGE.deal_icon} alt="deal" />
           Business
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
         </NavLink>
-      </li> */}
+      </li>
+      <li>
+        <NavLink
+          to="/deal"
+          className={({ isActive }) => (isActive ? "active" : undefined)}
+          onClick={() =>
+            width
+              ? dispatch({ type: "set", sidebarShow: !sidebarShow })
+              : null
+          }
+        >
+          <img src={IMAGE.business_icon_one} alt="business" />
+          Deal
+          <span>
+            <i class="fa-solid fa-angle-right"></i>
+          </span>
+        </NavLink>
+      </li>
          <li>
         <NavLink
           to="/my-checked-in"
@@ -200,7 +202,7 @@ const handleClose = () => setShow(false);
           }
         >
           <img src={IMAGE.customer_icon} alt="deal" />
-          My Deals
+          Order Deals
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
@@ -400,7 +402,7 @@ Business Panel
     </Modal.Header>
     <Modal.Body>
       {isBusiness ===  true ? 
-      <h4>You have no business! Please add your business first</h4>
+      <h4>You have not business yet, Please add your business first</h4>
       :
       <h4>Are You sure switch to business panel ?</h4>
 }

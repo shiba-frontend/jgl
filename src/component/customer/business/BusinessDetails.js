@@ -35,7 +35,7 @@ const BusinessDetails = () => {
   const [videourl, setvideourl] = useState("")
   const [isrecording, setIsRecording] = useState(false)
   const [bdata, setbdata] = useState({})
-
+  const [checkedStatus, setcheckedStatus] = useState(0)
 
   const dispatch = useDispatch();
   const {id} = useParams();
@@ -106,8 +106,7 @@ const BusinessDetails = () => {
   };
 
   const getCheckedInRequest = async () => {
-    setloading(true)
-
+   
     let body = {
         "key":"facb6e0a6fcbe200dca2fb60dec75be7",
         "source":"WEB",
@@ -118,9 +117,36 @@ const BusinessDetails = () => {
   await axios.post("/get-single-check-in", JSON.stringify(body))
   .then((response) => {
    
+    if(response.data.success){
+        setcheckedStatus(response.data.data?.checkin_status)
+    }
+  })
+  .catch((error) => {
+  
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
+    
+  });
+  }
+
+  const CheckedInHandle = async ()=>{
+    setloading(true)
+
+    let body = {
+        "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+        "source":"WEB",
+        "app_access_token":token&&token,
+        "businessId":businessId
+      }
+
+  await axios.post("/apply-check-in", JSON.stringify(body))
+  .then((response) => {
+   
       setloading(false)
     if(response.data.success){
-        console.log(response.data.data)
+      toast.success(response.data.message);
+      getBusinessData()
     }
   })
   .catch((error) => {
@@ -167,7 +193,7 @@ const BusinessDetails = () => {
         "key":"facb6e0a6fcbe200dca2fb60dec75be7",
         "source":"WEB",
         "app_access_token":token&&token,
-        "business_id":'135'
+        "business_id":id
       }
 
   await axios.post("/business-details", JSON.stringify(body))
@@ -314,11 +340,14 @@ const SubmitReview = async () => {
       data.append("key", "facb6e0a6fcbe200dca2fb60dec75be7");
       data.append("source", "WEB");
       data.append("app_access_token", token && token);
-      data.append("business_id", '135');
-      data.append("custom_checkbox", type);
+      data.append("business_id", id);
+      data.append("custom_checkbox1", type);
       data.append("review_category", categoryvalue);
+      data.append("review_category1", '');
       data.append("review_sub_category", subcategoryvalue);
+      data.append("review_sub_category1", '');
       data.append("review_content", reviewcontent);
+      data.append("review_content1", '');
       data.append("video_filename", videoBlob);
 
       let config = {
@@ -334,7 +363,7 @@ const SubmitReview = async () => {
           setloading(false);
           if (response.data.success) {
             toast.success(response.data.message);
-           
+            setShow(false)
           }
         })
         .catch((error) => {
@@ -421,13 +450,12 @@ const SubmitReview = async () => {
                           </td>
                           <td>
                               <ul>
-                                <li>Monday: 10:00 AM -12:00 PM</li>
-                                <li>Tuesday: 10:00 AM -12:00 PM</li>
-                                <li>wed: 10:00 AM -12:00 PM</li>
-                                <li>Thursday: 10:00 AM -12:00 PM</li>
-                                <li>friday: 10:00 AM -12:00 PM</li>
-                                <li>saturday: 10:00 AM -12:00 PM</li>
-                                <li>sunday: 10:00 AM -12:00 PM</li>
+                                {bdata?.working_hours&&bdata?.working_hours.map((val,i)=>{
+                                  return(
+                                    <li key={i}>{val}</li>
+                                  )
+                                })}
+                               
                               </ul>
                           </td>
                         </tr>
@@ -437,7 +465,8 @@ const SubmitReview = async () => {
                           <button className='themeBtn' onClick={()=>setShow(true)}>Add A Review</button>
                         </li>
                         <li>
-                            <NavLink to="/check-out" className="themeBtnOutline">Check In</NavLink>
+                          <button onClick={CheckedInHandle} className="themeBtnOutline" disabled={checkedStatus == 1 ? true : false}>{checkedStatus == 1 ? <i className="fa-solid fa-check"></i> : null}Check In</button>
+                            
                         </li>
                       </ul>
                   </div>
@@ -452,7 +481,8 @@ const SubmitReview = async () => {
       className="mb-3"
     >
       <Tab eventKey="home" title={`Deals (${bdata?.business_deals&&bdata?.business_deals.length})`}>
-          {bdata?.business_deals&&bdata?.business_deals.map((item, index) =>{
+        {bdata?.business_deals&&bdata?.business_deals.length > 0 ?
+          bdata?.business_deals&&bdata?.business_deals.map((item, index) =>{
             return (
               <div className='deal-card' key={index}>
                 {item?.deal_image &&
@@ -479,11 +509,17 @@ const SubmitReview = async () => {
 
               </div>
             )
-          })}
+          })
+        :
+        <h5>No Deals for {bdata?.business_name}</h5>
+        }
       </Tab>
       <Tab eventKey="profile" title={`Video Reviews (${bdata?.video_reviews&&bdata?.video_reviews.length})`}>
       <div className='text-review'>
-                        {bdata?.video_reviews&&bdata?.video_reviews.map((review,index)=>{
+
+          {bdata?.video_reviews&&bdata?.video_reviews.length > 0 ?
+
+                        bdata?.video_reviews&&bdata?.video_reviews.map((review,index)=>{
                             var rating = parseInt(review.rating)
                             var StarData = [];
                                 for(var i = 0; i <5; i++){
@@ -504,12 +540,18 @@ const SubmitReview = async () => {
                                   <span>--{review?.review_by}</span>
                               </div>
                           )
-                        })}
+                        })
+                      :
+                      <h5>No videos review for {bdata?.business_name}</h5>
+                      
+                      }
           </div>
       </Tab>
       <Tab eventKey="contact" title={`Reviews (${bdata?.text_reviews&&bdata?.text_reviews.length})`}>
           <div className='text-review'>
-                        {bdata?.text_reviews&&bdata?.text_reviews.map((review,index)=>{
+              {bdata?.text_reviews&&bdata?.text_reviews.length > 0 ?
+
+                        bdata?.text_reviews&&bdata?.text_reviews.map((review,index)=>{
                             var rating = parseInt(review.rating)
                             var StarData = [];
                                 for(var i = 0; i <5; i++){
@@ -528,7 +570,11 @@ const SubmitReview = async () => {
                                   <span>--{review?.review_by}</span>
                               </div>
                           )
-                        })}
+                        })
+                        :
+                        <h5>No review for {bdata?.business_name}</h5>
+                      
+                      }
           </div>
       </Tab>
     </Tabs>

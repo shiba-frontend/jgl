@@ -46,11 +46,11 @@ const LoginHandler = async () =>{
             dispatch({ type: "setToken", accessToken: Token })
             localStorage.setItem("accessToken", Token);
             localStorage.setItem("role_id", RoleId);
-            if(RoleId == "5"){
-                navigate("/home", { replace: true });
-            } else {
-                navigate("/dashboard", { replace: true });
-            }
+            // if(RoleId == "5"){
+            //     navigate("/home", { replace: true });
+            // } else {
+            //     navigate("/dashboard", { replace: true });
+            // }
           }
         })
         .catch((error) => {

@@ -25,7 +25,7 @@ const NewsDetails = () => {
 
   const dispatch = useDispatch();
  
-   const id =  useParams()
+   const {id} =  useParams()
 
 
    const token = localStorage.getItem('accessToken');
@@ -62,34 +62,50 @@ const NewsDetails = () => {
    
    useEffect(() => {
     getdetailsdata()
+   
      }, [])
 
 
      useEffect(() => {
 if(newsData?.random_deals && newsData?.random_deals.length > index){
+
+
   const interval = setInterval(() => {
-    if(progressive < 6){
+    if(progressive < 9){
       setprogressive(progressive + 1);
     }
-
   }, 1000);
-
-  if(progressive > 5){
+  
+ 
+   if(progressive > 8){
     setprogressive(0)
     setindex(index + 1)
-  }
-
- 
+    //HandleSpeakrandom(index + 1)
+  } 
 
   
+
   return () => clearInterval(interval);
+
+
 } else if(newsData?.random_deals && newsData?.random_deals.length <= index){
   setisshowing(true);
+  HandleSpeak();
 }
 
     
   }, [progressive, newsData?.random_deals]);
 
+
+
+  const HandleSpeakrandom = (index)=>{
+    var title = newsData?.random_deals&&newsData?.random_deals[index]?.title;
+    var des = newsData?.random_deals&&newsData?.random_deals[index]?.deal_text == '' ? "No Description" : newsData?.random_deals&&newsData?.random_deals[index]?.deal_text
+    var content =  title&&title.concat(des)
+
+    speak({text:content})
+  }
+ 
 
   const GetcartData = async ()=>{
     setloading(true)
@@ -148,7 +164,9 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
     
   });
     }
-    
+
+
+
 
 const HandleSpeak = ()=>{
   speak({text:newsData?.description})
@@ -161,7 +179,7 @@ const StopSpeak = ()=>{
 
 
   return (
-    <div className='customer-layout'>
+    <div className='customer-layout '>
         {loading && <CustomLoader />}
        <div className="top-f-header">
     <AfterLoginTopbar
@@ -172,7 +190,7 @@ const StopSpeak = ()=>{
         </div>
         </div>
         <div className='progress-bar-container'>
-          <div className='progress-bar-fill' style={{width:`${progressive * 20}%`}}>
+          <div className='progress-bar-fill' style={{width:`${progressive * 12.5}%`}}>
             
             </div>
         </div>
@@ -180,8 +198,11 @@ const StopSpeak = ()=>{
       <div className='comon-layout'>
       
       <div className='container'>
+      
        {!isshowing ?
+         <div className='article-d'>
                   <div className='deal-card'>
+                  
                 {newsData?.random_deals&&newsData?.random_deals[index]?.deal_image &&
                   <div className='dealcard-img'>
                       <img src={newsData?.random_deals&&newsData?.random_deals[index]?.deal_image} className='w-100'/>
@@ -193,6 +214,7 @@ const StopSpeak = ()=>{
                       <h5 style={{color:newsData?.random_deals&&newsData?.random_deals[index]?.primary_fontcolor,fontStyle:newsData?.random_deals&&newsData?.random_deals[index]?.primary_font_style,fontFamily:newsData?.random_deals&&newsData?.random_deals[index]?.primary_font_family,fontSize:'17px'}}>{newsData?.random_deals&&newsData?.random_deals[index]?.deal_text}</h5>
                   </div>
                  }
+                 <h4>{newsData?.random_deals&&newsData?.random_deals[index]?.title}</h4>
                 {newsData?.random_deals&&newsData?.random_deals[index]?.is_cart === 0 ? <button className='themeBtn' onClick={()=>CartHandle(newsData?.random_deals&&newsData?.random_deals[index]?.deal_id)}>
                   Add to cart
                 </button>
@@ -204,10 +226,10 @@ const StopSpeak = ()=>{
               }
 
               </div>
-             
+             </div>
 :
 <>
-      <PageMenu/>
+
     <div className='listen-btn text-right mb-2'>
       {!isstart ? 
     <button onClick={HandleSpeak} className='btn btn-sm btn-success'> <i class="fa-solid fa-volume-low"></i> Listen</button>
