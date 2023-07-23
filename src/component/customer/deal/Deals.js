@@ -7,18 +7,17 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import CustomLoader from '../../../common/CustomLoader';
 import { useSelector, useDispatch } from "react-redux";
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 
 const Deals = () => {
     const [loading, setloading] = useState(false)
     const [text, settext] = useState('');
-    const [iscondition, setiscondition] = useState(false);
+  const [isListening, setIsListening] = useState(false);
     const getdeals = useSelector((state) => state.dealsLocationList);
     const getstatus = useSelector((state) => state.isstatus);
     const dispatch = useDispatch();
 
- 
+    const recognition = new window.webkitSpeechRecognition();
 
     var localLat = localStorage.getItem("lat_name");
      var localLng = localStorage.getItem("lng_name");
@@ -162,41 +161,29 @@ const Deals = () => {
 
     },[getstatus])
 
+  
 
-    const {
-      transcript,
-      listening,
-      resetTranscript,
-      browserSupportsSpeechRecognition
-    } = useSpeechRecognition();
+  recognition.onstart = () => {
+    setTimeout(()=>{
+      setIsListening(false);
+      recognition.stop();
+    },4000)
+  };
   
-    if (!browserSupportsSpeechRecognition) {
-      return null
-    }
-  
-    const StartListening = ()=>{
-      resetTranscript()
-      setiscondition(true)
-      SpeechRecognition.startListening({continuous: true});
-  }
-  
-  const StopListening = async ()=>{
-      SpeechRecognition.stopListening();
-      settext(transcript)
-      
-      setiscondition(false)
-  
-      setloading(true)
-  
-      setTimeout( async()=>{
-        let body = {
+  recognition.onresult =  (event) => {
+      const transcript = event.results[0][0].transcript;
+    dispatch({ type: "voice", voicesearch: transcript })
+    settext(transcript);
+    setloading(true)
+
+          let body = {
           "key":"facb6e0a6fcbe200dca2fb60dec75be7",
           "source":"WEB",
           "app_access_token":token&&token,
           "search_phrase":transcript
         }
-    
-    await axios.post("/deal-voice-search", JSON.stringify(body))
+  
+   axios.post("/deal-voice-search", JSON.stringify(body))
     .then((response) => {
      
         setloading(false)
@@ -212,10 +199,13 @@ const Deals = () => {
         }
       
     });
-      },1000)
+  };
   
-  }
-  
+  const handleStartStop = async () => {
+    setIsListening(true);
+    recognition.start();
+  };
+
   const ResetNews = async() =>{
     settext('');
     if(localLat && localLng){
@@ -277,19 +267,14 @@ const Deals = () => {
         }
         </div>
         <div className='float-btn'>
-        {!iscondition ? 
-                <button onClick={StartListening}>
-                <i class="fa-solid fa-microphone-lines"></i> Speech to Search
-                </button>
-           
-            :
-        
-                <button onClick={StopListening}>
-                <i class="fa-solid fa-microphone-lines-slash"></i> Stop to confirm
-                </button>
-              
-         
-}
+   
+   <button onClick={handleStartStop}>
+ {isListening ? <i class="fa-solid fa-microphone-lines-slash"></i> :  <i class="fa-solid fa-microphone-lines"></i>  }
+   
+
+   </button>
+
+
 </div>
 
     </div>

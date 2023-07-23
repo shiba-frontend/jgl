@@ -16,8 +16,7 @@ let navigate = useNavigate();
 const handleClose = () => setShow(false);
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
-  const getlocation = useSelector((state) => state.locationData);
-  const getcurrentadd = useSelector((state) => state.previewLocation);
+
   const token = localStorage.getItem('accessToken');
   const LocationName = localStorage.getItem("location_name");
 
@@ -150,7 +149,7 @@ const handleClose = () => setShow(false);
               : null
           }
         >
-          <img src={IMAGE.deal_icon} alt="deal" />
+          <img src={IMAGE.business_icon_one} alt="deal" />
           Business
           <span>
             <i class="fa-solid fa-angle-right"></i>
@@ -167,7 +166,7 @@ const handleClose = () => setShow(false);
               : null
           }
         >
-          <img src={IMAGE.business_icon_one} alt="business" />
+          <img src={IMAGE.deal_icon} alt="business" />
           Deal
           <span>
             <i class="fa-solid fa-angle-right"></i>

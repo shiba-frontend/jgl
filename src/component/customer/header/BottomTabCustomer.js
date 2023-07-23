@@ -48,7 +48,7 @@ const BottomTabCustomer = () => {
             </li>
             <li>
                 <NavLink to="/deal">
-                    <img src={IMAGE.checkin_icon} alt="widget" />
+                    <img src={IMAGE.deal_icon} alt="widget" />
                 </NavLink>
             </li>
             <li>

@@ -106,7 +106,7 @@ const Business = () => {
              <div className="top-f-header">
         <AfterLoginTopbar/>
         <div className="header-info">
-            <div className="container"><img src={IMAGE.deal_icon}/> Business</div>
+            <div className="container"><img src={IMAGE.business_icon_one}/> Business</div>
           </div>
           </div>
         <div className='comon-layout'>

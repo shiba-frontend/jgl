@@ -32,38 +32,17 @@ const AfterLoginTopbar = (props) => {
     const place = searchResult.getPlace();
 
     var _address = place.formatted_address;
-    var _country = "";
-    var _city = "";
-    var _state = "";
-    var _zipcode = "";
+ 
 
     var _lat = place.geometry.location.lat()
     var _lng = place.geometry.location.lng()
 
-    for (const component of place.address_components){
-      const addressType = component.types[0]
-
-     
-
-      if(addressType == "administrative_area_level_3"){
-        _city = component.long_name
-      } 
-      if(addressType == "administrative_area_level_1"){
-        _state = component.long_name
-      }
-      if(addressType == "country"){
-        _country = component.long_name
-      }
-      if(addressType == "postal_code"){
-        _zipcode = component.long_name
-      }
-    }
 
     localStorage.setItem("location_name",_address);
     setShow(false)
     localStorage.setItem("lat_name",_lat);
     localStorage.setItem("lng_name",_lng);
-
+    localStorage.setItem("locstatus",false);
 
     dispatch({ type: "status", isstatus: true })
 
@@ -165,7 +144,6 @@ const AfterLoginTopbar = (props) => {
   useEffect(()=>{
 
     GetcartData();
-
   },[])
   
 

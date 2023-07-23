@@ -22,13 +22,23 @@ const NewsDetails = () => {
   const [isshowing, setisshowing] = useState(false)
   const [isstart, setisstart] = useState(false);
   const { speak, cancel } = useSpeechSynthesis();
+  const [voiceText, setvoiceText] = useState('')
 
   const dispatch = useDispatch();
  
    const {id} =  useParams()
 
-
+   const synthesis = window.speechSynthesis;
+   const voices = synthesis.getVoices();
    const token = localStorage.getItem('accessToken');
+
+   const handleSpeak = () => {
+    const utterance = new SpeechSynthesisUtterance(voiceText);
+    const selectedVoice = voices.find((voice) => voice.lang === "en-US");
+    utterance.voice = selectedVoice;
+    synthesis.speak(utterance);
+  };
+
 
    const getdetailsdata = async () => {
      setloading(true)
@@ -46,7 +56,7 @@ const NewsDetails = () => {
        setloading(false)
      if(response.data.success){
       setnewsData(response.data.data)
-
+      setvoiceText(response.data.data.title)
          console.log(response.data.data)
      }
    })
@@ -168,8 +178,13 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
 
 
 
+
+
 const HandleSpeak = ()=>{
-  speak({text:newsData?.description})
+  var title = newsData?.title
+  var raw = newsData?.description
+  var result = raw.replace(/\&nbsp;/g, '');
+  speak({text:title + result})
   setisstart(true)
 }
 const StopSpeak = ()=>{
