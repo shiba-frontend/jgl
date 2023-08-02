@@ -10,8 +10,7 @@ import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import annyang from 'annyang';
-import Modal from 'react-bootstrap/Modal';
-import { useSpeechSynthesis } from 'react-speech-kit';
+
 
 
 
@@ -20,31 +19,16 @@ const Home = () => {
   const [text, settext] = useState('');
   const [CategoryList, setCategoryList] = useState([])
   const [isListening, setIsListening] = useState(false);
-  const [show, setShow] = useState(false);
-
+  const [transcript, setTranscript] = useState('');
+  const newsResultList = useSelector((state) => state.newsresult);
   const Voice = useSelector((state) => state.voicesearch);
-  const [singledata, setsingledata] = useState({})
-  const [isread, setisread] = useState(false)
-  const [progressive, setprogressive] = useState(0)
-    const [index, setindex] = useState(0)
-    const { speak, cancel } = useSpeechSynthesis();
-    const [isToggled, setToggle] = useState(false);
-  const handleClose = () => setShow(false);
-  const recognition = new window.webkitSpeechRecognition();
-  const [speechResult, setSpeechResult] = useState('');
-  const [synth, setSynth] = useState(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
 
+  const recognition = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
   const token = localStorage.getItem('accessToken');
  const isLoc = localStorage.getItem("locstatus");
- const is_modal = localStorage.getItem('ismodal');
- const newsResultList = useSelector((state) => state.newsresult);
- const getprofileName = useSelector((state) => state.getprofile);
- const newsVoiceResultList = useSelector((state) => state.newsresultread);
-
 
   const GetData = async ()=>{
        
@@ -71,6 +55,7 @@ const Home = () => {
 
   }
 
+ 
 
 const getCheckedInRequest = async () => {
   setloading(true)
@@ -88,8 +73,6 @@ await axios.post("/newspaper-home", JSON.stringify(body))
     setloading(false)
   if(response.data.success){
     dispatch({ type: "news", newsresult: response.data.data })
-    setisread(false)
-    dispatch({ type: "newsresultread", newsresultread: [] })
     // setgetdata(response.data.data)
   }
 })
@@ -174,121 +157,104 @@ useEffect(() => {
   // } else {
   //   ApiCall()
   // }
- 
-  
-
-    getCheckedInRequest();
-    GetData()
-  
+  getCheckedInRequest();
+  GetData()
   
   if(!isLoc){
     GetCurrentLocation()
   }
- if(!is_modal){
-  setShow(true)
-  setTimeout(()=>{
-    setShow(false)
-    setIsListening(true)
-    localStorage.setItem("ismodal", true)
-  },3000)
- }
+ 
 
 
   }, [])
 
-
-
   useEffect(() => {
 
-    if (annyang) {
-      annyang.addCallback('result', handleSpeechResult);
-      annyang.start();
+
+
+    console.log("checking")
+    // Check if speech recognition is available in the browser
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      // Create a new SpeechRecognition instance
+      recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+      // Continuous results: Speech recognition continues to listen for speech until stopped manually.
+      recognition.current.continuous = true;
+
+      // Set the language for recognition, change it as needed
+      recognition.current.lang = 'en-US';
+
+      // Event listener when the recognition result is available
+      recognition.current.onresult = (event) => {
+        const currentTranscript = event.results[event.results.length - 1][0].transcript;
+        setTranscript(currentTranscript);
+      };
+
+      // Event listener when the recognition service starts (speech is detected)
+      recognition.current.onstart = () => {
+        setIsListening(true);
+      };
+
+      // Event listener when the recognition service stops (speech input ends)
+      recognition.current.onend = () => {
+        setIsListening(false);
+      };
+
+      // Start speech recognition
+      recognition.current.start();
+    } else {
+      console.log('Speech recognition is not supported in this browser.');
     }
 
-    annyang.addCallback('error', (error) => {
-      console.error('Speech recognition error:', error);
-    });
     return () => {
-      if (annyang) {
-        annyang.removeCallback('result', handleSpeechResult);
-        annyang.abort();
+      if (recognition.current) {
+        recognition.current.stop();
       }
     };
-
-  }, []);
-
-  const handleSpeechResult = (userSaid) => {
-    // Process the user's speech here
-    setSpeechResult(userSaid);
-    handleVoiceCommand(userSaid);
-  };
-
-  const handleVoiceCommand = (userSaid) => {
-
-    console.log('Handle voice command', userSaid[0].toUpperCase())
-
-    var text = userSaid[0].toUpperCase();
-    var Matchresultone = text.match('HEY JOHN');
-    var Matchresulttwo = text.match('HI JOHN');
-    var Matchresultthree = text.match('JOHN');
-    var splitText = text.split('ME')
-    var rawText = splitText[1]?.toLowerCase()
-    var matchTextone = text.match('CAN YOU GIVE')
-    var matchTexttwo = text.match('YOU GIVE')
-
-    var readTextOne = text.match('DETAILS OF');
-    var readTextTwo = text.match('DETAILS');
-
-    if (text.includes(Matchresultone)) {
-      respondToUser(`hello ${getprofileName} How can I assist you?`);
-    } else if (text.includes(Matchresulttwo)) {
-      respondToUser(`hello! ${getprofileName} How can I assist you?`);
-    } else if (text.includes(Matchresultthree)) {
-      respondToUser(`hello! ${getprofileName} How can I assist you?`);
-    } else if (text.includes(matchTextone)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        voicesearch(rawText)
-      },2000)
-    } else if (text.includes(matchTexttwo)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        voicesearch(rawText)
-      },2000)
-    } else if (text.includes(readTextOne)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        ReadList(text?.toLowerCase())
-      },2000)
-    } else if (text.includes(readTextTwo)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        ReadList(text?.toLowerCase())
-      },2000)
-    } else {
-      respondToUser(`I'm sorry, ${getprofileName} I didn't understand that. please try again`);
-    }
-  };
-
-  const respondToUser = (text) => {
-    const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[4]
-    message.lang = "en-US";
-    message.pitch = 1;
-    message.rate = 0.9;
-    message.voice = voice
-    message.text = text;
-   
-    speechSynthesis.speak(message);
-  };
+  }, [transcript]);
 
 
+  // useEffect(() => {
+  //   if (annyang) {
+  //     annyang.start({ autoRestart: true, continuous: true, soundstart:false });
+  //     annyang.addCallback('result', (phrases) => {
+        
+  //       // phrases is an array of the recognized speech
+  //       if (phrases && phrases.length > 0) {
 
+  //         var text = phrases[0]?.toUpperCase();
+  //         console.log(text)
+  //         var Matchresult = text.match('HEY ALEXA' || 'HEY ALEXA' || 'HI ALEXA' || 'ALEXA' || 'HE ALEXA');
+       
+  //           if (text.includes(Matchresult)) {
+  //             var fresult = text.split(Matchresult, 2)[1].toLowerCase()
+  //             settext(fresult)
+  //             setTimeout(()=>{
+  //               voicesearch(fresult)
+  //             },1000)
+  //           } else {
+  //             console.log("does not contain.");
+  //           }
+
+       
+  //       }
+  //     });
+
+  //     // Handle errors
+  //     annyang.addCallback('error', (error) => {
+  //       //console.error('Speech recognition error:', error);
+  //     });
+  //   } else {
+  //     console.log('Web Speech API is not supported in this browser.');
+  //   }
+
+  //   // Clean up the annyang instance when the component unmounts
+  //   return () => {
+  //     if (annyang) {
+  //       annyang.abort();
+  //     }
+  //   };
+  // }, []);
 
  const voicesearch = (saerchtext)=>{
   setloading(true)
@@ -303,48 +269,7 @@ axios.post("/newspaper-home", JSON.stringify(body))
       setloading(false)
     if(response.data.success){
       dispatch({ type: "news", newsresult: response.data.data })
-      dispatch({ type: "newsresultread", newsresultread: response.data.data })
       // setgetdata(response.data.data)
-      setindex(0)
-
-    }
-  })
-  .catch((error) => {
-      setloading(false)
-      if(error.response.status === 403){
-        toast.error(error.response.data.message);
-    }
-      if(error.response.status === 404){
-          toast.error(error.response.data.message);
-      }
-    
-  });
- }
-
- const ReadList = (saerchtextx)=>{
-  setloading(true)
-  let body = {
-    "key":"facb6e0a6fcbe200dca2fb60dec75be7",
-    "source":"WEB",
-    "app_access_token":token&&token,
-    "search_phrase":saerchtextx
-  }
-
-  console.log(body)
-
-axios.post("/voice-newspaper-read-single", JSON.stringify(body))
-  .then((response) => {
-      setloading(false)
-    if(response.data.success){
-      setsingledata(response.data.data)
-      setisread(true)
-      
-      console.log(response.data.data)
-
-      navigate(`/news-details/${response.data.data.article_id}`)
-
-      // setgetdata(response.data.data)
-      setindex(0)
     }
   })
   .catch((error) => {
@@ -371,73 +296,6 @@ const NextTopage = (id, name) => {
   )
 }
 
-
-function StopLisning(){
-  setToggle(!isToggled);
-  if(isToggled){
-    window.speechSynthesis.resume();
-  } else {
-    window.speechSynthesis.pause();
-  }
-
-  //setindex(index + newsResultList &&newsResultList.length)
-}
-
-useEffect(() => {
-
-  if(newsVoiceResultList&&newsVoiceResultList.length > index){
-    const interval = setInterval(() => {
-      if(progressive < 8){
-        setprogressive(progressive + 1);
-      }
-    }, 1000);
-     if(progressive > 7){
-      setprogressive(0)
-      setindex(index + 1)
-    } 
-    if(progressive == 0){
-    textToSpeech(index);
-    }
-    return () => clearInterval(interval);
-  } else {
-    // const speechSynthesis = window.speechSynthesis;
-    // const message = new SpeechSynthesisUtterance();
-    // const voice = window.speechSynthesis.getVoices()[4]
-    // message.lang = "en-US";
-    // message.pitch = 1;
-    // message.rate = 0.9;
-    // message.voice = voice
-    // message.text = 'Thanks for listen any think else';
-    // speechSynthesis.speak(message);
-
-  }
-
-
-// Cleanup the speech synthesis when the component unmounts
-return () => {
-  window.speechSynthesis.cancel();
-};
-
-
-}, [progressive, newsVoiceResultList]);
-
-const textToSpeech = (index) => {
-  console.log(index)
-  const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[4]
-    message.lang = "en-US";
-    message.pitch = 1;
-    message.rate = 0.9;
-    message.voice = voice
-    message.text = `Title is ${newsResultList&&newsResultList[index]?.reading_title}`;
-    speechSynthesis.speak(message);
-
-  // utterance.onend = () => {
-  //   setIsSpeaking(false);
-  //   console.log('Speech has ended.'); // You can add your custom logic here
-  // };
-};
 
 
   return (
@@ -505,11 +363,10 @@ const textToSpeech = (index) => {
             </li>
         </ul>
     </div>
-        
+
       {newsResultList&&newsResultList.length > 0 ?
         <div className='top-stories'>
-           {index > 0 &&  <button className='btn btn-sm btn-danger mb-2' onClick={StopLisning}>{isToggled ? ' Resume Listen' : 'Pause Listen'}</button>}
-            <h1>Top Stories For The Day: <span>{text}</span> </h1>
+            <h1>Top Stories For The Day: <span>{transcript}</span> </h1>
             <div className='row'>
             {newsResultList&&newsResultList.map((item,index)=>{
                 return (
@@ -537,43 +394,43 @@ const textToSpeech = (index) => {
         </div>
 :
 <div className='notFound'>
-<h4>No data found for : {text}</h4>
+<h4>No data found</h4>
 <button className='themeBtn' onClick={ResetNews}>Get All News</button>
 </div>
             }
 
         </div>
-     
+        {/* <div className='float-btn'>
+        {!iscondition ? 
+                <button onClick={StartListening}>
+                <i class="fa-solid fa-microphone-lines"></i> Speech to Search
+                </button>
+           
+            :
+        
+                <button onClick={StopListening}>
+                <i class="fa-solid fa-microphone-lines-slash"></i> Stop to confirm
+                </button>
+              
+         
+}
+</div> */}
 
-<div className='float-btn-text'>
-   <button onClick={()=>setShow(true)}>Say <br></br> 'hey john'</button>
-</div>
+{/* <div className='float-btn'>
+   
+                <button >
+              {isListening ? <i class="fa-solid fa-microphone-lines-slash"></i> :  <i class="fa-solid fa-microphone-lines"></i>  }
+                
+             
+                </button>
+           
+      
+</div> */}
 
     </div>
     <BottomTabCustomer/>
 
-    <Modal show={show} onHide={handleClose} centered size="sm" className='AlertMsg'>
-    <Modal.Header>
-      <Modal.Title><i class="fa-solid fa-triangle-exclamation"></i> Alert !</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <h6>Just say <b>'hey john'</b>, search for any article </h6>
-      <h6>Just say <b>'read for'</b>, search for single article <small>(Example- read for Prime Minister Benjamin )</small></h6>
-      
-      <ul>
-      <li>
-        <button onClick={handleClose} className='btn btn-md btn-danger mt-3'>
-            Close
-        </button>
-     
-      </li>
-   
-    </ul>
-
-    </Modal.Body>
   
-   
-  </Modal>
     </div>
     
   )

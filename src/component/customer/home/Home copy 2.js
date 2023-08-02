@@ -21,7 +21,7 @@ const Home = () => {
   const [CategoryList, setCategoryList] = useState([])
   const [isListening, setIsListening] = useState(false);
   const [show, setShow] = useState(false);
-
+  const newsResultList = useSelector((state) => state.newsresult);
   const Voice = useSelector((state) => state.voicesearch);
   const [singledata, setsingledata] = useState({})
   const [isread, setisread] = useState(false)
@@ -41,10 +41,6 @@ const Home = () => {
   const token = localStorage.getItem('accessToken');
  const isLoc = localStorage.getItem("locstatus");
  const is_modal = localStorage.getItem('ismodal');
- const newsResultList = useSelector((state) => state.newsresult);
- const getprofileName = useSelector((state) => state.getprofile);
- const newsVoiceResultList = useSelector((state) => state.newsresultread);
-
 
   const GetData = async ()=>{
        
@@ -89,7 +85,6 @@ await axios.post("/newspaper-home", JSON.stringify(body))
   if(response.data.success){
     dispatch({ type: "news", newsresult: response.data.data })
     setisread(false)
-    dispatch({ type: "newsresultread", newsresultread: [] })
     // setgetdata(response.data.data)
   }
 })
@@ -200,93 +195,74 @@ useEffect(() => {
 
   useEffect(() => {
 
+ 
+
+    
+  
     if (annyang) {
-      annyang.addCallback('result', handleSpeechResult);
-      annyang.start();
+      annyang.setLanguage('en-US');
+      annyang.start({ autoRestart: true, continuous: true, soundstart:false });
+      annyang.addCallback('result', (phrases) => {
+       // respondToUser('Hello!', 'en-US', 1.2);
+        if (phrases && phrases.length > 0) {
+          
+          var text = phrases[0]?.toUpperCase();
+          console.log(text)
+          var Matchresult = text.match('HEY JOHN'  || 'HI JOHN' || 'JOHN' || 'HE JOHN' || 'JOHN');
+          var readText = text.match('READ FOR' || ' RIT FOR' || 'RETE FOR' || ' REET FOR');
+            if (text.includes(Matchresult)) {
+              
+              setTimeout(()=>{
+                RespondToUser()
+              },1000)
+              //respondToUser('Hello!', 'en-US', 1.2)
+             //speak({text:'Hello! How can I assist you?'})
+              var fresult = text.split(Matchresult, 2)[1].toLowerCase()
+              settext(fresult)
+             // voicesearch(fresult)
+            }  else if (text.includes(readText)) {
+              var fresults = text.split(readText, 2)[1].toLowerCase()
+              settext(fresults)
+             // ReadList(fresults)
+            }
+            
+            else {
+              console.log("does not contain.");
+            }
+
+       
+        }
+      });
+
+      // Handle errors
+      annyang.addCallback('error', (error) => {
+        //console.error('Speech recognition error:', error);
+      });
+    } else {
+      console.log('Web Speech API is not supported in this browser.');
     }
 
-    annyang.addCallback('error', (error) => {
-      console.error('Speech recognition error:', error);
-    });
+    // Clean up the annyang instance when the component unmounts
     return () => {
       if (annyang) {
-        annyang.removeCallback('result', handleSpeechResult);
         annyang.abort();
       }
     };
 
+
+
   }, []);
 
-  const handleSpeechResult = (userSaid) => {
-    // Process the user's speech here
-    setSpeechResult(userSaid);
-    handleVoiceCommand(userSaid);
-  };
 
-  const handleVoiceCommand = (userSaid) => {
 
-    console.log('Handle voice command', userSaid[0].toUpperCase())
-
-    var text = userSaid[0].toUpperCase();
-    var Matchresultone = text.match('HEY JOHN');
-    var Matchresulttwo = text.match('HI JOHN');
-    var Matchresultthree = text.match('JOHN');
-    var splitText = text.split('ME')
-    var rawText = splitText[1]?.toLowerCase()
-    var matchTextone = text.match('CAN YOU GIVE')
-    var matchTexttwo = text.match('YOU GIVE')
-
-    var readTextOne = text.match('DETAILS OF');
-    var readTextTwo = text.match('DETAILS');
-
-    if (text.includes(Matchresultone)) {
-      respondToUser(`hello ${getprofileName} How can I assist you?`);
-    } else if (text.includes(Matchresulttwo)) {
-      respondToUser(`hello! ${getprofileName} How can I assist you?`);
-    } else if (text.includes(Matchresultthree)) {
-      respondToUser(`hello! ${getprofileName} How can I assist you?`);
-    } else if (text.includes(matchTextone)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        voicesearch(rawText)
-      },2000)
-    } else if (text.includes(matchTexttwo)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        voicesearch(rawText)
-      },2000)
-    } else if (text.includes(readTextOne)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        ReadList(text?.toLowerCase())
-      },2000)
-    } else if (text.includes(readTextTwo)) {
-      respondToUser(`Thanks! you are search for  ${rawText}`);
-      setTimeout(()=>{
-        settext(rawText)
-        ReadList(text?.toLowerCase())
-      },2000)
-    } else {
-      respondToUser(`I'm sorry, ${getprofileName} I didn't understand that. please try again`);
-    }
-  };
-
-  const respondToUser = (text) => {
+  const RespondToUser = ()=>{
     const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[4]
-    message.lang = "en-US";
-    message.pitch = 1;
-    message.rate = 0.9;
-    message.voice = voice
-    message.text = text;
-   
-    speechSynthesis.speak(message);
-  };
-
+                  const message = new SpeechSynthesisUtterance();
+                  message.text = "How can I assist you?";
+                  message.lang = "en-US";
+                  message.pitch = 1.0;
+                  speechSynthesis.speak(message);
+   }
 
 
 
@@ -303,7 +279,7 @@ axios.post("/newspaper-home", JSON.stringify(body))
       setloading(false)
     if(response.data.success){
       dispatch({ type: "news", newsresult: response.data.data })
-      dispatch({ type: "newsresultread", newsresultread: response.data.data })
+      setisread(false)
       // setgetdata(response.data.data)
       setindex(0)
 
@@ -383,55 +359,47 @@ function StopLisning(){
   //setindex(index + newsResultList &&newsResultList.length)
 }
 
-useEffect(() => {
+// useEffect(() => {
 
-  if(newsVoiceResultList&&newsVoiceResultList.length > index){
-    const interval = setInterval(() => {
-      if(progressive < 8){
-        setprogressive(progressive + 1);
-      }
-    }, 1000);
-     if(progressive > 7){
-      setprogressive(0)
-      setindex(index + 1)
-    } 
-    if(progressive == 0){
-    textToSpeech(index);
-    }
-    return () => clearInterval(interval);
-  } else {
-    // const speechSynthesis = window.speechSynthesis;
-    // const message = new SpeechSynthesisUtterance();
-    // const voice = window.speechSynthesis.getVoices()[4]
-    // message.lang = "en-US";
-    // message.pitch = 1;
-    // message.rate = 0.9;
-    // message.voice = voice
-    // message.text = 'Thanks for listen any think else';
-    // speechSynthesis.speak(message);
-
-  }
+//   if(newsResultList&&newsResultList.length > index){
+//     const interval = setInterval(() => {
+//       if(progressive < 15){
+//         setprogressive(progressive + 1);
+//       }
+//     }, 1000);
+//      if(progressive > 14){
+//       setprogressive(0)
+//       setindex(index + 1)
+//     } 
+//     if(progressive == 0){
+//     textToSpeech(index);
+//     }
+//     return () => clearInterval(interval);
+//   }
 
 
-// Cleanup the speech synthesis when the component unmounts
-return () => {
-  window.speechSynthesis.cancel();
-};
+// // Cleanup the speech synthesis when the component unmounts
+// return () => {
+//   window.speechSynthesis.cancel();
+// };
 
+ 
 
-}, [progressive, newsVoiceResultList]);
+  
+// }, [progressive, newsResultList]);
 
 const textToSpeech = (index) => {
-  console.log(index)
-  const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[4]
-    message.lang = "en-US";
-    message.pitch = 1;
-    message.rate = 0.9;
-    message.voice = voice
-    message.text = `Title is ${newsResultList&&newsResultList[index]?.reading_title}`;
-    speechSynthesis.speak(message);
+  // const speechSynthesis = window.speechSynthesis;
+  // console.log(index)
+  // // Create a new SpeechSynthesisUtterance instance
+  // const message = new SpeechSynthesisUtterance();
+  // var title =  newsResultList&&newsResultList[index]?.reading_title;
+  // var description = newsResultList&&newsResultList[index]?.reading_short_description.substring(0, 150)
+  // var content =  title&&title.concat(description)
+  // message.text = content;
+  // message.lang = "en-US";
+  // message.pitch = 2.0;
+  // speechSynthesis.speak(message);
 
   // utterance.onend = () => {
   //   setIsSpeaking(false);
@@ -506,6 +474,9 @@ const textToSpeech = (index) => {
         </ul>
     </div>
         
+              <button>Click</button>
+
+
       {newsResultList&&newsResultList.length > 0 ?
         <div className='top-stories'>
            {index > 0 &&  <button className='btn btn-sm btn-danger mb-2' onClick={StopLisning}>{isToggled ? ' Resume Listen' : 'Pause Listen'}</button>}

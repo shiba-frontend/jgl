@@ -13,8 +13,6 @@ const Deals = () => {
     const [loading, setloading] = useState(false)
     const [text, settext] = useState('');
     const [isListening, setIsListening] = useState(false);
-    const [progressive, setprogressive] = useState(0)
-    const [index, setindex] = useState(0)
     const { speak, cancel } = useSpeechSynthesis();
     const getdeals = useSelector((state) => state.dealsLocationList);
     const getstatus = useSelector((state) => state.isstatus);
@@ -164,43 +162,8 @@ const Deals = () => {
       } else {
         getbusinessList();
       }
-
+      HandleSpeakrandom()
     },[getstatus])
-
-
-    useEffect(()=>{
-      if(getdeals &&getdeals.length > index){
-        const interval = setInterval(() => {
-          if(progressive < 6){
-            setprogressive(progressive + 1);
-          }
-        }, 1000);
-         if(progressive > 5){
-          setprogressive(0)
-          setindex(index + 1)
-        } 
-        if(progressive == 0){
-          randamTextSpeak(index)
-        }
-        return () => clearInterval(interval);
-      }
-
-    },[progressive, getdeals])
-
-
-    const randamTextSpeak = (index)=>{
-      var businessName = `From ${getdeals&&getdeals[index]?.business_name}`
-      var title =  getdeals&&getdeals[index]?.title;
-      var description = getdeals&&getdeals[index].deal_text == '' ? '' : getdeals&&getdeals[index].deal_text
-      var content =  title&&title.concat(businessName + description)
-      speak({text: content})
-    }
-
-    function StopLisning(){
-      cancel({text:""})
-      setindex(index + getdeals &&getdeals.length)
-    }
-    
 
 
   recognition.onstart = () => {
@@ -255,6 +218,17 @@ const Deals = () => {
     }
   }
 
+  const HandleSpeakrandom = ()=>{
+    speak({text:"hello world"})
+    // getdeals&&getdeals.map((item)=>{
+    //   var title = item.title;
+    //   var description = item?.deal_text == '' ? 'No Description' : item?.deal_text
+    //   var content =  title&&title.concat(description)
+    //   return (
+    //     speak({text:content})
+    //   )
+    // })
+  }
 
 
   return (
@@ -268,8 +242,7 @@ const Deals = () => {
       </div>
     <div className='comon-layout'>
          <div className='container'>
-          {index > 0 &&  <button className='btn btn-sm btn-danger mb-2' onClick={StopLisning}>Stop Listen</button>}
-           
+       
 
             {getdeals&&getdeals.length > 0 ?
 

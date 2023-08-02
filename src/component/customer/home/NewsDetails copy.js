@@ -69,12 +69,13 @@ const NewsDetails = () => {
    
    useEffect(() => {
     getdetailsdata()
-    window.speechSynthesis.cancel();
+   
      }, [])
 
 
      useEffect(() => {
 if(newsData?.random_deals && newsData?.random_deals.length > index){
+
 
   const interval = setInterval(() => {
     if(progressive < 9){
@@ -108,20 +109,11 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
 
 
   const HandleSpeakrandom = (index)=>{
-    const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[4]
-    message.lang = "en-US";
-    message.pitch = 1;
-    message.rate = 0.9;
-    message.voice = voice
     var businessName = `From ${newsData?.random_deals&&newsData?.random_deals[index]?.business_name}`
     var title = newsData?.random_deals&&newsData?.random_deals[index]?.title;
     var des = newsData?.random_deals&&newsData?.random_deals[index]?.deal_text == '' ? "" : newsData?.random_deals&&newsData?.random_deals[index]?.deal_text
     var content =  title&&title.concat(businessName + des)
-    message.text = content;
-    speechSynthesis.speak(message);
-    //speak({text:content})
+    speak({text:content})
   }
  
 
@@ -191,19 +183,9 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
 const HandleSpeak = ()=>{
   var title = newsData?.title
   var raw = newsData?.reading_short_description
-  //var result = raw.replace(/\&nbsp;/g, '').substring(0, 1500);
-  var result = raw.substring(0, 1000);
-  var finalResult = `Story ${title + result}`
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[4]
-  message.lang = "en-US";
-  message.pitch = 1;
-  message.rate = 0.9;
-  message.voice = voice
-  message.text = finalResult;
-  speechSynthesis.speak(message);
-console.log(result)
+  var result = raw.replace(/\&nbsp;/g, '').substring(0, 1500);
+  console.log("count", result)
+  speak({text:title + result})
   setisstart(true)
 }
 const StopSpeak = ()=>{

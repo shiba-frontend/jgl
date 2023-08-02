@@ -139,10 +139,31 @@ const AfterLoginTopbar = (props) => {
   });
   
   }
+  const GetprofileData = async ()=>{
 
+    let body = {
+      "key":"facb6e0a6fcbe200dca2fb60dec75be7",
+      "source":"WEB",
+      "app_access_token":token&&token,
+    }
+
+  await axios.post("/get-profile", JSON.stringify(body))
+  .then((response) => {
+   
+    if(response.data.success){
+      var _data = response.data.data
+      dispatch({ type: "getprofile", getprofile: _data?.first_name })
+    }
+  })
+  .catch((error) => {
+ 
+      
+  });
+
+  }
 
   useEffect(()=>{
-
+    GetprofileData()
     GetcartData();
   },[])
   

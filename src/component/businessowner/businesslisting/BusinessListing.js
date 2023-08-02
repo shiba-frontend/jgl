@@ -6,13 +6,14 @@ import CustomLoader from '../../../common/CustomLoader';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { IMAGE } from '../../../common/Theme';
+import { useSelector, useDispatch } from "react-redux";
 
 const BusinessListing = () => {
   const [loading, setloading] = useState(false)
   const [business, setbusiness] = useState({})
 
   const token = localStorage.getItem('accessToken');
-
+  const isbusiness = useSelector((state) => state.isbusinessadded);
 
   const GetData = async ()=>{
       setloading(true)
@@ -73,18 +74,20 @@ const BusinessListing = () => {
             </p>
             <div className="listing-card-btn">
               <NavLink to="/add-business" className="fillBtn">
-                Edit Listing
+                Edit Business
               </NavLink>
               <NavLink to="/delete-listing" className="outlinebtn">
-                Delete Listing
+                Delete Business
               </NavLink>
             </div>
           </div>
+          {isbusiness &&
           <div className="addIcon">
             <NavLink to="/add-business">
               <img src={IMAGE.addicon} alt="addicon" />
             </NavLink>
           </div>
+}
         </div>
       </div>
       <BottomNavigation />

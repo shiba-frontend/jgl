@@ -6,7 +6,7 @@ import { IMAGE } from "../../../common/Theme";
 import CustomLoader from '../../../common/CustomLoader';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 const CheckOut = () => {
   const [loading, setloading] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -21,9 +21,46 @@ const CheckOut = () => {
   const [city, setcity] = useState("");
   const [zipcode, setzipcode] = useState("");
   const [orderData, setorderData] = useState({});
+  const [searchResult, setSearchResult] = useState('')
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyBrRtkwvBcSh3_uISG8CVAX2IqykHdQEP4",
+    libraries:["places"]
+  })
+  function onLoad(autocomplete) {
+    setSearchResult(autocomplete);
+  }
 
+  const onPlaceChanged = async (val) =>{
 
+    const place = searchResult.getPlace();
+    var _address = place.formatted_address;
+    var _country = "";
+    var _city = "";
+    var _state = "";
+    var _zipcode = ""
 
+    for (const component of place.address_components){
+      const addressType = component.types[0]
+      console.log(addressType)
+      if(addressType == "administrative_area_level_3"){
+        _city = component.long_name
+      } 
+      if(addressType == "administrative_area_level_1"){
+        _state = component.long_name
+      }
+      if(addressType == "country"){
+        _country = component.short_name
+      }
+      if(addressType == "postal_code"){
+        _zipcode = component.long_name
+      }
+    }
+    setcountry(_country)
+    setstate(_state)
+    setcity(_city)
+    setzipcode(_zipcode)
+    setaddress(_address)
+  }
 
   const token = localStorage.getItem('accessToken');
   const navigate = useNavigate();
@@ -214,6 +251,24 @@ toast.error(error.response.data.message);
                   </div>
                   <div className="col-lg-4 col-12">
                       <div className="form-group">
+                        <label>Address</label>
+                        <Autocomplete
+                            onLoad={(autocomplete)=>onLoad(autocomplete)}
+                            onPlaceChanged={(place) => onPlaceChanged(place)}
+                            defaultValue={address}
+                            >
+                            <input
+                                type="text"
+                                placeholder={address && address ? address : "Enter Your Address" }
+                                className="form-control"
+                                
+                            // onChange={(e)=>hiddenInput(e.target.value)}
+                            />
+                            </Autocomplete>
+                      </div>
+                  </div>
+                  <div className="col-lg-4 col-12">
+                      <div className="form-group">
                         <label>Country</label>
                         <input type="text" className="form-control" placeholder="Country" 
                          value={country}
@@ -257,15 +312,7 @@ toast.error(error.response.data.message);
                         />
                       </div>
                   </div>
-                  <div className="col-lg-4 col-12">
-                      <div className="form-group">
-                        <label>Address</label>
-                        <input type="text" className="form-control" placeholder="Address" 
-                        value={address}
-                        onChange={(e)=>setaddress(e.target.value)}
-                        />
-                      </div>
-                  </div>
+                 
                   
                   <div className="col-lg-4 col-12 mt-4">
                       <div className="form-group">

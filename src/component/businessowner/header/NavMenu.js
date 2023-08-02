@@ -41,6 +41,7 @@ const NavMenu = () => {
   .then((response) => {
     if(response.data.success){
       setisBusiness(true)
+      dispatch({ type: "isbusinessadded", isbusinessadded: true })
     } else {
       localStorage.setItem("business_id", response.data.data.business_id)
     }
@@ -51,6 +52,13 @@ const NavMenu = () => {
       if(error.response.status === 404){
           toast.error(error.response.data.message);
       }
+      if(error.response.status === 403){
+        dispatch({ type: "setToken", accessToken: null })
+        localStorage.clear();
+        setTimeout(()=>{
+          navigate("/", { replace: true });
+        },2000)
+    }
       
   });
 

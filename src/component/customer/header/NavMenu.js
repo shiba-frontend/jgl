@@ -150,7 +150,7 @@ const handleClose = () => setShow(false);
           }
         >
           <img src={IMAGE.business_icon_one} alt="deal" />
-          Business
+          Businesses
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
@@ -167,7 +167,7 @@ const handleClose = () => setShow(false);
           }
         >
           <img src={IMAGE.deal_icon} alt="business" />
-          Deal
+          Deals
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
@@ -184,7 +184,7 @@ const handleClose = () => setShow(false);
           }
         >
           <img src={IMAGE.checkin_icon} alt="checkin" />
-          My Check-Ins
+          My Checked-Ins
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>
@@ -201,7 +201,7 @@ const handleClose = () => setShow(false);
           }
         >
           <img src={IMAGE.customer_icon} alt="deal" />
-          Order Deals
+          My Deals
           <span>
             <i class="fa-solid fa-angle-right"></i>
           </span>

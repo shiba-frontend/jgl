@@ -4,7 +4,7 @@ import AfterLoginTopbar from "../header/AfterLoginTopbar";
 import CustomLoader from '../../../common/CustomLoader';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 
 const UpdateProfile = () => {
 
@@ -14,11 +14,54 @@ const UpdateProfile = () => {
   const [email, setemail] = useState("");
   const [phone, setphone] = useState("");
   const [address, setaddress] = useState("");
-
+  const [country, setcountry] = useState("");
+  const [state, setstate] = useState("");
+  const [city, setcity] = useState("");
+  const [zipcode, setzipcode] = useState("");
+  const [searchResult, setSearchResult] = useState('')
 
   const token = localStorage.getItem('accessToken');
   let navigate = useNavigate();
 
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyBrRtkwvBcSh3_uISG8CVAX2IqykHdQEP4",
+    libraries:["places"]
+  })
+  function onLoad(autocomplete) {
+    setSearchResult(autocomplete);
+  }
+
+  const onPlaceChanged = async (val) =>{
+
+    const place = searchResult.getPlace();
+    var _address = place.formatted_address;
+    var _country = "";
+    var _city = "";
+    var _state = "";
+    var _zipcode = ""
+
+    for (const component of place.address_components){
+      const addressType = component.types[0]
+      console.log(addressType)
+      if(addressType == "administrative_area_level_3"){
+        _city = component.long_name
+      } 
+      if(addressType == "administrative_area_level_1"){
+        _state = component.long_name
+      }
+      if(addressType == "country"){
+        _country = component.short_name
+      }
+      if(addressType == "postal_code"){
+        _zipcode = component.long_name
+      }
+    }
+    setcountry(_country)
+    setstate(_state)
+    setcity(_city)
+    setzipcode(_zipcode)
+    setaddress(_address)
+  }
 
   const GetData = async ()=>{
     setloading(true)
@@ -53,7 +96,6 @@ const UpdateProfile = () => {
 
   }
 
-
   useEffect(()=>{
     GetData()
   },[])
@@ -80,10 +122,10 @@ const UpdateProfile = () => {
             "last_name":lname,
             "contact_no":phone,
             "address":address,
-            "country":"",
-            "state":"",
-            "city":"",
-            "zipcode":"",
+            "country":country,
+            "state":state,
+            "city":city,
+            "zipcode":zipcode,
             "latitude":"",
             "longitude":""
         }
@@ -110,7 +152,6 @@ await axios.post("/update-profile", JSON.stringify(body))
 }
  
 }
-
 
 
 
@@ -180,13 +221,20 @@ await axios.post("/update-profile", JSON.stringify(body))
             </div>
             <div className="col-12 col-lg-4 col-md-6">
               <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Address"
-                  value={address}
-                  onChange={(e)=>setaddress(e.target.value)}
-                />
+              <Autocomplete
+                  onLoad={(autocomplete)=>onLoad(autocomplete)}
+                  onPlaceChanged={(place) => onPlaceChanged(place)}
+                  defaultValue={address}
+                  >
+                  <input
+                      type="text"
+                      placeholder={address && address ? address : "Enter Your Address" }
+                      className="form-control"
+                      
+                  // onChange={(e)=>hiddenInput(e.target.value)}
+                  />
+                  </Autocomplete>
+
               </div>
             </div>
            

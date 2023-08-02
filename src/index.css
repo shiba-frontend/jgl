@@ -344,6 +344,7 @@ button.close-btn {
   font-size: 13px;
   color: #F9F9F9;
   margin-right: 14px;
+  text-decoration: underline;
 }
 .login-after-top-right button {
   font-weight: 500;
@@ -1720,7 +1721,7 @@ button.logoutBtn {
   color: #fff;
   position: absolute;
   top: 0;
-  left: -19px;
+  right: -13px;
 }
 .bottom-bar li a.active {
   background: #f16e77;
@@ -2130,4 +2131,19 @@ ul.bredcrams {
 
 .story-list-info img {
   width: 100%;
+}
+.float-btn-text {
+  position: fixed;
+  bottom: 63px;
+  right: 19px;
+  text-align: center;
+  font-size: 12px;
+}
+.float-btn-text button {
+  border: 1px solid red;
+  display: block;
+  color: red;
+  border-radius: 19px 0;
+  padding: 3px;
+  background: #fff;
 }
