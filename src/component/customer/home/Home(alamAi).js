@@ -12,8 +12,9 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import annyang from 'annyang';
 import Modal from 'react-bootstrap/Modal';
 import { useSpeechSynthesis } from 'react-speech-kit';
-
-
+import Artyom from "artyom.js"
+import { useSpeechRecognition } from 'react-speech-recognition';
+import alanBtn from "@alan-ai/alan-sdk-web";
 
 const Home = () => {
   const [loading, setloading] = useState(false)
@@ -21,13 +22,20 @@ const Home = () => {
   const [CategoryList, setCategoryList] = useState([])
   const [isListening, setIsListening] = useState(false);
   const [show, setShow] = useState(false);
+
+  const Voice = useSelector((state) => state.voicesearch);
+  const [singledata, setsingledata] = useState({})
   const [isread, setisread] = useState(false)
   const [progressive, setprogressive] = useState(0)
     const [index, setindex] = useState(0)
+    const { speak, cancel } = useSpeechSynthesis();
     const [isToggled, setToggle] = useState(false);
   const handleClose = () => setShow(false);
+  const recognition = new window.webkitSpeechRecognition();
   const [speechResult, setSpeechResult] = useState('');
-
+  const [synth, setSynth] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { transcript, listening, startListening, stopListening, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -165,9 +173,16 @@ const GetCurrentLocation = async ()=>{
 }
 
 useEffect(() => {
+  // if(newsData == ''){
+  //   getCheckedInRequest();
+  // } else {
+  //   ApiCall()
+  // }
+
     getCheckedInRequest();
     GetData()
-
+  
+  
   if(!isLoc){
     GetCurrentLocation()
   }
@@ -187,33 +202,53 @@ useEffect(() => {
 
 
 
+ 
+
+  // useEffect(() => {
+  //   // Create a new instance of Artyom
+  //     if ('speechSynthesis' in window) {
+  //       window.speechSynthesis.onvoiceschanged = () => {
+  //         console.log('SpeechSynthesis is ready!');
+  //       };
+  //     } else {
+  //       console.error('SpeechSynthesis API is not available in this browser.');
+  //     }
+  //   const artyom = new Artyom();
+
+  //   // Add commands that you want Artyom to recognize
+  //   artyom.addCommands([
+  //     {
+  //       indexes: ['hello', 'hi', 'hey'],
+  //       action: () => {
+  //         console.log('Hello, how can I help you?');
+  //         artyom.say("Hey buddy ! How are you today?");
+  //       },
+  //     },
+  //     // Add more commands here as needed
+  //   ]);
+
+  //   // Start the speech recognition
+  //   artyom.initialize({
+  //     lang: 'en-US', // Set the language for recognition
+  //     continuous: true, // Keep listening for commands continuously
+  //     debug: true, // Enable debug mode for logging
+  //   });
+
+  //   // Clean up on component unmount
+  //   return () => {
+  //     artyom.fatality();
+  //   };
+  // }, []);
+
   useEffect(() => {
-
-    if (annyang) {
-     
-      annyang.addCallback('result', handleSpeechResult);
-      //annyang.start({ autoRestart: false, continuous: true });
-      annyang.start();
-      console.log('start')
-      // if ('speechSynthesis' in window) {
-      //   window.speechSynthesis.onvoiceschanged = () => {
-      //     console.log('SpeechSynthesis is ready!');
-      //   };
-      // } else {
-      //   console.error('SpeechSynthesis API is not available in this browser.');
-      // }
-    }
-
-    // annyang.addCallback('error', (error) => {
-    //   console.error('Speech recognition error:', error);
-    // });
-    return () => {
-      if (annyang) {
-        annyang.removeCallback('result', handleSpeechResult);
-        annyang.abort();
-      }
-    };
-
+    alanBtn({
+        key: '300ac89da58053f6f624f460a731363f2e956eca572e1d8b807a3e2338fdd0dc/stage',
+        onCommand: ({command}) => {
+          if (command === 'hey john') {
+            // Call the client code that will react to the received command
+          }
+        }
+    });
   }, []);
 
   const handleSpeechResult = (userSaid) => {
@@ -337,6 +372,7 @@ axios.post("/voice-newspaper-read-single", JSON.stringify(body))
   .then((response) => {
       setloading(false)
     if(response.data.success){
+      setsingledata(response.data.data)
       setisread(true)
       
       console.log(response.data.data)

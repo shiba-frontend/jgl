@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AfterLoginTopbar from '../header/AfterLoginTopbar'
 import PageMenu from '../header/PageMenu'
 import BottomTabCustomer from '../header/BottomTabCustomer';
-import { NavLink, useNavigate,useParams } from "react-router-dom";
+import { NavLink, Navigate, useNavigate,useParams } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import CustomLoader from '../../../common/CustomLoader';
@@ -24,7 +24,7 @@ const NewsDetails = () => {
   const dispatch = useDispatch();
  
    const {id} =  useParams()
-
+   const navigate = useNavigate()
   //  const synthesis = window.speechSynthesis;
   //  const voices = synthesis.getVoices();
    const token = localStorage.getItem('accessToken');
@@ -121,7 +121,7 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
     var content =  title&&title.concat(businessName + des)
     message.text = content;
     speechSynthesis.speak(message);
-    //speak({text:content})
+   // speak({text:content})
   }
  
 
@@ -195,16 +195,24 @@ const HandleSpeak = ()=>{
   var result = raw.substring(0, 1000);
   var finalResult = `Story ${title + result}`
   const speechSynthesis = window.speechSynthesis;
+ 
   const message = new SpeechSynthesisUtterance();
   const voice = window.speechSynthesis.getVoices()[4]
   message.lang = "en-US";
   message.pitch = 1;
-  message.rate = 0.9;
-  message.voice = voice
+  message.rate = 0.8;
+ // message.voice = voice
   message.text = finalResult;
+  // speak({text:finalResult, voice: SpeechSynthesisVoice})
   speechSynthesis.speak(message);
 console.log(result)
   setisstart(true)
+  message.onend = () => {
+    speak({text:"Thanks for listening"})
+    setTimeout(() => {
+      navigate("/home")
+    },1000)
+  };
 }
 const StopSpeak = ()=>{
   cancel({text:""})
