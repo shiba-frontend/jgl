@@ -37,9 +37,6 @@ const NewsDetails = () => {
   // };
 
 
-
-  console.log("index", index)
-
    const getdetailsdata = async () => {
      setloading(true)
    
@@ -57,13 +54,15 @@ const NewsDetails = () => {
      if(response.data.success){
       setnewsData(response.data.data)
       setvoiceText(response.data.data.title)
-      //startPlaying(response.data.data.random_deals)
          console.log(response.data.data)
      }
    })
    .catch((error) => {
        setloading(false)
      
+       if(error.response.status === 404){
+           toast.error(error.response.data.message);
+       }
      
    });
    }
@@ -74,11 +73,28 @@ const NewsDetails = () => {
      }, [])
 
 
-
-
      useEffect(() => {
 if(newsData?.random_deals && newsData?.random_deals.length > index){
-  HandleSpeakrandom(index)
+
+  const interval = setInterval(() => {
+    if(progressive < 9){
+      setprogressive(progressive + 1);
+    }
+  }, 1000);
+  
+ 
+   if(progressive > 8){
+    setprogressive(0)
+    setindex(index + 1)
+    
+  } 
+
+  if(progressive == 0){
+    HandleSpeakrandom(index)
+  }
+
+  return () => clearInterval(interval);
+
 
 } else if(newsData?.random_deals && newsData?.random_deals.length <= index){
   setisshowing(true);
@@ -87,16 +103,16 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
 }
 
     
-  }, [index, newsData?.random_deals]);
+  }, [progressive, newsData?.random_deals]);
 
 
 
   const HandleSpeakrandom = (index)=>{
     const speechSynthesis = window.speechSynthesis;
     const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[5]
+    const voice = window.speechSynthesis.getVoices()[4]
     message.lang = "en-US";
-    message.pitch = 0;
+    message.pitch = 1;
     message.rate = 0.9;
     message.voice = voice
     var businessName = `From ${newsData?.random_deals&&newsData?.random_deals[index]?.business_name}`
@@ -105,14 +121,7 @@ if(newsData?.random_deals && newsData?.random_deals.length > index){
     var content =  title&&title.concat(businessName + des)
     message.text = content;
     speechSynthesis.speak(message);
-    message.onend = () => doOnEnd(index);
    // speak({text:content})
-  }
-
-  const doOnEnd = (playIndex) => {
-    console.log('onEnd', playIndex)
-    let newIndex = playIndex + 1;
-    setindex(newIndex)
   }
  
 
@@ -188,9 +197,9 @@ const HandleSpeak = ()=>{
   const speechSynthesis = window.speechSynthesis;
  
   const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
+  const voice = window.speechSynthesis.getVoices()[4]
   message.lang = "en-US";
-  message.pitch = 0;
+  message.pitch = 1;
   message.rate = 0.9;
  // message.voice = voice
   message.text = finalResult;
@@ -208,7 +217,6 @@ console.log(result)
 const StopSpeak = ()=>{
   cancel({text:""})
   setisstart(false)
-  navigate("/home")
 }
 
 
@@ -265,9 +273,10 @@ const StopSpeak = ()=>{
 <>
 
     <div className='listen-btn text-right mb-2'>
-      {isstart ? 
-    <button onClick={StopSpeak} className='btn btn-sm btn-danger ml-2'><i class="fa-solid fa-volume-xmark"></i> Stop Listen</button>:null
-    
+      {!isstart ? 
+    <button onClick={HandleSpeak} className='btn btn-sm btn-success'> <i class="fa-solid fa-volume-low"></i> Listen</button>
+    :
+    <button onClick={StopSpeak} className='btn btn-sm btn-danger ml-2'><i class="fa-solid fa-volume-xmark"></i> Stop Listen</button>
       }
     </div>
         <div className='top-stories'>

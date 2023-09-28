@@ -272,8 +272,10 @@ const Cart = () => {
               
            </ul>
             <div className="mt-4">
-
-            <NavLink className='themeBtn' to="/check-out">Check Out</NavLink>
+            {token ?  <NavLink className='themeBtn' to="/check-out">Check Out</NavLink> :
+             <NavLink className='themeBtn' to="/">Check Out</NavLink> 
+            }
+           
             </div>
             </>
             :

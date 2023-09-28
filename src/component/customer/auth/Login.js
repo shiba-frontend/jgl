@@ -102,7 +102,10 @@ const LoginHandler = async () =>{
             <div className='form-group text-right'>
                 <NavLink to="/forgot-password" className="theme-color">Forgot Password?</NavLink>
             </div>
-            <div className='form-group mb-4 mt-3'>
+            <div className='form-group  mt-3'>
+               <h5>Skip Login ? <NavLink to="/home">Click here. <i className="fa-solid fa-arrow-right"></i></NavLink></h5>
+            </div>
+            <div className='form-group mb-4 mt-2'>
                <h5>New User ? <NavLink to="/sign-up">Signup here. <i className="fa-solid fa-arrow-right"></i></NavLink></h5>
             </div>
             <div className='form-group'>

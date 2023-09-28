@@ -109,18 +109,16 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      {token &&
-      <><NavMenu/>
+      
+      <NavMenu/>
       <NavMenuNews/>
       <NavMenuBusiness/>
-      </>
       
-    }
       <Routes>
       <Route path="*" element={<NotFound />} />
    <Route element={<PublicRoute />}> 
           
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login-customer" element={<Login />} />
             <Route path="/login-newspaper" element={<LoginNews />} />
             <Route path="/sign-up" element={<SignUp />} />
@@ -128,22 +126,23 @@ function App() {
             <Route path="/otp" element={<Otp />} />
             <Route path="/signup-otp" element={<SignUpOtp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+
      </Route> 
            <Route element={<PrivateRoute />}> 
-           <Route path="/home" element={<Home />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+           
+          
             <Route path="/newspaper-privacy-policy" element={<PrivacyPolicyNews />} />
             <Route path="/business-privacy-policy" element={<PrivacyPolicyBusiness />} />
-            <Route path="/terms-condition" element={<TermsCondition />} />
+           
             <Route path="/newspaper-terms-condition" element={<TermsConditionNews />} />
             <Route path="/business-terms-condition" element={<TermsConditionBusiness />} />
-            <Route path="/about-us" element={<About />} />
+            
             <Route path="/newspaper-about-us" element={<AboutNews />} />
             <Route path="/business-about-us" element={<AboutBusiness />} />
-            <Route path="/user-agreement" element={<UserAgreement />} />
+           
             <Route path="/newspaper-user-agreement" element={<UserAgreementNews />} />
             <Route path="/business-user-agreement" element={<UserAgreementBusiness/>} />
-            <Route path="/contact-us" element={<ContactUs />} />
+         
             <Route path="/newspaper-contact-us" element={<ContactUsNews />} />
             <Route path="/business-contact-us" element={<ContactUsBusiness />} />
 
@@ -164,16 +163,15 @@ function App() {
             <Route path="/add-sub-category" element={<AddSubCategory />} />
             <Route path="/edit-category/:id" element={<EditCategory />} />
             <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
-            <Route path="/deal" element={<  Deals />} />
+            
             <Route path="/my-deal" element={<MyDeal />} />
             <Route path="/order-details/:id" element={<OrderDetails />} />
-            <Route path="/news-details/:id" element={<NewsDetails />} />
-            <Route path="/business" element={<Business />} />
-            <Route path="/business-details/:id" element={<BusinessDetails />} />
+          
+           
             <Route path="/home-article" element={<CategoryArticle />} />
             <Route path="/my-checked-in" element={<MyCheckedIn />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/check-out" element={<CheckOut />} />
+           
+           
             <Route path="/payment-deal" element={<Payment />} />
             <Route path="/news-analytics" element={<NewsAnalyticsList />} />
             <Route path="/news-articles" element={<ArticlesList />} />
@@ -196,6 +194,18 @@ function App() {
             <Route path="/my-order" element={<MyOrder />} />
             <Route path="/payment" element={<PaymentCard />} />
           </Route> 
+          <Route path="/home" element={<Home />} />
+          <Route path="/business" element={<Business />} />
+            <Route path="/business-details/:id" element={<BusinessDetails />} />
+            <Route path="/deal" element={<  Deals />} />
+            <Route path="/about-us" element={<About />} />
+            <Route path="/terms-condition" element={<TermsCondition />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/user-agreement" element={<UserAgreement />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/news-details/:id" element={<NewsDetails />} />
+            <Route path="/check-out" element={<CheckOut />} />
       </Routes>
       </BrowserRouter>
     </div>

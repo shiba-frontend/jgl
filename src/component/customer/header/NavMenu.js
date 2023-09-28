@@ -173,6 +173,7 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
+      {token && <>
          <li>
         <NavLink
           to="/my-checked-in"
@@ -189,7 +190,7 @@ const handleClose = () => setShow(false);
             <i class="fa-solid fa-angle-right"></i>
           </span>
         </NavLink>
-      </li>
+      </li> 
       <li>
         <NavLink
           to="/my-deal"
@@ -224,7 +225,8 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
-   
+      </>
+}
       <li>
         <NavLink
           to="/about-us"
@@ -310,6 +312,8 @@ const handleClose = () => setShow(false);
           </span>
         </NavLink>
       </li>
+      {token &&
+      <>
       <li>
 <button className="logoutBtnn" onClick={()=>setShow1(true)}>
 <img src={IMAGE.home_icon} alt="contact" />
@@ -354,17 +358,42 @@ Business Panel
           </span>
         </NavLink>
       </li>
+      </>
+}
      
-      <li>
-  <button className="logoutBtnn" onClick={()=>setShow(true)}>
-    <img src={IMAGE.signout_icon} alt="signout" />
-      Logout
-      <span>
-        <i class="fa-solid fa-angle-right"></i>
-      </span>
-  </button>
+     {token ? 
+         <li>
+         <button className="logoutBtnn" onClick={()=>setShow(true)}>
+           <img src={IMAGE.signout_icon} alt="signout" />
+             Logout
+             <span>
+               <i class="fa-solid fa-angle-right"></i>
+             </span>
+         </button>
+       
+       </li> 
+       :
 
-</li>
+       <li>
+       <NavLink
+         to="/login-customer"
+         className={({ isActive }) => (isActive ? "active" : undefined)}
+         onClick={() =>
+           width
+             ? dispatch({ type: "set", sidebarShow: !sidebarShow })
+             : null
+         }
+       >
+         <img src={IMAGE.signout_icon} alt="signout" />
+        Login
+         <span>
+           <i class="fa-solid fa-angle-right"></i>
+         </span>
+       </NavLink>
+     </li>
+    }
+
+  
    
     </ul>
   </div>

@@ -12,28 +12,30 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import annyang from 'annyang';
 import Modal from 'react-bootstrap/Modal';
 import { useSpeechSynthesis } from 'react-speech-kit';
-
-
+import Artyom from "artyom.js"
+import { useSpeechRecognition } from 'react-speech-recognition';
+import alanBtn from "@alan-ai/alan-sdk-web";
 
 const Home = () => {
   const [loading, setloading] = useState(false)
   const [text, settext] = useState('');
   const [CategoryList, setCategoryList] = useState([])
-  const [isresume, setisresume] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [show, setShow] = useState(false);
+
+  const Voice = useSelector((state) => state.voicesearch);
+  const [singledata, setsingledata] = useState({})
   const [isread, setisread] = useState(false)
   const [progressive, setprogressive] = useState(0)
-  const [index, setindex] = useState(0)
-  const [speechResult, setSpeechResult] = useState('');
-  const [isToggled, setToggle] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [listening, setListening] = useState(false);
-  const [speechText, setSpeechText] = useState('');
-  const [newresult, setNewResult] = useState([])
-
-
+    const [index, setindex] = useState(0)
+    const { speak, cancel } = useSpeechSynthesis();
+    const [isToggled, setToggle] = useState(false);
   const handleClose = () => setShow(false);
+  const recognition = new window.webkitSpeechRecognition();
+  const [speechResult, setSpeechResult] = useState('');
+  const [synth, setSynth] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { transcript, listening, startListening, stopListening, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -45,7 +47,6 @@ const Home = () => {
  const getprofileName = useSelector((state) => state.getprofile);
  const newsVoiceResultList = useSelector((state) => state.newsresultread);
 
-console.log('newsResultList', newsVoiceResultList)
 
 
 
@@ -54,6 +55,7 @@ console.log('newsResultList', newsVoiceResultList)
     let body = {
       "key":"facb6e0a6fcbe200dca2fb60dec75be7",
       "source":"WEB",
+      "app_access_token":token&&token,
     }
 
   await axios.post("/newspaper/category-list", JSON.stringify(body))
@@ -80,6 +82,7 @@ const getCheckedInRequest = async () => {
   let body = {
       "key":"facb6e0a6fcbe200dca2fb60dec75be7",
       "source":"WEB",
+      "app_access_token":token&&token,
       "search_phrase":''
     }
 
@@ -91,8 +94,7 @@ await axios.post("/newspaper-home", JSON.stringify(body))
     dispatch({ type: "news", newsresult: response.data.data })
     setisread(false)
     dispatch({ type: "newsresultread", newsresultread: [] })
-    StartFirstReply()
- 
+    // setgetdata(response.data.data)
   }
 })
 .catch((error) => {
@@ -171,9 +173,16 @@ const GetCurrentLocation = async ()=>{
 }
 
 useEffect(() => {
+  // if(newsData == ''){
+  //   getCheckedInRequest();
+  // } else {
+  //   ApiCall()
+  // }
+
     getCheckedInRequest();
     GetData()
-
+  
+  
   if(!isLoc){
     GetCurrentLocation()
   }
@@ -181,6 +190,7 @@ useEffect(() => {
   setShow(true)
   setTimeout(()=>{
     setShow(false)
+    setIsListening(true)
     localStorage.setItem("ismodal", true)
   },3000)
  }
@@ -190,27 +200,56 @@ useEffect(() => {
   }, [])
 
 
-  const StartFirstReply = ()=>{
-    window.speechSynthesis.cancel();
-    annyang.abort();
-    const speechSynthesis = window.speechSynthesis;
-    const message = new SpeechSynthesisUtterance();
-    const voice = window.speechSynthesis.getVoices()[5]
-    message.lang = "en-US";
-    message.pitch = 0;
-    message.rate = 0.9;
-    message.voice = voice;
-    message.text = `hello ${getprofileName}, i am charlie!, How can I assist you?`;
-    message.onend = () => {
-      annyang.addCallback('result', handleSpeechResult);
-      annyang.debug(true);
-      annyang.start();
-    };
-    speechSynthesis.speak(message);
-  }
 
 
+ 
 
+  // useEffect(() => {
+  //   // Create a new instance of Artyom
+  //     if ('speechSynthesis' in window) {
+  //       window.speechSynthesis.onvoiceschanged = () => {
+  //         console.log('SpeechSynthesis is ready!');
+  //       };
+  //     } else {
+  //       console.error('SpeechSynthesis API is not available in this browser.');
+  //     }
+  //   const artyom = new Artyom();
+
+  //   // Add commands that you want Artyom to recognize
+  //   artyom.addCommands([
+  //     {
+  //       indexes: ['hello', 'hi', 'hey'],
+  //       action: () => {
+  //         console.log('Hello, how can I help you?');
+  //         artyom.say("Hey buddy ! How are you today?");
+  //       },
+  //     },
+  //     // Add more commands here as needed
+  //   ]);
+
+  //   // Start the speech recognition
+  //   artyom.initialize({
+  //     lang: 'en-US', // Set the language for recognition
+  //     continuous: true, // Keep listening for commands continuously
+  //     debug: true, // Enable debug mode for logging
+  //   });
+
+  //   // Clean up on component unmount
+  //   return () => {
+  //     artyom.fatality();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    alanBtn({
+        key: '300ac89da58053f6f624f460a731363f2e956eca572e1d8b807a3e2338fdd0dc/stage',
+        onCommand: ({command}) => {
+          if (command === 'give'){
+            alert("You have")
+          }
+        }
+    });
+  }, []);
 
   const handleSpeechResult = (userSaid) => {
     
@@ -219,80 +258,69 @@ useEffect(() => {
     handleVoiceCommand(userSaid);
   };
 
+  const handleVoiceCommand = (userSaid) => {
 
-  
-const handleVoiceCommand = async(userSaid) => {
+    console.log('Handle voice command', userSaid[0].toUpperCase())
 
-  console.log("User said : " + userSaid);
+    var text = userSaid[0].toUpperCase();
+    var Matchresultone = text.match('HEY JOHN');
+    var Matchresulttwo = text.match('HI JOHN');
+    var Matchresultthree = text.match('JOHN');
+    var splitText = text.split('ME')
+    var rawText = splitText[1]?.toLowerCase()
+    var matchTextone = text.match('CAN YOU GIVE')
+    var matchTexttwo = text.match('YOU GIVE')
 
-  var speech = userSaid[0].toUpperCase();
+    var readTextOne = text.match('DETAILS OF');
+    var readTextTwo = text.match('DETAILS');
 
-  console.log("Speech : " + speech);
-
-  console.log("Starting...");
-  var splitText = speech.split('ME');
-  var rawText = splitText[1]?.toLowerCase();
-
-  settext(rawText)
-
-  // if(speech.includes('HEY JOHN') || speech.includes('HI JOHN') || speech.includes('JOHN')){
-  //   respondToUser(`hello ${getprofileName} How can I assist you?`);
-  // } else 
-  if(speech.includes('GIVE') || speech.includes('SHOW') || speech.includes('TELL') || speech.includes('LOOK UP') || speech.includes('GET') || speech.includes('SEARCH')) {
-   // respondToUser(`Thanks! you are search for  ${rawText}`);
-      annyang.abort();
-      setTimeout(() => {
+    if (text.includes(Matchresultone)) {
+      respondToUser(`hello ${getprofileName} How can I assist you?`);
+    } else if (text.includes(Matchresulttwo)) {
+      respondToUser(`hello! ${getprofileName} How can I assist you?`);
+    } else if (text.includes(Matchresultthree)) {
+      respondToUser(`hello! ${getprofileName} How can I assist you?`);
+    } else if (text.includes(matchTextone)) {
+      respondToUser(`Thanks! you are search for  ${rawText}`);
+      setTimeout(()=>{
+        settext(rawText)
         voicesearch(rawText)
-      }, 1500)
-
-  }  if(speech.includes('DETAILS') || speech.includes('READ')){
-        
-    annyang.abort();
-    //setListening(false);
-    // setTimeout(() => {
-    //     ReadList(speech?.toLowerCase())
-    // }, 1500);
-
-}  if(speech.includes('STOP')){
-  window.scrollTo(0, 0);  
-  setIsPlaying(false)
-  setisresume(false)
-  respondToUserNo(`Thank you ${getprofileName}! have a nice day`)
-  setTimeout(()=>{
-    getCheckedInRequest()
-  },5000)
-}
-
-if(speech.includes('YES') || speech.includes('YEAH') || speech.includes('OKAY') || speech.includes('OK')) {
-  setToggle(true)
-  setActiveIndex(0);
-  window.scrollTo(0, 0);  
-  setIsPlaying(true)
-  }
-
-  if(speech.includes('CONTINUE')) {
-    setActiveIndex(0);
-    window.scrollTo(0, 0);  
-    setActiveIndex(activeIndex);
-    setisresume(true)
+      },2500)
+    } else if (text.includes(matchTexttwo)) {
+      respondToUser(`Thanks! you are search for  ${rawText}`);
+      setTimeout(()=>{
+        settext(rawText)
+        voicesearch(rawText)
+      },2500)
+    } else if (text.includes(readTextOne)) {
+      respondToUser(`Thanks! you are search for  ${text}`);
+      setTimeout(()=>{
+        settext(rawText)
+        ReadList(text?.toLowerCase())
+      },2500)
+    } else if (text.includes(readTextTwo)) {
+      respondToUser(`Thanks! you are search for  ${text}`);
+      setTimeout(()=>{
+        settext(rawText)
+        ReadList(text?.toLowerCase())
+      },2500)
+    } else {
+      respondToUser(`I'm sorry, ${getprofileName} I didn't understand that. please try again`);
     }
+  };
 
-  if(speech.includes('NO') || speech.includes('NOTHING')) {
-    window.scrollTo(0, 0);  
-    setIsPlaying(false)
-    setisresume(false)
-    respondToUserNo(`Thank you ${getprofileName}! have a nice day`)
-    }
-
-    // if(speech.includes('STOP') || speech.includes('STOP')) {
-    //   window.scrollTo(0, 0);  
-    //   setIsPlaying(false)
-    //   setisresume(false)
-    //   respondToUserNo(`Thank you ${getprofileName}! have a nice day`)
-    //   }
-
-}
-
+  const respondToUser = (text) => {
+    const speechSynthesis = window.speechSynthesis;
+    const message = new SpeechSynthesisUtterance();
+    const voice = window.speechSynthesis.getVoices()[4]
+    message.lang = "en-US";
+    message.pitch = 1;
+    message.rate = 0.9;
+    message.voice = voice
+    message.text = text;
+   console.log(message);
+    speechSynthesis.speak(message);
+  };
 
 
 
@@ -303,6 +331,7 @@ if(speech.includes('YES') || speech.includes('YEAH') || speech.includes('OKAY') 
   let body = {
     "key":"facb6e0a6fcbe200dca2fb60dec75be7",
     "source":"WEB",
+    "app_access_token":token&&token,
     "search_phrase":saerchtext
   }
 axios.post("/newspaper-home", JSON.stringify(body))
@@ -311,238 +340,25 @@ axios.post("/newspaper-home", JSON.stringify(body))
     if(response.data.success){
       dispatch({ type: "news", newsresult: response.data.data })
       dispatch({ type: "newsresultread", newsresultread: response.data.data })
-      setNewResult(response.data.data)
-      if(response.data.data.length > 0 && response.data.data.length < 1){
-        ReplyToUserSingle(response.data.data.length)
-      } else {
-        const speechSynthesis = window.speechSynthesis;
-        const message = new SpeechSynthesisUtterance();
-        const voice = window.speechSynthesis.getVoices()[5]
-        message.lang = "en-US";
-        message.pitch = 1;
-        message.rate = 0.9;
-        message.voice = voice
-        message.text = `I have  found ${response.data.data.length} results matching with ${saerchtext}. Do you want me to read title for you?`;
-       console.log(message);
-       message.onend = () => {
-       
-        let synth = window.speechSynthesis;
-        synth.cancel()
-        console.log('onEnd');
-        annyang.addCallback('result', handleSpeechResult);
-        annyang.debug(true);
-        annyang.start();
-       
-       };
-
-        speechSynthesis.speak(message);
-      
-         // playNotFound();
-      }
-
+      // setgetdata(response.data.data)
+      setindex(0)
 
     }
   })
   .catch((error) => {
       setloading(false)
+      if(error.response.status === 403){
+        toast.error(error.response.data.message);
+    }
+      if(error.response.status === 404){
+          toast.error(error.response.data.message);
+      }
     
   });
  }
 
- 
- const respondToUserSTop = (text) => {
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
-  message.lang = "en-US";
-  message.pitch = 1;
-  message.rate = 0.9;
-  message.voice = voice
-  message.text = text;
-  speechSynthesis.speak(message);
-  message.onend = () => {
-  
-    annyang.addCallback('result', handleSpeechResult);
-    annyang.start();
-  };
-
-  
-};
-
-const respondToUserNo = (text) => {
-
-  console.log("responding to no", text)
-
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
-  message.lang = "en-US";
-  message.pitch = 1;
-  message.rate = 0.9;
-  message.voice = voice
-  message.text = text;
-  message.onend = () => {
-       
-    // let synth = window.speechSynthesis;
-    // synth.cancel()
-    annyang.addCallback('result', handleSpeechResult);
-    annyang.start();
-   
-   };
-  
-  speechSynthesis.speak(message);
-
- 
-};
-
-
-const ReplyToUserSingle = (length) => {
-  var text = 'Do you want to continue read'
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
-  message.lang = "en-US";
-  message.pitch = 1;
-  message.rate = 0.9;
-  message.voice = voice
-  message.text = text;
- console.log(message);
-  speechSynthesis.speak(message);
-  message.onend = () => {
-    annyang.addCallback('result', handleSpeechResult);
-    annyang.debug(true);
-    annyang.start();
-  };
-};
-
-
-useEffect(()=>{
-
-  if(isPlaying) {
-    startPlaying(newsVoiceResultList)
-  }
-
-},[newsVoiceResultList, isPlaying, isresume])
-
-
-const startPlaying = (data) => {
-  // annyang.abort();
-  // window.speechSynthesis.cancel();
-  console.log("Playing Started", data);
-// console.log("Title : " + newsVoiceResultList[playIndex]?.reading_title)
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
-  message.lang = "en-US";
-  message.pitch = 0;
-  message.rate = 0.9;
-  message.voice = voice;
-  message.text = `Title is.. ${data[0]?.reading_title}`;
-  message.onend = () => doOnEnd(0, data);
-
-  speechSynthesis.speak(message);
-
-
-}
-
-
-
-const doOnEnd = (playIndex, data) => {
-
-  if(playIndex === data.length - 1){
-      window.scrollTo(0, 0);
-    setIsPlaying(false);
-      setActiveIndex(0);
-      console.log("Ended");
-
-      const speechSynthesis = window.speechSynthesis;
-      const message = new SpeechSynthesisUtterance();
-      const voice = window.speechSynthesis.getVoices()[5]
-      message.lang = "en-US";
-      message.pitch = 0;
-      message.rate = 0.9;
-      message.voice = voice;
-      message.text = 'Would you like to hear any other news?';
-      message.onend = () => {
-    
-        annyang.addCallback('result', handleSpeechResult);
-        annyang.debug(true);
-        annyang.start();
-      
-        setListening(true);
-        setSpeechText('');
-
-      };
-  
-      speechSynthesis.speak(message);
-
-  } else {
-      let newIndex = playIndex + 1;
-      setActiveIndex(newIndex);
-
-      let element = document.getElementById("news-div-"+newIndex+"");
-
-      let rect = element.getBoundingClientRect();
-      let scrollTop = document.documentElement.scrollTop;
-      let absoluteY = (scrollTop + rect.top) - 155;
-
-      console.log("Offset : " + absoluteY);
-
-      window.scrollTo(0, absoluteY);
-
-      
-
-      setTimeout(() => {
-          playArticle(newIndex, data);
-      }, 500);
-  
-  }
-
-}
-
-const playArticle = (playIndex, data) => {
-
-// if(playIndex > 4){
-
-//   const speechSynthesis = window.speechSynthesis;
-//   const message = new SpeechSynthesisUtterance();
-//   const voice = window.speechSynthesis.getVoices()[5]
-//   message.lang = "en-US";
-//   message.pitch = 0;
-//   message.rate = 0.9;
-//   message.voice = voice;
-//   message.text = 'do you want to repeat articles! just say continue. if not say no ';
-//    message.onend = () => {
-//       annyang.addCallback('result', handleSpeechResult);
-//       annyang.debug(true);
-//       annyang.start();
-//       };
-  
-//   speechSynthesis.speak(message);
-// } else {
-
-
-  console.log("Now playing index : " + playIndex);
- // console.log("Title : " + newsVoiceResultList[playIndex]?.reading_title)
-  const speechSynthesis = window.speechSynthesis;
-  const message = new SpeechSynthesisUtterance();
-  const voice = window.speechSynthesis.getVoices()[5]
-  message.lang = "en-US";
-  message.pitch = 0;
-  message.rate = 0.9;
-  message.voice = voice;
-  message.text = `Title is.. ${data[playIndex]?.reading_title}`;
-  message.onend = () => doOnEnd(playIndex, data);
-  
-  speechSynthesis.speak(message);
-  
-}
-
-
-
-const ReadList = (saerchtextx)=>{
+ const ReadList = (saerchtextx)=>{
   setloading(true)
-  
   let body = {
     "key":"facb6e0a6fcbe200dca2fb60dec75be7",
     "source":"WEB",
@@ -552,32 +368,35 @@ const ReadList = (saerchtextx)=>{
 
   console.log(body)
 
-  axios.post("/voice-newspaper-read-single", JSON.stringify(body))
-    .then((response) => {
+axios.post("/voice-newspaper-read-single", JSON.stringify(body))
+  .then((response) => {
       setloading(false)
-      if(response.data.success){
-    
-        setListening(false);
-        console.log(response.data.data)
-
-        navigate(`/news-details/${response.data.data.article_id}`)
-        dispatch({ type: "newsresultread", newsresultread: [] })
+    if(response.data.success){
+      setsingledata(response.data.data)
+      setisread(true)
       
-      }
-    })
-    .catch((error) => {
+      console.log(response.data.data)
+
+      navigate(`/news-details/${response.data.data.article_id}`)
+      dispatch({ type: "newsresultread", newsresultread: [] })
+      // setgetdata(response.data.data)
+      setindex(0)
+    }
+  })
+  .catch((error) => {
       setloading(false)
       if(error.response.status === 403){
         toast.error(error.response.data.message);
-
-      }
+       
+    }
       if(error.response.status === 404){
           toast.error(error.response.data.message);
-          //getCheckedInRequest()
+          getCheckedInRequest()
       }
-
-    });
+    
+  });
  }
+
 
 const NextTopage = (id, name) => {
   navigate("/home-article",
@@ -591,9 +410,76 @@ const NextTopage = (id, name) => {
 }
 
 
+function StopLisning(){
+  setToggle(!isToggled);
+  if(isToggled){
+    window.speechSynthesis.resume();
+  } else {
+    window.speechSynthesis.pause();
+  }
+
+  //setindex(index + newsResultList &&newsResultList.length)
+}
+
+useEffect(() => {
+
+  if(newsVoiceResultList&&newsVoiceResultList.length > index){
+    const interval = setInterval(() => {
+      if(progressive < 7){
+        setprogressive(progressive + 1);
+      }
+    }, 1000);
+     if(progressive > 6){
+      setprogressive(0)
+      setindex(index + 1)
+    } 
+    if(progressive == 0){
+    textToSpeech(index);
+    }
+    return () => clearInterval(interval);
+  } else if(newsVoiceResultList.length !== 0 && newsVoiceResultList.length <= index){
+    elseVoice()
+  }
 
 
+// Cleanup the speech synthesis when the component unmounts
+return () => {
+  window.speechSynthesis.cancel();
+};
 
+}, [progressive, newsVoiceResultList]);
+
+const elseVoice = ()=>{
+  const speechSynthesis = window.speechSynthesis;
+  const message = new SpeechSynthesisUtterance();
+  const voice = window.speechSynthesis.getVoices()[4]
+  message.lang = "en-US";
+  message.pitch = 1;
+  message.rate = 0.9;
+  message.voice = voice
+  message.text = 'Thanks for listen any think else';
+  speechSynthesis.speak(message);
+  
+}
+
+
+const textToSpeech = (index) => {
+  console.log(index)
+  const speechSynthesis = window.speechSynthesis;
+    const message = new SpeechSynthesisUtterance();
+    const voice = window.speechSynthesis.getVoices()[4]
+    message.lang = "en-US";
+    message.pitch = 1;
+    message.rate = 0.9;
+    message.voice = voice
+    message.text = `Title is ${newsResultList&&newsResultList[index]?.reading_title}`;
+    speechSynthesis.speak(message);
+
+  // utterance.onend = () => {
+  //   setIsSpeaking(false);
+  //   console.log('Speech has ended.'); // You can add your custom logic here
+  // };
+};
 
 
   return (
@@ -603,13 +489,8 @@ const NextTopage = (id, name) => {
     <AfterLoginTopbar
       />
       <div className='header-info'>
-      <div className='container d-flex align-items-center'>
+        <div className='container'>
           Top Stories
-          {/* {
-         isToggled ?
-          <button className='btn btn-sm btn-danger ml-auto' onClick={() => StopLisning()}>Stop Listening</button>
-        : null
-        } */}
         </div>
     
       </div>
@@ -669,12 +550,12 @@ const NextTopage = (id, name) => {
         
       {newsResultList&&newsResultList.length > 0 ?
         <div className='top-stories'>
-        
+           {index > 0 &&  <button className='btn btn-sm btn-danger mb-2' onClick={StopLisning}>{isToggled ? ' Resume Listen' : 'Pause Listen'}</button>}
             <h1>Top Stories For The Day: <span>{text}</span> </h1>
             <div className='row'>
             {newsResultList&&newsResultList.map((item,index)=>{
                 return (
-                  <div className='col-lg-4 col-12' key={index} id={"news-div-"+index+""}>
+                  <div className='col-lg-4 col-12' key={index}>
                     <NavLink to={`/news-details/${item.article_id}`}>
                     <div className='story-list'>
                         <div className='story-list-img'>
@@ -706,9 +587,9 @@ const NextTopage = (id, name) => {
         </div>
      
 
-{/* <div className='float-btn-text'>
+<div className='float-btn-text'>
    <button onClick={()=>setShow(true)}>Say <br></br> 'hey john'</button>
-</div> */}
+</div>
 
     </div>
     <BottomTabCustomer/>

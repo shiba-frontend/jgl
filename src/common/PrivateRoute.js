@@ -4,7 +4,7 @@ const PrivateRoute = () => {
     const token = localStorage.getItem('accessToken');
 
     return(
-        token ? <Outlet/> : <Navigate to="/"  />
+        token ? <Outlet/> : <Navigate to="/home"  />
     )
 }
 

@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-html{
-  scroll-behavior: smooth;
-}
 body {
   margin: 0;
   padding: 0;
@@ -649,14 +646,6 @@ button.accept-btn {
   color: #fff;
   padding: 13px 0px;
   font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-info button{
-    margin-bottom: 0 !important;
-    margin-right: 15px;
 }
 .pageMenu > ul > li > button {
   color: #484848;
@@ -1692,8 +1681,7 @@ button.logoutBtn {
 }
 .AlertMsg .modal-header .modal-title.h4 {
   font-size: 18px;
-  color: #009688;
-  line-height: 2;
+  color: red;
 }
 .AlertMsg h4 {
   text-align: center;
@@ -2158,119 +2146,4 @@ ul.bredcrams {
   border-radius: 19px 0;
   padding: 3px;
   background: #fff;
-}
-
-.listening-container{
-  position: fixed;
-  bottom: 0;
-  margin: 10px;
-  margin-bottom: 50px;
-  background-color: #fff;
-  width: calc(100% - 20px);
-  padding: 20px;
-  z-index: 99999;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
-  border-radius: 8px;
-}
-
-.listening-wrap{
-  display: flex;
-  align-items: center;
-}
-
-.listening-wrap div{
-  flex: 1;
-}
-
-.listening-wrap span{
-  display: block;
-  font-size: 12;
-  color: #606771;
-}
-
-.float-btn-mic{
-    position: fixed;
-    z-index: 999;
-    right: 10px;
-    bottom: 60px;
-}
-
-.mic-button{
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 25px;
-    font-size: 20px;
-    background: #f30000;
-    color: #fff;
-    box-shadow: 0 0 8px rgba(0,0,0,0.3);
-}
-
-.close-listening-btn{
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: 2px solid #f30000;
-  border-radius: 20px;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-main{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.modal-body-icon{
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f30000;
-    color: #fff;
-    border-radius: 20px;
-}
-
-.modal-body-title{
-    font-size: 1.3em;
-    margin-top: 5px;
-    text-align: center;
-}
-
-.modal-section-title{
-  width: 100%;
-  margin-top: 15px;
-  font-size: 1.1em;
-  font-weight: 500;
-}
-
-.modal-section-msg{
-  width: 100%;
-}
-
-.modal-section-msg span{
-  font-weight: 500;
-  text-decoration: underline;
-  font-style: italic;
-}
-
-.modal-section-note{
-  font-size: 0.85em;
-  width: 100%;
-}
-
-.modal-section-note span{
-  background: #ddd;
-  font-style: italic;
-  display: inline-block;
-  padding: 0 5px;
-  border-radius: 3px;
 }

@@ -39,7 +39,6 @@ const Deals = () => {
           let body = {
               "key":"facb6e0a6fcbe200dca2fb60dec75be7",
               "source":"WEB",
-              "app_access_token":token,
               "lat":lat,
               "lng":lng
             }
@@ -78,7 +77,6 @@ const Deals = () => {
           "source":"WEB",
           "lat":localLat,
           "lng":localLng,
-          "app_access_token":token,
         }
         axios.post("/get-home-deals", JSON.stringify(body))
         .then((response) => {
@@ -102,7 +100,6 @@ const Deals = () => {
       let body = {
         "key":"facb6e0a6fcbe200dca2fb60dec75be7",
         "source":"WEB",
-        "app_access_token":token&&token,
         "deal_id":cart_id
       }
 
