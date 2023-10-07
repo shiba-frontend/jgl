@@ -264,6 +264,7 @@ const closeListening = () => {
 
 
 const searchVoice = (searchText) => {
+  alert(searchText)
 
   
   console.log("Search Started.");
