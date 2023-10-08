@@ -46,18 +46,51 @@ const getUserMediaPermission = () => {
   });
 };
 
+
+
 const speak = (message, onEnd = () => {}) => {
   getUserMediaPermission()
     .then(() => {
-      let speechUtterance = new SpeechSynthesisUtterance(message);
-
-      speechUtterance.voice = voiceList.filter(
-        (i) => i.name === SpeechEngineMName
-      )[0];
       recognition.stop();
-      SpeechSynthesis.speak(speechUtterance);
 
-      speechUtterance.onend = onEnd;
+      if (message.length > 175) {
+        let messageChunks = message.split(".");
+        let readCount = 0;
+
+        while (readCount < messageChunks.length) {
+          let speechUtterance = new SpeechSynthesisUtterance(
+            messageChunks[readCount]
+          );
+          speechUtterance.lang = "en-US";
+          speechUtterance.pitch = 0;
+          speechUtterance.rate = 0.9;
+
+          speechUtterance.voice = voiceList.filter(
+            (i) => i.name === SpeechEngineMName
+          )[0];
+          SpeechSynthesis.speak(speechUtterance);
+          readCount = readCount + 1;
+          speechUtterance.onend = () => {
+            setTimeout(() => {
+              if (!SpeechSynthesis.speaking) {
+                onEnd();
+              }
+            }, 2000);
+          };
+        }
+      } else {
+        let speechUtterance = new SpeechSynthesisUtterance(message);
+        speechUtterance.lang = "en-US";
+        speechUtterance.pitch = 0;
+        speechUtterance.rate = 0.9;
+
+        speechUtterance.voice = voiceList.filter(
+          (i) => i.name === SpeechEngineMName
+        )[0];
+        SpeechSynthesis.speak(speechUtterance);
+
+        speechUtterance.onend = onEnd;
+      }
 
       if (!SpeechSynthesis.speaking) {
         window.confirm("Make sure you enable sound permission to allow.");

@@ -13,6 +13,7 @@ import annyang from "annyang";
 import Modal from "react-bootstrap/Modal";
 import { useSpeechSynthesis } from "react-speech-kit";
 import useCharlie, { STATUS_CODES } from "../../../hooks/useCharlie";
+import { getAction } from "../../../hooks/actions";
 
 const Home = () => {
   const [loading, setloading] = useState(false);
@@ -60,6 +61,18 @@ const Home = () => {
       setShow(false);
     }
   }, [status]);
+
+  useEffect(() => {
+    // let body = {
+    //   key: "facb6e0a6fcbe200dca2fb60dec75be7",
+    //   source: "WEB",
+    //   search_phrase: "political",
+    // };
+    // axios.post("/newspaper-home", JSON.stringify(body)).then((response) => {
+    //   console.log("News Paper Response: ", response);
+    // });
+    console.log("Search Actions: ", getAction("Hey Charlie! get me some news on sports"));
+  }, []);
 
   const GetData = async () => {
     let body = {
@@ -748,7 +761,9 @@ const Home = () => {
             {status === STATUS_CODES.RECOGNIZED && (
               <Fragment>
                 <div className="modal-body-title">You Said:</div>
-                <div className="modal-section-msg">{transcript?.transcript}</div>
+                <div className="modal-section-msg">
+                  {transcript?.transcript}
+                </div>
               </Fragment>
             )}
           </div>
