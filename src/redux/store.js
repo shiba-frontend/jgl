@@ -14,7 +14,7 @@ const initialState = {
   businessLocationList: [],
   isstatus: false,
   isbusinessadded: false,
-  getprofile:'',
+  getprofile: "",
   newsresultread: [],
 };
 const changeState = (state = initialState, { type, ...rest }) => {
@@ -45,12 +45,18 @@ const changeState = (state = initialState, { type, ...rest }) => {
       return { ...state, ...rest };
     case "status":
       return { ...state, ...rest };
-      case "isbusinessadded":
+    case "isbusinessadded":
       return { ...state, ...rest };
-      case "getprofile":
+    case "getprofile":
       return { ...state, ...rest };
-      case "newsresultread":
+    case "newsresultread":
       return { ...state, ...rest };
+    case "setEmitter":
+      return { ...state, ...rest };
+    case "setSingleFlow":
+      return { ...state, ...rest };
+    case "setCharlie":
+      return {...state, ...rest}
     default:
       return state;
   }

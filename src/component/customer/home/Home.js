@@ -14,6 +14,7 @@ import Modal from "react-bootstrap/Modal";
 import { useSpeechSynthesis } from "react-speech-kit";
 import useCharlie, { STATUS_CODES } from "../../../hooks/useCharlie";
 import { getAction } from "../../../hooks/actions";
+import { TypeAnimation } from "react-type-animation";
 
 const Home = () => {
   const [loading, setloading] = useState(false);
@@ -32,10 +33,6 @@ const Home = () => {
   const [speechText, setSpeechText] = useState("");
   const [newresult, setNewResult] = useState([]);
 
-  const { conversations, status, start, transcript } = useCharlie();
-
-  const handleClose = () => setShow(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -48,20 +45,6 @@ const Home = () => {
 
   console.log("newsResultList", newsVoiceResultList);
 
-  /** Written by
-   * @Rajesh
-   */
-  useEffect(() => {
-    if (
-      status === STATUS_CODES.LISTENING ||
-      status === STATUS_CODES.RECOGNIZED
-    ) {
-      setShow(true);
-    } else {
-      setShow(false);
-    }
-  }, [status]);
-
   useEffect(() => {
     // let body = {
     //   key: "facb6e0a6fcbe200dca2fb60dec75be7",
@@ -71,7 +54,14 @@ const Home = () => {
     // axios.post("/newspaper-home", JSON.stringify(body)).then((response) => {
     //   console.log("News Paper Response: ", response);
     // });
-    console.log("Search Actions: ", getAction("Hey Charlie! get me some news on sports"));
+    // let body = {
+    //   key: "facb6e0a6fcbe200dca2fb60dec75be7",
+    //   source: "WEB",
+    //   search_phrase: "barbie story",
+    // };
+    // axios.post("/voice-newspaper-read-single", JSON.stringify(body)).then((response) => {
+    //   console.log("Single Story Data:", response);
+    // });
   }, []);
 
   const GetData = async () => {
@@ -717,69 +707,6 @@ const Home = () => {
 </div> */}
       </div>
       <BottomTabCustomer />
-
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered
-        size="sm"
-        className="AlertMsg"
-      >
-        <Modal.Header>
-          <Modal.Title>Just Go Live!</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="modal-main">
-            <div className="modal-body-icon">
-              <i class="fa-solid fa-microphone"></i>
-            </div>
-            {status === STATUS_CODES.LISTENING && (
-              <Fragment>
-                <div className="modal-body-title">Say Now! I'm Listening.</div>
-                <div className="modal-section-title">
-                  For results on any Topic
-                </div>
-                <div className="modal-section-msg">
-                  Just say, Give me <span>Topic Name</span>
-                </div>
-                <div className="modal-section-note">
-                  For example <span>Give me Politics</span> or{" "}
-                  <span>Give me Sports</span>
-                </div>
-                <div className="modal-section-title">
-                  For any specific article
-                </div>
-                <div className="modal-section-msg">
-                  Just say, Details of <span>Article Name</span>
-                </div>
-                <div className="modal-section-note">
-                  For example <span>Details of Barbie</span> or{" "}
-                  <span>Details of Messi</span>
-                </div>
-              </Fragment>
-            )}
-            {status === STATUS_CODES.RECOGNIZED && (
-              <Fragment>
-                <div className="modal-body-title">You Said:</div>
-                <div className="modal-section-msg">
-                  {transcript?.transcript}
-                </div>
-              </Fragment>
-            )}
-          </div>
-
-          <ul>
-            <li>
-              <button
-                onClick={handleClose}
-                className="btn btn-md btn-success mt-3"
-              >
-                Don't need assistance
-              </button>
-            </li>
-          </ul>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

@@ -12,6 +12,8 @@ export const search = [
   "look up for me",
   "give",
   "search",
+  "details",
+  "for"
 ];
 
 export const positive = ["yes", "ok", "yeah", "read"];
@@ -31,6 +33,7 @@ export const common = [
   "news",
   "can",
   "you",
+  "of"
 ];
 
 export const category = [

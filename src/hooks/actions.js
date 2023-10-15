@@ -5,6 +5,7 @@ export const Actions = {
   READ_STORY: "READ_STORY",
   STOP_READ_STORY: "STOP_READ_STORY",
   NOT_FOUND: "NOT_FOUND",
+  SEARCH_SINGLE: "SEARCH_SINGLE",
 };
 
 const getTopics = (messages) => {
@@ -13,17 +14,7 @@ const getTopics = (messages) => {
     return regex.test(messages);
   });
   console.log("Search Actions: Match: ", result);
-  // category.forEach((c) => {
-  //   let regex = new RegExp(`(${c})`, "g");
-  //   console.log("Search Actions: RegEx: ", regex);
-  //   console.log("Search Actions: Match: ", regex.test(messages));
-  //   if (regex.test(messages)) {
-  //     return {
-  //       status: "FOUND",
-  //       topic: c,
-  //     };
-  //   }
-  // });
+
   if (result.length === 0) {
     return { status: "NOT_FOUND" };
   }
@@ -34,15 +25,37 @@ const getTopics = (messages) => {
   };
 };
 
+const getArticle = (message) => {
+  let SearchExpression = new RegExp(`(${search.join("|")})`, "g");
+  let PositiveExpression = new RegExp(`(${positive.join("|")})`, "g");
+  let NegativeExpression = new RegExp(`(${negative.join("|")})`, "g");
+  let CommonExpression = new RegExp(`(${common.join("|")})`, "g");
+  let PunctuationExpress = /[.,\/#!$%\^&\*;:{}=\-_`~()?]/g;
+
+  return message
+    .replaceAll(SearchExpression, "")
+    .trim()
+    .replaceAll(CommonExpression, "")
+    .trim()
+    .replaceAll(PunctuationExpress, "")
+    .trim();
+};
+
 export const getAction = (message) => {
   let SearchExpression = new RegExp(`(${search.join("|")})`, "g");
   let PositiveExpression = new RegExp(`(${positive.join("|")})`, "g");
   let NegativeExpression = new RegExp(`(${negative.join("|")})`, "g");
 
   if (SearchExpression.test(message)) {
+    if (getTopics(message).topic) {
+      return {
+        action: Actions.SEARCH,
+        topic: getTopics(message),
+      };
+    }
     return {
-      action: Actions.SEARCH,
-      topic: getTopics(message),
+      action: Actions.SEARCH_SINGLE,
+      topic: getArticle(message),
     };
   }
 

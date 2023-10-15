@@ -46,55 +46,105 @@ const getUserMediaPermission = () => {
   });
 };
 
+var speechUtteranceChunker = function (utt, settings, callback) {
+  settings = settings || {};
+  var newUtt;
+  var txt =
+    settings && settings.offset !== undefined
+      ? utt.text.substring(settings.offset)
+      : utt.text;
+  if (utt.voice && utt.voice.voiceURI === "native") {
+    // Not part of the spec
+    newUtt = utt;
+    newUtt.text = txt;
+    newUtt.addEventListener("end", function () {
+      if (speechUtteranceChunker.cancel) {
+        speechUtteranceChunker.cancel = false;
+      }
+      if (callback !== undefined) {
+        callback();
+      }
+    });
+  } else {
+    var chunkLength = (settings && settings.chunkLength) || 160;
+    var pattRegex = new RegExp(
+      "^[\\s\\S]{" +
+        Math.floor(chunkLength / 2) +
+        "," +
+        chunkLength +
+        "}[.!?,]{1}|^[\\s\\S]{1," +
+        chunkLength +
+        "}$|^[\\s\\S]{1," +
+        chunkLength +
+        "} "
+    );
+    var chunkArr = txt.match(pattRegex);
 
+    if (chunkArr[0] === undefined || chunkArr[0].length <= 2) {
+      //call once all text has been spoken...
+      if (callback !== undefined) {
+        callback();
+      }
+      return;
+    }
+    var chunk = chunkArr[0];
+    newUtt = new SpeechSynthesisUtterance(chunk);
+    var x;
+    for (x in utt) {
+      if (utt.hasOwnProperty(x) && x !== "text") {
+        newUtt[x] = utt[x];
+      }
+    }
+    newUtt.addEventListener("end", function () {
+      if (speechUtteranceChunker.cancel) {
+        speechUtteranceChunker.cancel = false;
+        return;
+      }
+      settings.offset = settings.offset || 0;
+      settings.offset += chunk.length - 1;
+      speechUtteranceChunker(utt, settings, callback);
+    });
+  }
+
+  if (settings.modifier) {
+    settings.modifier(newUtt);
+  }
+  console.log(newUtt); //IMPORTANT!! Do not remove: Logging the object out fixes some onend firing issues.
+  //placing the speak invocation inside a callback fixes ordering and onend issues.
+  setTimeout(function () {
+    speechSynthesis.speak(newUtt);
+  }, 0);
+};
 
 const speak = (message, onEnd = () => {}) => {
   getUserMediaPermission()
     .then(() => {
       recognition.stop();
 
-      if (message.length > 175) {
-        let messageChunks = message.split(".");
-        let readCount = 0;
+      let speechUtterance = new SpeechSynthesisUtterance(message);
+      speechUtterance.lang = "en-US";
+      speechUtterance.pitch = 0;
+      speechUtterance.rate = 0.9;
 
-        while (readCount < messageChunks.length) {
-          let speechUtterance = new SpeechSynthesisUtterance(
-            messageChunks[readCount]
-          );
-          speechUtterance.lang = "en-US";
-          speechUtterance.pitch = 0;
-          speechUtterance.rate = 0.9;
+      speechUtterance.voice = voiceList.filter(
+        (i) => i.name === SpeechEngineMName
+      )[0];
 
-          speechUtterance.voice = voiceList.filter(
-            (i) => i.name === SpeechEngineMName
-          )[0];
-          SpeechSynthesis.speak(speechUtterance);
-          readCount = readCount + 1;
-          speechUtterance.onend = () => {
-            setTimeout(() => {
-              if (!SpeechSynthesis.speaking) {
-                onEnd();
-              }
-            }, 2000);
-          };
-        }
-      } else {
-        let speechUtterance = new SpeechSynthesisUtterance(message);
-        speechUtterance.lang = "en-US";
-        speechUtterance.pitch = 0;
-        speechUtterance.rate = 0.9;
+      let utteranceSettings = {
+        chunkLength: 180,
+      };
 
-        speechUtterance.voice = voiceList.filter(
-          (i) => i.name === SpeechEngineMName
-        )[0];
-        SpeechSynthesis.speak(speechUtterance);
+      speechUtteranceChunker(speechUtterance, utteranceSettings, function () {
+        //some code to execute when done
+        console.log("done");
+        onEnd();
+      });
 
-        speechUtterance.onend = onEnd;
-      }
+      // speechUtterance.onend = onEnd;
 
-      if (!SpeechSynthesis.speaking) {
-        window.confirm("Make sure you enable sound permission to allow.");
-      }
+      // if (!SpeechSynthesis.speaking) {
+      //   window.confirm("Make sure you enable sound permission to allow.");
+      // }
     })
     .catch((error) => {
       console.log("Error: ", error);

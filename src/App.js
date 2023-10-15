@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import FlashScreen from "./component/flashscreen/FlashScreen";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -11,7 +11,6 @@ import LoginNews from "./component/newspaper/auth/Login";
 import Otp from "./component/auth/Otp";
 import ForgotPassword from "./component/auth/ForgotPassword";
 import ResetPassword from "./component/auth/ResetPassword";
-
 
 //End Auth
 import MyDeal from "./component/customer/deal/MyDeal";
@@ -36,7 +35,6 @@ import NavMenuBusiness from "./component/businessowner/header/NavMenu";
 
 //End
 
-
 // Cms
 import PrivacyPolicy from "./component/customer/cms/PrivacyPolicy";
 import PrivacyPolicyNews from "./component/newspaper/cms/PrivacyPolicy";
@@ -59,7 +57,7 @@ import UserAgreementNews from "./component/newspaper/cms/UserAgreement";
 import UserAgreementBusiness from "./component/businessowner/cms/UserAgreement";
 //End cms
 
-//Profile 
+//Profile
 import ChangePassword from "./component/customer/profile/ChangePassword";
 import ChangePasswordNews from "./component/newspaper/profile/ChangePassword";
 import ChangePasswordBusiness from "./component/businessowner/profile/ChangePassword";
@@ -95,121 +93,155 @@ import EditDeal from "./component/businessowner/Deals/EditDeal";
 import Payment from "./component/customer/checkprocess/Payment";
 import OrderDetails from "./component/customer/deal/OrderDetails";
 import CategoryArticle from "./component/customer/home/CategoryArticle";
+import useCharlie, { STATUS_CODES } from "./hooks/useCharlie";
+import Modal from "react-bootstrap/Modal";
+import { TypeAnimation } from "react-type-animation";
+import { getAction } from "./hooks/actions";
+import axios from "axios";
+import { useEffect } from "react";
+import Charlie from "./Charlie";
 
 //End Profile
 
-
-
 function App() {
-
   var token = useSelector((state) => state.accessToken);
-  var token = localStorage.getItem('accessToken');
+  var token = localStorage.getItem("accessToken");
 
+  const dispatch = useDispatch();
 
   return (
     <div className="App">
-      <BrowserRouter>
-      
-      <NavMenu/>
-      <NavMenuNews/>
-      <NavMenuBusiness/>
-      
+      <NavMenu />
+      <NavMenuNews />
+      <NavMenuBusiness />
+
       <Routes>
-      <Route path="*" element={<NotFound />} />
-   <Route element={<PublicRoute />}> 
-          
-            <Route path="/" element={<Home />} />
-            <Route path="/login-customer" element={<Login />} />
-            <Route path="/login-newspaper" element={<LoginNews />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />     
-            <Route path="/otp" element={<Otp />} />
-            <Route path="/signup-otp" element={<SignUpOtp />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="*" element={<NotFound />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login-customer" element={<Login />} />
+          <Route path="/login-newspaper" element={<LoginNews />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/signup-otp" element={<SignUpOtp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Route>
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="/newspaper-privacy-policy"
+            element={<PrivacyPolicyNews />}
+          />
+          <Route
+            path="/business-privacy-policy"
+            element={<PrivacyPolicyBusiness />}
+          />
 
-     </Route> 
-           <Route element={<PrivateRoute />}> 
-           
-          
-            <Route path="/newspaper-privacy-policy" element={<PrivacyPolicyNews />} />
-            <Route path="/business-privacy-policy" element={<PrivacyPolicyBusiness />} />
-           
-            <Route path="/newspaper-terms-condition" element={<TermsConditionNews />} />
-            <Route path="/business-terms-condition" element={<TermsConditionBusiness />} />
-            
-            <Route path="/newspaper-about-us" element={<AboutNews />} />
-            <Route path="/business-about-us" element={<AboutBusiness />} />
-           
-            <Route path="/newspaper-user-agreement" element={<UserAgreementNews />} />
-            <Route path="/business-user-agreement" element={<UserAgreementBusiness/>} />
-         
-            <Route path="/newspaper-contact-us" element={<ContactUsNews />} />
-            <Route path="/business-contact-us" element={<ContactUsBusiness />} />
+          <Route
+            path="/newspaper-terms-condition"
+            element={<TermsConditionNews />}
+          />
+          <Route
+            path="/business-terms-condition"
+            element={<TermsConditionBusiness />}
+          />
 
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/newspaper-change-password" element={<ChangePasswordNews />} />
-            <Route path="/business-change-password" element={<ChangePasswordBusiness />} />
-            <Route path="/update-profile" element={<UpdateProfile />} />
-            <Route path="/newspaper-update-profile" element={<UpdateProfileNews />} />
-            <Route path="/business-update-profile" element={<UpdateProfileBusiness />} />
-            <Route path="/delete-account" element={<DeleteAccount />} />
-            <Route path="/business-delete-account" element={<DeleteAccountBusiness />} />
+          <Route path="/newspaper-about-us" element={<AboutNews />} />
+          <Route path="/business-about-us" element={<AboutBusiness />} />
 
+          <Route
+            path="/newspaper-user-agreement"
+            element={<UserAgreementNews />}
+          />
+          <Route
+            path="/business-user-agreement"
+            element={<UserAgreementBusiness />}
+          />
 
-        
-            <Route path="/news-category" element={<NewsCategoryList />} />
-            <Route path="/news-sub-category" element={<SubCategoryList />} />
-            <Route path="/add-category" element={<AddCategory />} />
-            <Route path="/add-sub-category" element={<AddSubCategory />} />
-            <Route path="/edit-category/:id" element={<EditCategory />} />
-            <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
-            
-            <Route path="/my-deal" element={<MyDeal />} />
-            <Route path="/order-details/:id" element={<OrderDetails />} />
-          
-           
-            <Route path="/home-article" element={<CategoryArticle />} />
-            <Route path="/my-checked-in" element={<MyCheckedIn />} />
-           
-           
-            <Route path="/payment-deal" element={<Payment />} />
-            <Route path="/news-analytics" element={<NewsAnalyticsList />} />
-            <Route path="/news-articles" element={<ArticlesList />} />
-            <Route path="/article-details" element={<PoliticalNewsArticle />} />
-            <Route path="/add-articles" element={<AddArticles />} />
-            <Route path="/article-details/:id" element={<EditArticle />} />
-            <Route path="/analyticle-details/:id" element={<AnalyticleDetails />} />
-            {/* Business Owner */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/add-business" element={<AddBusiness />} />
-            <Route path="/deal-listing" element={<DealsListing />} />
-            <Route path="/business-listing" element={<BusinessListing />} />
-            <Route path="/delete-listing" element={<DeleteListing />} />
-            <Route path="/add-deal" element={<AddDeal />} />
-            <Route path="/edit-deal/:id" element={<EditDeal />} />
-            <Route path="/review-list" element={<ReviewList />} />
-            <Route path="/customer-review-list" element={<ReviewListcustomer />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/customer-list" element={<CustomerList />} />
-            <Route path="/my-order" element={<MyOrder />} />
-            <Route path="/payment" element={<PaymentCard />} />
-          </Route> 
-          <Route path="/home" element={<Home />} />
-          <Route path="/business" element={<Business />} />
-            <Route path="/business-details/:id" element={<BusinessDetails />} />
-            <Route path="/deal" element={<  Deals />} />
-            <Route path="/about-us" element={<About />} />
-            <Route path="/terms-condition" element={<TermsCondition />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/user-agreement" element={<UserAgreement />} />
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/news-details/:id" element={<NewsDetails />} />
-            <Route path="/check-out" element={<CheckOut />} />
+          <Route path="/newspaper-contact-us" element={<ContactUsNews />} />
+          <Route path="/business-contact-us" element={<ContactUsBusiness />} />
+
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route
+            path="/newspaper-change-password"
+            element={<ChangePasswordNews />}
+          />
+          <Route
+            path="/business-change-password"
+            element={<ChangePasswordBusiness />}
+          />
+          <Route path="/update-profile" element={<UpdateProfile />} />
+          <Route
+            path="/newspaper-update-profile"
+            element={<UpdateProfileNews />}
+          />
+          <Route
+            path="/business-update-profile"
+            element={<UpdateProfileBusiness />}
+          />
+          <Route path="/delete-account" element={<DeleteAccount />} />
+          <Route
+            path="/business-delete-account"
+            element={<DeleteAccountBusiness />}
+          />
+
+          <Route path="/news-category" element={<NewsCategoryList />} />
+          <Route path="/news-sub-category" element={<SubCategoryList />} />
+          <Route path="/add-category" element={<AddCategory />} />
+          <Route path="/add-sub-category" element={<AddSubCategory />} />
+          <Route path="/edit-category/:id" element={<EditCategory />} />
+          <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
+
+          <Route path="/my-deal" element={<MyDeal />} />
+          <Route path="/order-details/:id" element={<OrderDetails />} />
+
+          <Route path="/home-article" element={<CategoryArticle />} />
+          <Route path="/my-checked-in" element={<MyCheckedIn />} />
+
+          <Route path="/payment-deal" element={<Payment />} />
+          <Route path="/news-analytics" element={<NewsAnalyticsList />} />
+          <Route path="/news-articles" element={<ArticlesList />} />
+          <Route path="/article-details" element={<PoliticalNewsArticle />} />
+          <Route path="/add-articles" element={<AddArticles />} />
+          <Route path="/article-details/:id" element={<EditArticle />} />
+          <Route
+            path="/analyticle-details/:id"
+            element={<AnalyticleDetails />}
+          />
+          {/* Business Owner */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-business" element={<AddBusiness />} />
+          <Route path="/deal-listing" element={<DealsListing />} />
+          <Route path="/business-listing" element={<BusinessListing />} />
+          <Route path="/delete-listing" element={<DeleteListing />} />
+          <Route path="/add-deal" element={<AddDeal />} />
+          <Route path="/edit-deal/:id" element={<EditDeal />} />
+          <Route path="/review-list" element={<ReviewList />} />
+          <Route
+            path="/customer-review-list"
+            element={<ReviewListcustomer />}
+          />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/customer-list" element={<CustomerList />} />
+          <Route path="/my-order" element={<MyOrder />} />
+          <Route path="/payment" element={<PaymentCard />} />
+        </Route>
+        <Route path="/home" element={<Home />} />
+        <Route path="/business" element={<Business />} />
+        <Route path="/business-details/:id" element={<BusinessDetails />} />
+        <Route path="/deal" element={<Deals />} />
+        <Route path="/about-us" element={<About />} />
+        <Route path="/terms-condition" element={<TermsCondition />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/user-agreement" element={<UserAgreement />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/news-details/:id" element={<NewsDetails />} />
+        <Route path="/check-out" element={<CheckOut />} />
       </Routes>
-      </BrowserRouter>
+
+      <Charlie />
     </div>
-    
   );
 }
 

@@ -24,12 +24,12 @@ const useRecognition = (recognizer) => {
   //     recognition.start();
   //   };
 
-  const changeStatus = (detail)=>{
+  const changeStatus = (detail) => {
     let dispatchEvent = new CustomEvent("onStatusChanged", {
-      detail
-    })
+      detail,
+    });
     recognizer.dispatchEvent(dispatchEvent);
-  }
+  };
 
   const pingAudio = () => {
     let audio = new Audio(require("../assets/ic_ping.wav"));
@@ -41,6 +41,8 @@ const useRecognition = (recognizer) => {
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
         // recognition.start();
+        
+
         let mediaRecorder = new MediaRecorder(stream);
 
         // recognition.onresult = (result) => {
@@ -49,7 +51,7 @@ const useRecognition = (recognizer) => {
         // };
 
         recognizer.addEventListener("listen", (event) => {
-          changeStatus(STATUS_CODES.LISTENING)
+          changeStatus(STATUS_CODES.LISTENING);
           let timeout = event?.detail || 6000;
           pingAudio();
           mediaRecorder.start();
@@ -83,11 +85,10 @@ const useRecognition = (recognizer) => {
           let dispatchEvent = new CustomEvent("onSpeechRecognized", {
             detail: { transcript },
           });
-          
 
           recognizer.dispatchEvent(dispatchEvent);
 
-          changeStatus(STATUS_CODES.RECOGNIZED)
+          changeStatus(STATUS_CODES.RECOGNIZED);
 
           let endTime = new Date().getTime();
           let diff = endTime - startTime;
